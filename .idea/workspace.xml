@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b160603a-968a-4800-81b9-28add4f5c930" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1k51KebOVml0iUrPzShJ1GZSJeR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/assets/img" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\projects\DP-CloudServer\vue_front_project\src\components" />
+      <recent name="D:\projects\DP-CloudServer\vue_front_project\src\views\admin" />
+      <recent name="D:\projects\DP-CloudServer\vue_front_project\src\views" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\projects\DP-CloudServer\vue_front_project\src\assets\img" />
+      <recent name="D:\projects\DP-CloudServer\vue_front_project" />
+      <recent name="D:\projects\DP-CloudServer\vue_front_project\src\views\user" />
+      <recent name="D:\projects\DP-CloudServer\vue_front_project\src\utils" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.serve">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="deploy" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="deploy" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="serve" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="upload" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="upload" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.deploy" />
+        <item itemvalue="npm.upload" />
+        <item itemvalue="npm.build" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b160603a-968a-4800-81b9-28add4f5c930" name="Default Changelist" comment="" />
+      <created>1604975575573</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604975575573</updated>
+      <workItem from="1604975576625" duration="4732000" />
+      <workItem from="1604985887709" duration="6054000" />
+      <workItem from="1605004540374" duration="1279000" />
+      <workItem from="1605231654909" duration="6997000" />
+      <workItem from="1605491012412" duration="3000" />
+      <workItem from="1605491090248" duration="44290000" />
+      <workItem from="1605663716815" duration="37908000" />
+      <workItem from="1605796918371" duration="9787000" />
+      <workItem from="1605869345848" duration="8780000" />
+      <workItem from="1605923000263" duration="968000" />
+      <workItem from="1605959285466" duration="2968000" />
+      <workItem from="1606111321575" duration="9287000" />
+      <workItem from="1606132006867" duration="25754000" />
+      <workItem from="1606269732772" duration="13471000" />
+      <workItem from="1606308561678" duration="663000" />
+      <workItem from="1606314456470" duration="188000" />
+      <workItem from="1606354811441" duration="3601000" />
+      <workItem from="1606371093816" duration="2212000" />
+      <workItem from="1606393524763" duration="2601000" />
+      <workItem from="1606441922392" duration="816000" />
+      <workItem from="1606465040229" duration="1022000" />
+      <workItem from="1606480719336" duration="1019000" />
+      <workItem from="1606703109806" duration="1483000" />
+      <workItem from="1606710723016" duration="2090000" />
+      <workItem from="1606791241770" duration="165000" />
+      <workItem from="1606873481161" duration="638000" />
+      <workItem from="1606874135773" duration="490000" />
+      <workItem from="1606880296898" duration="3641000" />
+      <workItem from="1606890767789" duration="3942000" />
+      <workItem from="1606896104562" duration="280000" />
+      <workItem from="1606905488486" duration="2637000" />
+      <workItem from="1606908157995" duration="66000" />
+      <workItem from="1606908688467" duration="791000" />
+      <workItem from="1606909908902" duration="4885000" />
+      <workItem from="1606980171106" duration="6043000" />
+      <workItem from="1607046205679" duration="1242000" />
+      <workItem from="1607067952193" duration="250000" />
+      <workItem from="1607068397121" duration="2116000" />
+      <workItem from="1607086165173" duration="708000" />
+      <workItem from="1607156961109" duration="1061000" />
+      <workItem from="1607236290319" duration="1210000" />
+      <workItem from="1607305137505" duration="600000" />
+      <workItem from="1607307163488" duration="2372000" />
+      <workItem from="1607391983501" duration="664000" />
+      <workItem from="1607392679451" duration="189000" />
+      <workItem from="1607392893858" duration="188000" />
+      <workItem from="1607403853296" duration="9000" />
+      <workItem from="1607403903632" duration="8000" />
+      <workItem from="1607406841883" duration="11000" />
+      <workItem from="1607502965557" duration="1101000" />
+      <workItem from="1607682318683" duration="2195000" />
+      <workItem from="1607737741998" duration="175000" />
+      <workItem from="1607759544757" duration="4000" />
+      <workItem from="1608085005900" duration="2192000" />
+      <workItem from="1608715045287" duration="425000" />
+      <workItem from="1608717817873" duration="3647000" />
+      <workItem from="1608876085883" duration="22333000" />
+      <workItem from="1609124808011" duration="1217000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="421" y="155" key="FileChooserDialogImpl" timestamp="1607737914256">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="421" y="155" key="FileChooserDialogImpl/0.0.1280.800@0.0.1280.800" timestamp="1607737914256" />
+    <state width="1260" height="162" key="GridCell.Tab.0.bottom" timestamp="1609125175599">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1260" height="162" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1609125175599" />
+    <state width="1260" height="162" key="GridCell.Tab.0.center" timestamp="1609125175598">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1260" height="162" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1609125175598" />
+    <state width="1260" height="162" key="GridCell.Tab.0.left" timestamp="1609125175597">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1260" height="162" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1609125175597" />
+    <state width="1260" height="162" key="GridCell.Tab.0.right" timestamp="1609125175598">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1260" height="162" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1609125175598" />
+    <state x="309" y="122" width="672" height="678" key="search.everywhere.popup" timestamp="1608951986444">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="309" y="122" width="672" height="678" key="search.everywhere.popup/0.0.1280.800@0.0.1280.800" timestamp="1608951986444" />
+  </component>
+</project>
