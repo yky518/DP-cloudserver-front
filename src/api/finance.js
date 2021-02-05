@@ -61,3 +61,11 @@ export function getInvoices(params) {
     params,
   });
 }
+
+export function getBills(params) {
+  return request({
+    url: '/finance/bills',
+    method: 'get',
+    params,
+  });
+}

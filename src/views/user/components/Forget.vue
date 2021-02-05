@@ -1,151 +1,146 @@
 <template>
-  <div class="forget">
-    <div class="title">
-      <div class="line"></div>
-      <h2>忘记密码</h2>
+  <div id="login">
+    <div id="bg">
+      <div class="header">
+        <div class="logo">
+          <img src="../../../assets/img/logo@2x.png" alt="" />
+        </div>
+        <div class="companyName">DP-Cloudserver</div>
+      </div>
+      <div class="slogan">
+        <div
+          class="sloganCN"
+          :style="'font-size:' + (36 / 1519) * screenWidth + 'px'"
+        >
+          分子模拟未来
+        </div>
+        <div
+          class="sloganEN"
+          :style="'font-size:' + (22 / 1519) * screenWidth + 'px'"
+        >
+          Molecule Simulates The Future
+        </div>
+      </div>
     </div>
-
-    <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" label-position="top">
-      <FormItem prop="username">
-        <Input type="text" v-model="formCustom.username" placeholder="用户名"></Input>
-      </FormItem>
-      <FormItem prop="email">
-        <Input type="text" v-model="formCustom.email" placeholder="邮箱"></Input>
-      </FormItem>
-      <FormItem prop="verify">
-        <!--     <Verify @success="success" @error="alert('error')" :show-button="false"
-                     :type="3" :bar-size="{width: '100%',height:'40px'}"></Verify>-->
-        <Input type="text" v-model="formCustom.code"  placeholder="验证码" style="width: 55%"></Input>
-        <Button v-if="showGetCode" :disabled="!formCustom.username||!formCustom.email"
-                style="width: 40%;margin-left: 5%"
-                @click="getCode">Get Code</Button>
-        <Button v-else disabled
-                style="width: 40%;margin-left: 5%">{{codeTimer}}</Button>
-      </FormItem>
-      <FormItem prop="passwd">
-        <Input type="password" v-model="formCustom.passwd" placeholder="密码"></Input>
-      </FormItem>
-      <FormItem prop="passwd2">
-        <Input type="password" v-model="formCustom.passwd2" placeholder="确认密码"></Input>
-      </FormItem>
-      <FormItem label="验证" prop="verify">
-        <Verify @success="success" @error="alert('error')" :show-button="false"
-                :type="3" :bar-size="{width: '100%',height:'40px'}"></Verify>
-      </FormItem>
-      <FormItem>
-        <Button :disabled="!slidePass"
-                type="primary" long @click="handleSubmit('formCustom')">提交</Button>
-      </FormItem>
-    </Form>
+    <div id="loginMain">
+      <div class="loginMainPadding">
+        <h3 class="loginTitle">修改密码</h3>
+        <Form
+          ref="formCustom"
+          :model="formCustom"
+          :rules="ruleCustom"
+          label-position="top"
+          class="loginForm"
+        >
+          <FormItem label="原密码" prop="passwd">
+            <Input type="text" v-model="formCustom.passwd"></Input>
+          </FormItem>
+          <FormItem label="新密码" prop="passwd2">
+            <Input type="password" v-model="formCustom.passwd2"></Input>
+          </FormItem>
+          <FormItem label="确认密码" prop="passwd3">
+            <Input type="password" v-model="formCustom.passwd3"></Input>
+          </FormItem>
+          <FormItem label="验证" prop="verify">
+            <Verify
+              @success="success"
+              @error="alert('error')"
+              :show-button="false"
+              :type="3"
+              :bar-size="{ width: '100%', height: '36px' }"
+              explain="滑过验证"
+              class="loginVerify"
+            ></Verify>
+          </FormItem>
+          <FormItem>
+            <Button
+              :disabled="!slidePass||!samePwd"
+              type="primary"
+              long
+              @click="handleSubmit('formCustom')"
+              class="loginBtn"
+              >修改密码</Button
+            >
+          </FormItem>
+        </Form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Verify from 'vue2-verify';
-import { passwordForget, verify } from '@/api/user';
+import Verify from "vue2-verify";
+import { passwordForget, accountModify } from "@/api/user";
 
 export default {
-  name: 'Modify',
+  name: "Modify",
   data() {
     const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter your password again'));
-      } else if (value !== this.formCustom.passwd) {
-        callback(new Error('Password is not same'));
+      if (value === "") {
+        callback(new Error("Please enter your password again"));
+      } else if (value !== this.formCustom.passwd2) {
+        callback(new Error("Password is not same"));
       } else {
+        this.samePwd = true;
         callback();
       }
     };
     return {
       slidePass: false,
-      codeTimer: 60,
-      showGetCode: true,
+      samePwd:false,
       formCustom: {
-        username: '',
-        passwd: '',
-        passwd2: '',
-        code: '',
-        email: '',
+        passwd: "",
+        passwd2: "",
+        passwd3: "",
       },
       ruleCustom: {
-        username: [
-          { required: true, message: 'Name cannot be empty', trigger: 'blur' },
-        ],
         passwd: [
-          { required: true, message: 'Password cannot be empty', trigger: 'blur' },
+          {
+            required: true,
+            message: "Password cannot be empty",
+            trigger: "blur",
+          },
         ],
         passwd2: [
-          { validator: validatePass2, trigger: 'blur' },
+          {
+            required: true,
+            message: "Password cannot be empty",
+            trigger: "blur",
+          },
         ],
-        email: [
-          { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
-          { type: 'email', message: 'Incorrect email format', trigger: 'blur' },
-        ],
+        passwd3: [{ validator: validatePass2, trigger: "blur" }],
       },
+      screenWidth: document.documentElement.clientWidth,
+      screenHeight: document.documentElement.clientHeight,
+    };
+  },
+  mounted() {
+    window.onresize = () => {
+      return (() => {
+        window.fullHeight = document.documentElement.clientHeight;
+        window.fullWidth = document.documentElement.clientWidth;
+        this.screenHeight = window.fullHeight; // 高
+        this.screenWidth = window.fullWidth; // 宽
+      })();
     };
   },
   methods: {
-    async getCode() {
-      let emailValidate = false;
-      let nameValidate = false;
-      await this.$refs.formCustom.validateField('email', (err) => {
-        if (!err) {
-          emailValidate = true;
-        }
-      });
-      await this.$refs.formCustom.validateField('username', (err) => {
-        if (!err) {
-          nameValidate = true;
-        }
-      });
-      console.log(emailValidate);
-      console.log(nameValidate);
-      if (emailValidate && nameValidate) {
-        const data = {
-          username: this.formCustom.username,
-          email: this.formCustom.email,
-        };
-        passwordForget(data).then((res) => {
-          console.log(res);
-        });
-      }
-      this.codeTimer = 60;
-      this.showGetCode = false;
-
-      const timer = setInterval(() => {
-        if (this.codeTimer >= 0) {
-          this.codeTimer -= 1;
-        } else {
-          clearInterval(timer);
-          this.showGetCode = true;
-        }
-      }, 1000);
-    },
-    handleSubmit(name) {
-      console.log(name);
-      this.$refs[name].validate((valid) => {
-        console.log(valid);
-        if (valid) {
-          verify({
-            username: this.formCustom.username,
-            password: this.formCustom.passwd,
-            code: this.formCustom.code,
-            email: this.formCustom.email,
-          }).then((res) => {
-            console.log(res);
-            this.$Message.success('修改成功');
-            this.$router.push('/account/login');
-          });
-        } else {
-          this.$Message.error('Fail!');
-        }
-      });
-    },
-    handleReset(name) {
-      this.$refs[name].resetFields();
-    },
     success() {
       this.slidePass = true;
+    },
+    handleSubmit() {
+      accountModify({
+        password: this.formCustom.passwd,
+        new_password: this.formCustom.passwd2,
+      }).then((res) => {
+        console.log(res);
+        this.$Message.success("修改成功");
+        this.$router.push("/account/login");
+      }).catch((err)=>{
+        console.log(err)
+        this.$Message.error("修改失败")
+        location.reload()
+      })
     },
   },
   components: {
@@ -154,50 +149,136 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.forget{
-  width: 43%;
-  padding: 40px;
-  h2, h3 {
-    color: #333333;
-  }
-  h2{
-    font-size: 28px;
-  }
-  .title{
-    display: flex;
-    .line{
-      width:6px;
-      background:rgba(46,91,255,1);
-      border-radius:5px;
-      margin-right: 10px;
+<style lang="scss" scope>
+html,
+body,
+#main {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f0f2f5;
+
+  font-family: PingFangSC-Semibold, PingFang SC;
+}
+#login {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: #ffffff;
+  border-radius: 20px;
+  #bg {
+    // flex: 1;
+    width: 57%;
+    height: 100%;
+    background: url("../../../assets/img/背景@2x.png") no-repeat;
+    background-size: 100% 100%;
+    // float: left;
+    color: #ffffff;
+    .header {
+      position: absolute;
+      top: 4%;
+      left: 2%;
+      .logo {
+        float: left;
+        width: 36px;
+        height: 36px;
+        background: #ffffff;
+        border-radius: 10px;
+        position: relative;
+        img {
+          width: 20px;
+          height: 18px;
+          position: absolute;
+          margin: auto;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+      }
+      .companyName {
+        height: 36px;
+        line-height: 36px;
+        float: left;
+        font-size: 20px;
+        margin-left: 16px;
+      }
+    }
+    .slogan {
+      position: absolute;
+      top: 44%;
+      left: 5%;
+      .sloganCN {
+        font-size: 32px;
+        font-weight: 500;
+      }
+      .sloganEN {
+        margin-top: 5px;
+        font-size: 18px;
+      }
     }
   }
-  /deep/ .ivu-form {
-    .ivu-form-item{
-      margin-top: 20px;
-      .ivu-form-item-label {
-        color: #333333;
-        font-size: 20px;
+  #loginMain {
+    height: 100%;
+    flex: 1;
+    // padding: 120px 180px 0 180px;
+    .loginMainPadding {
+      width: 100%;
+      height: 100%;
+      padding: 8% 15% 0 15%;
+      .loginTitle {
+        width: 100%;
+        height: 56px;
+        line-height: 56px;
+        text-align: center;
+        color: #1f2676;
+        font-size: 30px;
+        letter-spacing: 4px;
       }
+      .loginForm {
+        /deep/ .ivu-input {
+          background: #fafafa;
+          border-radius: 30px;
+          border: 1px solid #e8e8e8;
+        }
+        .loginVerify {
+          width: 100%;
+          /deep/ .verify-bar-area {
+            background: #fafafa;
+            border-radius: 30px;
+            border: 1px solid #e8e8e8;
+            /deep/ .verify-msg {
+              color: #999999;
+            }
+            /deep/ .verify-left-bar,
+            .verify-move-block {
+              background: #fafafa;
+              border-radius: 30px;
+              border: 1px solid #e8e8e8;
+            }
+          }
+        }
+        .pwd .ivu-col a,
+        .pwd .ivu-col /deep/.ivu-checkbox-wrapper {
+          color: #666666 !important;
+          font-size: 8px;
+        }
+        .loginBtn {
+          width: 100%;
+          background: #2b3586;
+          color: #ffffff;
+          border-radius: 30px;
+        }
+      }
+      .register {
+        width: 100%;
+        text-align: center;
+        color: #999999;
+        font-size: 8px;
 
-      .ivu-input{
-        height: 40px;
-      }
-      /*          .ivu-btn-primary{
-                  background-color: #2E5BFF;
-                }
-                .ivu-btn-primary[disabled]{
-                  color: #c5c8ce;
-                  background-color: #f7f7f7;
-                  border-color: #dcdee2;
-                }*/
-
-      .ivu-btn{
-        height: 40px;
-      }
-      .ivu-btn-primary:hover{
-        //background-color: #57a3f3;
+        a {
+          color: #2b3586;
+        }
       }
     }
   }

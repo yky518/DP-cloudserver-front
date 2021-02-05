@@ -204,13 +204,11 @@ export default {
       page: 1,
       per_page: 10,
     }).then((res) => {
-      console.log(res);
       this.invoiceData = res.items;
     });
   },
   methods: {
     handleSubmit(name) {
-      console.log(name);
       addInvoices(this.addForm).then((res) => {
         console.log(res);
       });

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import MyLayout from '@/layout/Layout.vue';
+import helpDoc from '@/views/helpDoc/HomePage.vue';
 import { Message } from 'view-design';
 // eslint-disable-next-line import/no-cycle
 // import { getMenu } from '@/api/user';
@@ -15,6 +16,11 @@ export const constantRoutes = [
   {
     path: '/',
     redirect: '/dashboard/infos',
+  },
+  {
+    path:'/log',
+    name:'log',
+    component: () => import('@/views/result/log.vue')
   },
   {
     path: '/account',
@@ -46,6 +52,11 @@ export const constantRoutes = [
         name: 'Forget',
         component: () => import('@/views/user/components/Forget'),
       },
+      {
+        path: 'test',
+        name: 'test',
+        component: () => import('@/views/test')
+      }
     ],
 
   },
@@ -67,7 +78,7 @@ export const constantRoutes = [
   },
   {
     path: '/dashboard',
-    component: () => import('@/layout/Layout'),
+    component: MyLayout,
     children: [
       {
         path: 'infos',
@@ -96,6 +107,16 @@ export const constantRoutes = [
         name: 'Machine',
         component: () => import(/* webpackChunkName: "about" */ '../components/Machine.vue'),
       },
+      {
+        path: 'modify',
+        name: 'modify',
+        component: () => import('@/views/modify.vue'),
+      },
+      {
+        path: '/test',
+        name: 'test',
+        component: () => import('../views/test.vue')
+      },
     ],
   },
   {
@@ -109,7 +130,6 @@ export const constantRoutes = [
       },
     ],
   },
-
 ];
 
 const originalPush = VueRouter.prototype.push;
@@ -132,6 +152,8 @@ router.beforeEach((to, from, next) => {
   // 拦截指定路由
   console.log(store.state.user.name);
   if (store.state.user.name) {
+    console.log(to)
+    console.log(to.name)
     next();
   } else if (/^\/account/.test(to.path) && to.path !== '/account/modify') {
     next();

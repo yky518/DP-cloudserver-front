@@ -1,17 +1,16 @@
 <template>
   <div id="vasp">
-    <Breadcrumb>
+    <!-- <Breadcrumb>
       <BreadcrumbItem>算法</BreadcrumbItem>
       <BreadcrumbItem>Vasp</BreadcrumbItem>
-    </Breadcrumb>
+    </Breadcrumb> -->
 
     <Card class="card-panel">
       <Machine type="vasp" @set="setMachine"></Machine>
-
     </Card>
 
-    <div style="margin: 10px 0">
-      <Button type="primary" @click="parseJson" long>确定</Button>
+    <div style="width:100%;text-align:center;">
+      <Button type="primary" @click="parseJson" long style="width:200px;height:40px;background:#13227A;border-radius: 20px;display:inline-block;">确定</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">

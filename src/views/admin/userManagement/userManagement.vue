@@ -1,148 +1,383 @@
 <template>
-<div>
-  <Button @click="addModal = true">添加</Button>
-  <Button @click="multiDel">批量删除</Button>
-  <Table ref="user_table" :columns="userColumns" :data="userData"
-         @on-selection-change="multiSelect">
-    <template slot-scope="{ row, index }" slot="action">
-      <Button type="primary" size="small"
-              style="margin-right: 5px" @click="showDrawer(index)">编辑</Button>
-      <Button type="primary" size="small"
-              style="margin-right: 5px" @click="accountDel(row.bid)">删除</Button>
-    </template>
-    <template slot-scope="{ row }" slot="role">
-      {{parseRole(row.role_id)}}
-    </template>
-  </Table>
-  <Page :total="totalUser" style="text-align: center" @on-change="changePage"/>
-  <Drawer title="账号信息修改" :closable="false" v-model="ifShowDrawer">
-    <Form ref="editForm" :model="editForm" :rules="ruleEdit" :label-width="80">
-      <FormItem label="登陆账号" prop="username">
-        <Input type="text" v-model="editForm.username" disabled></Input>
-      </FormItem>
-      <FormItem label="真实姓名" prop="name">
-        <Input type="text" v-model="editForm.name" ></Input>
-      </FormItem>
-      <FormItem label="手机号" prop="phone">
-        <Input type="text" v-model="editForm.phone" ></Input>
-      </FormItem>
-      <FormItem label="邮箱" prop="email">
-        <Input type="text" v-model="editForm.email" ></Input>
-      </FormItem>
-      <FormItem label="角色" prop="role_id">
-        <Select v-model="editForm.role_id">
-          <Option v-for="item in roleData"
-                  :key="'edit' + item.name" :value="item.id">{{ item.name }}</Option>
-        </Select>
-      </FormItem>
-      <FormItem label="密码" prop="password">
-        <Input type="password" v-model="editForm.password" ></Input>
-      </FormItem>
-      <FormItem label="确认密码" prop="password2">
-        <Input type="password" v-model="editForm.password2" ></Input>
-      </FormItem>
-    </Form>
-    <Button long @click="editSubmit">确定</Button>
+  <div id="userManagement">
+    <Breadcrumb separator="-">
+      <BreadcrumbItem>用户设置</BreadcrumbItem>
+      <BreadcrumbItem>子用户管理</BreadcrumbItem>
+    </Breadcrumb>
+    <Button @click="addModal = true" type="primary" shape="circle" style="margin-right:15px;background:#13227A;color:#FFFFFF;">添加子用户</Button>
+    <Table
+      ref="userTable"
+      :columns="userColumns"
+      :data="userData"
+      @on-selection-change="userIsSelect"
+      style="border-top:1px solid #F4F4F4;margin:12px 0;"
+      :height="(860/1080)*screenHeight"
+    >
+      <template slot-scope="{ row, index }" slot="action">
+        <Button
+          type="text"
+          size="large"
+          style="margin-right: 5px;color: #13227a;"
+          @click="showDrawer(index)"
+          :disabled="$refs.userTable.objData[index]._isDisabled"
+          ><img
+              src="../../../assets/img/bianjiIcon.png"
+              alt=""
+              style="width: 18px; height: 18px"
+            /></Button
+        >
+        <!-- @click="accountDel(row.bid)" -->
+        <Button
+          type="text"
+          size="large"
+          style="margin-right: 5px;color: #13227a;"
+          @click="deleteUser(row, index)"
+          :disabled="$refs.userTable.objData[index]._isDisabled"
+          ><img
+              src="../../../assets/img/shanchuIcon.png"
+              alt=""
+              style="width: 18px; height: 18px"
+            /></Button
+        >
+      </template>
+      <template slot-scope="{ row }" slot="role">
+        {{ parseRole(row.role_id) }}
+      </template>
+      <div slot="footer">
+        <div class="footer">
+          <Checkbox
+              style="display: inline-block"
+              @on-change="selectAllUser"
+              v-model="userIsAllSelectd"
+              >全选</Checkbox
+            >
+          <Button
+            class="userBtn setAuthority"
+            :disabled="!userIsSelectd"
+            @click.native="ifShowAuthModal = true;">批量设置权限</Button>
+          <Button
+            class="userBtn Del"
+            :disabled="!userIsSelectd"
+            @click.native="deleteAllUser()">批量删除</Button>
+        </div>
+      </div>
+    </Table>
+    <Page
+      :total="totalUser"
+      style="text-align: center"
+      @on-change="changePage"
+    />
+    <Modal v-model="ifShowModal" id="edit">
+      <Menu @on-select="selectMenu" active-name="1" class="editMenu">
+        <MenuItem name="1">信息设置</MenuItem>
+        <MenuItem name="2">权限设置</MenuItem>
+        <MenuItem name="3">隐私设置</MenuItem>
+      </Menu>
+      <Form v-if="formList[0]" label-position="top" ref="editForm" class="editForm">
+        <FormItem label="用户名" prop="username">
+          <Input type="text" v-model="editForm.username"></Input>
+        </FormItem>
+        <FormItem label="用户全名(不可修改)" prop="name">
+          <Input type="text" v-model="editForm.name"></Input>
+        </FormItem>
+        <FormItem label="费用上限" prop="costLimit">
+          <Input type="text" v-model="editForm.costLimit"></Input>
+        </FormItem>
+        <FormItem style="text-align: center">
+          <Button>确定</Button>
+        </FormItem>
+      </Form>
 
-  </Drawer>
-  <Modal
-      v-model="addModal"
-      @on-ok="addSubmit()"
-      title="添加">
-    <!--  :rules="ruleCustom"-->
-    <Form ref="addForm" :model="addForm" :rules="ruleAdd" :label-width="80">
-      <FormItem label="登陆账号" prop="username">
-        <Input type="text" v-model="addForm.username" ></Input>
-        @{{$store.state.user.name}}
-      </FormItem>
-      <FormItem label="真实姓名" prop="name">
-        <Input type="text" v-model="addForm.name" ></Input>
-      </FormItem>
-      、<FormItem label="手机号" prop="phone">
-      <Input type="text" v-model="addForm.phone" ></Input>
-    </FormItem>
-      <FormItem label="邮箱" prop="email">
-        <Input type="text" v-model="addForm.email" ></Input>
-      </FormItem>
-      <FormItem label="角色" prop="role_id">
-        <Select v-model="addForm.role_id">
-          <Option v-for="item in roleData"
-                  :key="'add' + item.name" :value="item.id">{{ item.name }}</Option>
-        </Select>
-      </FormItem>
-      <FormItem label="密码" prop="password">
-        <Input type="password" v-model="addForm.password" ></Input>
-      </FormItem>
-      <FormItem label="确认密码" prop="password2">
-        <Input type="password" v-model="addForm.password2" ></Input>
-      </FormItem>
-    </Form>
-  </Modal>
-</div>
+      <Form v-if="formList[1]" label-position="top" class="editForm">
+        <FormItem label="API权限" prop="apiPermission">
+          <CheckboxGroup v-model="apiPermissions">
+            <Row>
+              <Col span="8">
+                <Checkbox label="account">账户</Checkbox>
+              </Col>
+              <Col span="8">
+                <Checkbox label="finance">财务</Checkbox>
+              </Col>
+            </Row>
+          </CheckboxGroup>
+        </FormItem>
+
+        <FormItem label="菜单权限" prop="menuPermission">
+          <CheckboxGroup v-model="menuPermissions" size="large">
+            <Row>
+              <Col span="8">
+                <Checkbox label="create" size="large">开机</Checkbox></Col
+              >
+              <Col span="8"><Checkbox label="cp2k">Cp2k</Checkbox></Col>
+              <Col span="8"><Checkbox label="lammps">Lammps</Checkbox></Col>
+            </Row>
+            <Row>
+              <Col span="8"><Checkbox label="iter">Iter</Checkbox></Col>
+              <Col span="8"><Checkbox label="dpkit">Dpkit</Checkbox></Col>
+              <Col span="8"><Checkbox label="vasp">Vasp</Checkbox></Col>
+            </Row>
+            <Row>
+              <Col span="8"><Checkbox label="user">用户管理</Checkbox></Col>
+            </Row>
+          </CheckboxGroup>
+        </FormItem>
+        <FormItem style="text-align: center">
+          <Button>确定</Button>
+        </FormItem>
+      </Form>
+      <Form v-if="formList[2]" label-position="top" class="editForm">
+        <FormItem label="邮箱" prop="email">
+          <Input type="text" v-model="editForm.email"></Input>
+        </FormItem>
+        <FormItem label="旧密码" prop="password">
+          <Input type="password" v-model="editForm.password"></Input>
+        </FormItem>
+        <FormItem style="text-align: center">
+          <Button>去邮箱修改</Button>
+        </FormItem>
+      </Form>
+      <p slot="footer"></p>
+    </Modal>
+
+    <Modal v-model="addModal" width="550" class="addUser">
+      <Carousel v-model="value1" dots="none" arrow="never" v-if="addModal">
+         <CarouselItem>
+          <Form
+            ref="addForm"
+            :model="addForm"
+            :rules="ruleAdd"
+            label-position="top"
+            style="padding:20px;"
+          >
+            <p slot="header">
+              <div style="width:100%;text-align:center;margin:5px 0 21px 0;height:33px;line-height:33px;font-size:20px;">添加子用户</div>
+            </p>
+            <Row :gutter="48">
+              <Col span="12">
+                <FormItem label="用户名" prop="username">
+                  <Input type="text" v-model="addForm.username"></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="用户全名(不可修改)" prop="name">
+                  <Input type="text" v-model="addForm.name"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row :gutter="48">
+              <Col span="12">
+                <FormItem label="邮箱" prop="email">
+                  <Input type="text" v-model="addForm.email"></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="费用上限" prop="phone">
+                  <Input type="text" v-model="addForm.limit"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row :gutter="48">
+              <Col span="12">
+                <FormItem label="密码" prop="password">
+                  <Input type="password" v-model="addForm.password"></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="确认密码" prop="password2">
+                  <Input type="password" v-model="addForm.password2"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row :gutter="48">
+              <Col span="12">
+                <FormItem label="手机号" prop="phone">
+                  <Input type="text" v-model="addForm.phone"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+       </CarouselItem>
+       <CarouselItem>
+          <Form label-position="top" style="padding:20px;padding-left:60px;">
+            <p slot="header">
+              <div style="width:100%;text-align:center;margin:5px 0 21px 0;height:33px;line-height:33px;font-size:20px;">添加子用户</div>
+            </p>
+            <FormItem label="API权限" prop="apiPermission">
+              <CheckboxGroup v-model="apiPermissions">
+                <Row>
+                  <Col span="8">
+                    <Checkbox label="account">账户</Checkbox>
+                  </Col>
+                  <Col span="8">
+                    <Checkbox label="finance">财务</Checkbox>
+                  </Col>
+                </Row>
+              </CheckboxGroup>
+            </FormItem>
+
+            <FormItem label="菜单权限" prop="menuPermission">
+              <CheckboxGroup v-model="menuPermissions" size="large">
+                <Row>
+                  <Col span="8">
+                    <Checkbox label="create" size="large">开机</Checkbox></Col
+                  >
+                  <Col span="8"><Checkbox label="cp2k">Cp2k</Checkbox></Col>
+                  <Col span="8"><Checkbox label="lammps">Lammps</Checkbox></Col>
+                </Row>
+                <Row>
+                  <Col span="8"><Checkbox label="iter">Iter</Checkbox></Col>
+                  <Col span="8"><Checkbox label="dpkit">Dpkit</Checkbox></Col>
+                  <Col span="8"><Checkbox label="vasp">Vasp</Checkbox></Col>
+                </Row>
+                <Row>
+                  <Col span="8"><Checkbox label="user">用户管理</Checkbox></Col>
+                </Row>
+              </CheckboxGroup>
+            </FormItem>
+          </Form>
+        </CarouselItem>
+      </Carousel>
+      <div slot="footer" style="text-align:center;">
+        <Button
+          type="primary"
+          size="large"
+          @click="addSubmit()"
+          style="width: 310px;height: 40px;background: #13227A;border-radius: 11px;display:inline-block;"
+          >{{value1 == 0?"下一步":"提交"}}</Button
+        >
+      </div>
+    </Modal>
+
+    <Modal
+      v-model="ifShowAuthModal"
+      title="批量设置权限"
+      class="setAuth"
+      >
+      <Form label-position="top">
+        <FormItem label="API权限" prop="apiPermission">
+          <CheckboxGroup v-model="apiPermissions">
+            <Row>
+              <Col span="8">
+                <Checkbox label="account">账户</Checkbox>
+              </Col>
+              <Col span="8">
+                <Checkbox label="finance">财务</Checkbox>
+              </Col>
+            </Row>
+          </CheckboxGroup>
+        </FormItem>
+
+        <FormItem label="菜单权限" prop="menuPermission">
+          <CheckboxGroup v-model="menuPermissions" size="large">
+            <Row>
+              <Col span="8">
+                <Checkbox label="create" size="large">开机</Checkbox></Col
+              >
+              <Col span="8"><Checkbox label="cp2k">Cp2k</Checkbox></Col>
+              <Col span="8"><Checkbox label="lammps">Lammps</Checkbox></Col>
+            </Row>
+            <Row>
+              <Col span="8"><Checkbox label="iter">Iter</Checkbox></Col>
+              <!--          <Checkbox label="lcurve">Lcurve</Checkbox>-->
+              <Col span="8"><Checkbox label="dpkit">Dpkit</Checkbox></Col>
+              <Col span="8"><Checkbox label="vasp">Vasp</Checkbox></Col>
+            </Row>
+            <Row>
+              <Col span="8"><Checkbox label="user">用户管理</Checkbox></Col>
+            </Row>
+          </CheckboxGroup>
+        </FormItem>
+        <FormItem style="text-align: center">
+          <Button>确定</Button>
+        </FormItem>
+      </Form>
+      <div slot="footer"></div>
+    </Modal>
+  </div>
 </template>
 
 <script>
 import {
-  accountList, accountModify, roleList, subAdd, accountDel,
-} from '@/api/user';
+  accountList,
+  accountModify,
+  roleList,
+  subAdd,
+  accountDel,
+} from "@/api/user";
 
 export default {
-  name: 'UserManagement',
+  name: "UserManagement",
   data() {
     const validatePassAdd = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter your password again'));
+      if (value === "") {
+        callback(new Error("Please enter your password again"));
       } else if (value !== this.addForm.password) {
-        callback(new Error('Password is not same'));
+        callback(new Error("Password is not same"));
       } else {
         callback();
       }
     };
     const validatePassEdit = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter your password again'));
+      if (value === "") {
+        callback(new Error("Please enter your password again"));
       } else if (value !== this.editForm.password) {
-        callback(new Error('Password is not same'));
+        callback(new Error("Password is not same"));
       } else {
         callback();
       }
     };
     return {
-      ifShowDrawer: false,
+      
+      screenWidth: document.documentElement.clientWidth,
+      screenHeight: document.documentElement.clientHeight,
+      value1: 0,
+      userIsSelectd: false,
+      userIsAllSelectd: false,
+      userChosenNum: 0,
+      ifShowModal: false,
+      formList: [true, false, false],
+      ifShowAuthModal: false,
+      // ifShowDrawer: false,
       selectBids: [],
       userColumns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center',
-        }, {
-          title: 'BID',
-          key: 'bid',
-        }, {
-          title: '昵称',
-          key: 'username',
-        }, {
-          title: '用户名',
-          key: 'name',
+          align: "center",
+        },
+        // {
+        //   title: "BID",
+        //   key: "bid",
+        // },
+        {
+          title: "用户名",
+          key: "username",
         },
         {
-          title: '邮箱',
-          key: 'email',
+          title: "隶属管理员",
+          key: "organization_name",
         },
         {
-          title: '手机号',
-          key: 'phone',
+          title: "全名",
+          key: "name",
         },
         {
-          title: '角色',
-          // key: 'role_id',
-          slot: 'role',
+          title: "邮箱",
+          key: "email",
         },
         {
-          title: 'Action',
-          slot: 'action',
+          title: "电话",
+          key: "phone",
+        },
+        {
+          title: "费用上限",
+          key: "",
+        },
+        {
+          title: "操作",
+          slot: "action",
           width: 150,
-          align: 'center',
+          align: "center",
         },
       ],
       userData: [],
@@ -150,56 +385,81 @@ export default {
       modal: false,
       addModal: false,
       addForm: {
-        username: '',
-        name: '',
-        phone: '',
-        email: '',
-        password: '',
-        password2: '',
-        role_id: '',
+        username: "",
+        name: "",
+        phone: "",
+        email: "",
+        password: "",
+        password2: "",
+        role_id: "",
       },
       editForm: {
-        bid: '',
-        username: '',
-        name: '',
-        phone: '',
-        email: '',
-        role_id: '',
+        bid: "",
+        username: "",
+        name: "",
+        phone: "",
+        email: "",
+        role_id: "",
       },
-      roleData: [],
       ruleAdd: {
         username: [
-          { required: true, message: 'The username cannot be empty', trigger: 'blur' },
+          {
+            required: true,
+            message: "The username cannot be empty",
+            trigger: "blur",
+          },
         ],
         name: [
-          { required: true, message: 'The name cannot be empty', trigger: 'blur' },
+          {
+            required: true,
+            message: "The name cannot be empty",
+            trigger: "blur",
+          },
         ],
         password: [
-          { required: true, message: 'The password cannot be empty', trigger: 'blur' },
+          {
+            required: true,
+            message: "The password cannot be empty",
+            trigger: "blur",
+          },
         ],
-        password2: [
-          { validator: validatePassAdd, trigger: 'blur' },
-        ],
+        password2: [{ validator: validatePassAdd, trigger: "blur" }],
         email: [
-          { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
-          { type: 'email', message: 'Incorrect email format', trigger: 'blur' },
+          {
+            required: true,
+            message: "Mailbox cannot be empty",
+            trigger: "blur",
+          },
+          { type: "email", message: "Incorrect email format", trigger: "blur" },
         ],
       },
       ruleEdit: {
         username: [
-          { required: true, message: 'The username cannot be empty', trigger: 'blur' },
+          {
+            required: true,
+            message: "The username cannot be empty",
+            trigger: "blur",
+          },
         ],
         name: [
-          { required: true, message: 'The name cannot be empty', trigger: 'blur' },
+          {
+            required: true,
+            message: "The name cannot be empty",
+            trigger: "blur",
+          },
         ],
-        passwd2: [
-          { validator: validatePassEdit, trigger: 'blur' },
-        ],
+        passwd2: [{ validator: validatePassEdit, trigger: "blur" }],
         email: [
-          { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
-          { type: 'email', message: 'Incorrect email format', trigger: 'blur' },
+          {
+            required: true,
+            message: "Mailbox cannot be empty",
+            trigger: "blur",
+          },
+          { type: "email", message: "Incorrect email format", trigger: "blur" },
         ],
       },
+      apiPermissions: [],
+      menuPermissions: [],
     };
   },
   created() {
@@ -207,35 +467,85 @@ export default {
       page: 1,
       per_page: 10,
     }).then((res) => {
-      console.log(res);
       this.userData = res.items;
     });
-
-    roleList({
-      page: 1,
-      per_page: 10,
-    }).then((res) => {
-      console.log(res);
-      this.roleData = res.items;
-    });
+    window.onresize = () => {
+      return (() => {
+        window.fullHeight = document.documentElement.clientHeight;
+        window.fullWidth = document.documentElement.clientWidth;
+        this.screenHeight = window.fullHeight; // 高
+        this.screenWidth = window.fullWidth; // 宽
+      })();
+    };
   },
   methods: {
+    deleteUser(row, index) {
+      //删除
+      if (confirm("确认要删除吗?")) {
+        if (this.$refs.userTable.objData[index]._isChecked)
+          this.userChosenNum--;
+        this.$refs.userTable.objData[index]._isDisabled = true;
+        this.$refs.userTable.objData[index]._isChecked = false;
+        this.accountDel(row.bid);
+      }
+    },
+    deleteAllUser() {
+      //删除选中
+      if (confirm("确认要删除吗?")) {
+        for (let item in this.$refs.userTable.objData) {
+          if (this.$refs.userTable.objData[item]._isChecked) {
+            this.$refs.userTable.objData[item]._isChecked = false;
+            this.$refs.userTable.objData[item]._isDisabled = true;
+            this.accountDel(this.$refs.userTable.objData[item].bid);
+          }
+        }
+        this.userChosenNum = 0;
+        this.userIsSelectd = false;
+        this.userIsAllSelectd = false;
+      }
+    },
+    selectAllUser(state) {
+      //全选
+      let num = 0;
+      for (let item in this.$refs.userTable.objData) {
+        if (!this.$refs.userTable.objData[item]._isDisabled) {
+          this.$refs.userTable.objData[item]._isChecked = state;
+          num++;
+        }
+      }
+      this.userIsSelectd = num != 0 ? state : 0;
+      this.userChosenNum = state ? num : 0;
+    },
+    userIsSelect(selection) {
+      //单选时操作
+      let item,
+        num = 0;
+      for (item in this.$refs.userTable.objData) {
+        if (!this.$refs.userTable.objData[item]._isDisabled) num++;
+      }
+      this.userChosenNum = selection.length;
+      this.userIsSelectd = selection.length ? true : false;
+      this.userIsAllSelectd = selection.length == num ? true : false;
+    },
+
+    selectMenu(name) {
+      this.formList = [false, false, false];
+      this.formList[name - 1] = true;
+    },
     parseRole(roleId) {
       for (const item of this.roleData) {
         if (roleId === item.id) {
           return item.name;
         }
       }
-      return 'null';
+      return "null";
     },
     changePage(page) {
-      console.log(page);
       this.userData = [];
       roleList({
         page,
         per_page: 10,
       }).then((res) => {
-        console.log(res);
         for (const items of res.items) {
           this.userData.push(items);
         }
@@ -244,26 +554,28 @@ export default {
     multiSelect(selection) {
       const bids = selection.map((value) => value.bid);
       this.selectBids = bids;
+      this.multiselect = selection.length == 0 ? true : false;
     },
     showDrawer(index) {
       this.ifShowDrawer = true;
-      this.$set(this.editForm, 'bid', this.userData[index].bid);
-      this.$set(this.editForm, 'name', this.userData[index].name);
-      this.$set(this.editForm, 'password', this.userData[index].username);
-      this.$set(this.editForm, 'phone', this.userData[index].phone);
-      this.$set(this.editForm, 'email', this.userData[index].email);
-      this.$set(this.editForm, 'role_id', this.userData[index].role_id);
-
-      console.log(this.editForm);
+      this.ifShowModal = true;
+      this.$set(this.editForm, "bid", this.userData[index].bid);
+      this.$set(this.editForm, "name", this.userData[index].name);
+      this.$set(this.editForm, "password", this.userData[index].username);
+      this.$set(this.editForm, "phone", this.userData[index].phone);
+      this.$set(this.editForm, "email", this.userData[index].email);
+      this.$set(this.editForm, "role_id", this.userData[index].role_id);
     },
     showModal(index) {
-      console.log(index);
       this.addForm = this.userData[index];
       this.addModal = true;
     },
     addSubmit() {
+      if (this.value1 == 0) {
+        this.value1 = 1;
+        return;
+      }
       this.$refs.addForm.validate((valid) => {
-        console.log(valid);
         if (valid) {
           const params = {
             username: `${this.addForm.username}@${this.$store.state.user.name}`,
@@ -274,26 +586,23 @@ export default {
             role_id: this.addForm.role_id,
           };
           subAdd(params).then((res) => {
-            console.log(res);
-            this.$Message.success('添加成功');
+            this.$Message.success("添加成功");
             window.location.reload();
           });
         } else {
-          this.$Message.error('Fail!');
+          this.$Message.error("Fail!");
         }
       });
     },
     editSubmit() {
       this.$refs.editForm.validate((valid) => {
-        console.log(valid);
         if (valid) {
           accountModify(this.editForm).then((res) => {
-            console.log(res);
-            this.$Message.success('修改成功');
+            this.$Message.success("修改成功");
             window.location.reload();
           });
         } else {
-          this.$Message.error('Fail!');
+          this.$Message.error("Fail!");
         }
       });
     },
@@ -301,26 +610,119 @@ export default {
       accountDel({
         bids: [bid],
       }).then((res) => {
-        console.log(res);
-        this.$Message.success('账号删除成功');
+        this.$Message.success("账号删除成功");
         window.location.reload();
       });
     },
-    multiDel() {
-      if (this.selectBids.length > 0) {
-        accountDel({
-          bids: this.selectBids,
-        }).then((res) => {
-          console.log(res);
-          this.$Message.success('批量删除成功');
-          window.location.reload();
-        });
-      }
+    getUserUrl(index, name) {
+      let url = name + "Icon";
+      if (this.$refs.userTable.objData[index]._isDisabled) url += "Del";
+      url += ".png";
+      return require("../../../assets/img/" + url);
     },
   },
 };
 </script>
 
-<style scoped>
-
+<style lang="scss">
+#userManagement {
+  margin: 20px;
+  /deep/ .ivu-breadcrumb {
+    color: #333333;
+    margin-left: 5px;
+    span:last-child {
+      color: #13227a;
+      font-weight: 700;
+    }
+  }
+  .ivu-table .disabled td {
+    color: #d8d8d8 !important;
+    position: relative;
+    .ivu-table-cell div {
+      color: #d8d8d8 !important;
+    }
+  }
+  .deleteIcon {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    float: right;
+    right: 0;
+    top: 0;
+  }
+  .footer {
+    position: relative;
+    .userBtn {
+      float: right;
+      border-radius: 20px;
+      margin-left: 24px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .setAuthority {
+      right: 20px;
+    }
+    .Del {
+      right: 150px;
+    }
+    .ivu-checkbox-wrapper {
+      margin-left: 9px;
+    }
+  }
+  .setAuth {
+    /deep/ .ivu-modal-body {
+      overflow: hidden;
+    }
+    /deep/ .ivu-form {
+      float: left;
+      width: 520px !important;
+      margin: 10px 0 0 8px;
+    }
+    /deep/ .ivu-btn {
+      display: inline-block;
+      width: 280px;
+      height: 40px;
+      background: #13227a;
+      border-radius: 20px;
+      color: #ffffff;
+    }
+  }
+  .addUser {
+    /deep/ .ivu-modal-body {
+      padding: 0;
+    }
+  }
+  
+}
+#edit {
+    /deep/ .ivu-modal-body {
+      overflow: hidden;
+    }
+    /deep/ .ivu-modal-footer{
+      border: 0;
+      padding: 0;
+    }
+    .editMenu {
+      float: left;
+      width: 120px !important;
+      height: 310px;
+      // height: 310px;
+      margin-right: 20px;
+    }
+    .editForm {
+      float: left;
+    }
+    /deep/ .ivu-btn {
+      display: inline-block;
+      width: 280px;
+      height: 40px;
+      background: #13227a;
+      border-radius: 20px;
+      color: #ffffff;
+    }
+  }
+  /deep/ .ivu-btn-text:hover {
+    background-color: #ebf7ff;
+  }
 </style>

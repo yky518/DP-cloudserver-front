@@ -28,7 +28,7 @@ export function getUserSummary() {
   });
 }
 
-export function getJodDetails(params) {
+export function getJobDetails(params) {
   return request({
     url: 'data/get_job_details',
     method: 'get',

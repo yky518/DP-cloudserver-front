@@ -73,9 +73,7 @@ export default {
   },
   methods: {
     handleSubmit(name) {
-      console.log(name);
       this.$refs[name].validate((valid) => {
-        console.log(valid);
         if (valid) {
           accountModify({
             username: this.formCustom.username,

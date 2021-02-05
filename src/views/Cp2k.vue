@@ -1,16 +1,16 @@
 <template>
   <div id="cp2k">
-    <Breadcrumb>
+    <!-- <Breadcrumb>
       <BreadcrumbItem>算法</BreadcrumbItem>
       <BreadcrumbItem>Cp2k</BreadcrumbItem>
-    </Breadcrumb>
+    </Breadcrumb> -->
 
     <Card class="card-panel">
       <Machine type="cp2k" @set="setMachine"></Machine>
     </Card>
 
-    <div style="margin: 10px 0">
-      <Button type="primary" @click="parseJson" long>确定</Button>
+    <div style="margin: 10px 0;width:100%;text-align: center;">
+      <Button type="primary" @click="parseJson" style="width:200px;height:40px;background:#13227A;border-radius: 20px;display: inline-block;">确定</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">
@@ -86,6 +86,18 @@ export default {
   },
   created() {
 
+  },
+  mounted() {
+    let task = {
+      task_id:'2234',
+      task_name:'DPtech_test_indicate',
+      task_type:'indicate',
+      GPU:'T4*1',
+      CPU:'16',
+      Memory:'62GB',
+      subtask:'30'
+    }
+    // this.$parent.changeState(true,task)
   },
   methods: {
     setMachine(machine) {

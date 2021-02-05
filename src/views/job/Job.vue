@@ -201,7 +201,7 @@
 
 import Iter from '@/views/job/components/Iter.vue';
 import { getStsToken } from '@/api/jobs';
-import { getJodDetails, updateTaskOperation } from '@/api/info';
+import { getJobDetails, updateTaskOperation } from '@/api/info';
 
 const OSS = require('ali-oss');
 const FileSaver = require('file-saver');
@@ -259,13 +259,11 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.id);
     const params = {
       job_id: this.$route.params.id,
       page: 1,
     };
-    getJodDetails(params).then((res) => {
-      console.log(res.data);
+    getJobDetails(params).then((res) => {
       this.data = res.data;
       this.data.cost = this.data.cost.toFixed(2);
       if (this.data.job_type === 'dpgen') {
@@ -289,7 +287,6 @@ export default {
             ip: detail.ip,
           });
         }
-        console.log(this.taskTable);
       } else {
         alert(`当前任务id是${this.$route.params.id} 等待数据加载`);
       }
@@ -305,23 +302,20 @@ export default {
         operation: 'terminated',
       };
       updateTaskOperation(data).then((res) => {
-        console.log(res);
         this.$Message.success('任务将在30秒后停止');
       }).catch((err) => {
         console.log(err);
       });
     },
     toFtp(ip) {
-      console.log(ip);
       window.open(`ftp://${ip}`);
     },
     changePage(page) {
-      console.log(page);
       const params = {
         job_id: this.$route.params.id,
         page,
       };
-      getJodDetails(params).then((res) => {
+      getJobDetails(params).then((res) => {
         if (this.data.root_job_id) {
           this.details = res.details;
           this.taskTable = [];
@@ -338,7 +332,6 @@ export default {
               ip: detail.ip,
             });
           }
-          console.log(this.taskTable);
         } else {
           alert(`当前任务id是${this.$route.params.id} 等待数据加载`);
         }
@@ -347,8 +340,8 @@ export default {
       });
     },
     download(row) {
-      console.log(row);
       if (row.result) {
+        console.log(row.result)
         getStsToken().then((res) => {
           const result = res;
           const client = new OSS({
@@ -360,7 +353,8 @@ export default {
 
           });
           const url = client.signatureUrl(row.result, { expires: 600 });
-          this.downloadFile(url);
+          console.log(url)
+          // this.downloadFile(url);
           // this.downloadFile(url);
           // this.downloadFile(url);
         }).catch((err) => {
@@ -441,7 +435,7 @@ export default {
         page: this.page,
         status,
       };
-      getJodDetails(params).then((res) => {
+      getJobDetails(params).then((res) => {
         if (this.data.root_job_id) {
           this.details = res.details;
           this.taskTable = [];

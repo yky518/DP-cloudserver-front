@@ -1,11 +1,11 @@
 <template>
   <div id="dpkit">
-    <Breadcrumb>
+    <!-- <Breadcrumb>
       <BreadcrumbItem>算法</BreadcrumbItem>
       <BreadcrumbItem>DeePMD-kit
         <Icon type="ios-help-circle" @click="showModal = true"/>
       </BreadcrumbItem>
-    </Breadcrumb>
+    </Breadcrumb> -->
     <Modal title="CloudServer：DeepMD-Kit使用文档"
         v-model="showModal" :footer-hide="true">
       <div style="margin: 10px">
@@ -292,8 +292,8 @@
 
       </Form>
     </Card>
-    <div style="margin: 10px 0">
-      <Button type="primary" @click="parseJson" long>确定</Button>
+    <div style="margin: 10px 0;text-align: center;width:100%">
+      <Button type="primary" @click="parseJson" long style="width:200px;height:40px;background:#13227A;border-radius: 20px;display:inline-block;">确定</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">

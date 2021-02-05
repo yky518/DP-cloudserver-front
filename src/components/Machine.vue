@@ -141,12 +141,10 @@ export default {
   },
   created() {
     getInstanceType().then((res) => {
-      console.log(res);
       this.gpu_list = res.data.gpu;
       this.cpu_list = res.data.v_cpu;
       this.memory_list = res.data.memory;
       this.image_list = res.data.image_name;
-      console.log(this.gpu_list);
     }).catch((err) => {
       console.log(err);
     });
@@ -177,7 +175,6 @@ export default {
         mem_limit: this.machine.resources.mem_limit,
       };
       getBestPrice(params).then((res) => {
-        // console.log(res);
         if (res.length) {
           const data = res[0];
           this.$set(this.machine.resources, 'type', data.instance_type);
@@ -195,7 +192,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-
-</style>

@@ -1,6 +1,6 @@
 <template>
   <div id="machine">
-    <Breadcrumb>
+    <Breadcrumb separator="-">
       <BreadcrumbItem>算法</BreadcrumbItem>
       <BreadcrumbItem>开机</BreadcrumbItem>
     </Breadcrumb>
@@ -100,7 +100,6 @@ export default {
         },
         machine,
       };
-      console.log(data);
       insertJob(data)
         .then((res) => {
           if (res) {
@@ -118,7 +117,6 @@ export default {
       location.reload();
     },
     toTask(data) {
-      console.log(data);
       this.$router.push(`/task/${data.id}`);
     },
   },
@@ -127,11 +125,11 @@ export default {
 
 <style scoped lang="scss">
 #machine{
+  margin: 20px;
   /deep/ .ivu-breadcrumb{
     color: #333333;
-    font-size: 20px;
     span:last-child{
-      color: #2E5BFF;
+      color: #13227A;
       font-weight: 700;
     }
   }

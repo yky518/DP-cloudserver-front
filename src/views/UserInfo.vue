@@ -162,12 +162,10 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.name);
     this.getData();
   },
   methods: {
     toJob(data) {
-      console.log(data);
       this.$router.push(`/user/job/${data.job_id}`);
     },
     /*    parseRate(index){
@@ -175,7 +173,6 @@ export default {
       return this.details[index].finished_task/this.details[index].all_task
     }, */
     changePage(page) {
-      console.log(page);
       this.page = page;
       this.jobTable = [];
       // eslint-disable-next-line no-plusplus
@@ -199,7 +196,6 @@ export default {
         operation: 'terminated',
       };
       updateTaskOperation(data).then((res) => {
-        console.log(res);
         this.$Modal.success({
           title: '停止成功',
           content: '机器将在30秒后关闭',
@@ -212,7 +208,6 @@ export default {
       });
     },
     changeMachinePage(page) {
-      console.log(page);
       this.machinePage = page;
       this.machineTable = [];
       // eslint-disable-next-line no-plusplus
@@ -222,7 +217,6 @@ export default {
     },
     getData() {
       getUserDetails().then((data) => {
-        console.log(data);
         this.data = data.data;
         this.details = data.details;
         this.all_job = data.details.length;
@@ -338,7 +332,6 @@ export default {
       });
 
       getAliveMachine().then((res) => {
-        console.log(res);
         this.machineData = res.alive_machine;
         this.all_machine = this.machineData.length;
         // eslint-disable-next-line no-plusplus
@@ -351,7 +344,6 @@ export default {
       window.location.reload();
     },
     parseTime(time) {
-      console.log(time);
       let timeString = '';
       if (Math.floor(time / 86400) > 0) {
         timeString += `${Math.floor(time / 86400)}天`;

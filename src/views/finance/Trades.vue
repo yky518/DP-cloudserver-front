@@ -52,7 +52,6 @@ export default {
       page: 1,
       per_page: 10,
     }).then((res) => {
-      console.log(res);
       this.tradesData = res;
     });
     /* this.tradesData = [

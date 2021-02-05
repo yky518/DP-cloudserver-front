@@ -116,7 +116,6 @@ export default {
   },
   methods: {
     drawLine() {
-      console.log(this.lcurve_data);
       // eslint-disable-next-line guard-for-in
       for (const i in this.lcurve_data) {
         const chartname = `chart_${i}`;
