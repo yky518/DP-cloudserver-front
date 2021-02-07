@@ -8,7 +8,7 @@ import App from './App.vue';
 import router, { setMenu } from './router';
 import store from './store';
 import 'view-design/dist/styles/iview.css';
-
+import i18n from './assets/languages/i18n.js'
 import './utils/drog'
 if (localStorage.getItem('name')) {
   console.log(store.state.routes.routes);
@@ -45,5 +45,6 @@ console.log(router)
 new Vue({
   router,
   store,
+  i18n,
   render: (h) => h(App),
 }).$mount('#app');
