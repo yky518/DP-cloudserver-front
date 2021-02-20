@@ -15,7 +15,6 @@ if (localStorage.getItem('name')) {
   const menus = store.state.routes.routes;
   const tmpRouters = [];
   let n = 0;
-  console.log(menus)
   for (const menu of menus) {
     const tmp = parseRouter(asyncRouters, menu);
     if (tmp) {
@@ -28,20 +27,18 @@ if (localStorage.getItem('name')) {
         });
         n += 1;
       }
-      console.log(tmp)
       tmpRouters.push(tmp);
     }
   }
-  console.log(tmpRouters);
   setMenu(tmpRouters);
 }
+if(!localStorage.getItem('lang'))
+  localStorage.setItem('lang','zh')
 
 Vue.prototype.$echarts = echarts;
 
 Vue.use(ViewUI);
 Vue.config.productionTip = false;
-console.log("router")
-console.log(router)
 new Vue({
   router,
   store,

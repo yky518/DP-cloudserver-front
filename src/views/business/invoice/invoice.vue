@@ -1,6 +1,6 @@
 <template>
   <div id="invoice">
-    <div class="invoice_tip">如有开票需求，请与您的销售人员联系。</div>
+    <div class="invoice_tip">{{$t("index.Invoice.如有开票需求请与您的销售人员联系")}}</div>
   </div>
 </template>
 

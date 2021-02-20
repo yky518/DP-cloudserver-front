@@ -1,20 +1,20 @@
 <template>
   <div id="withdraw">
     <div class="totleAmount">
-      <span class="totleAmount_title">可提现总金额为：</span>
+      <span class="totleAmount_title">{{i18n.可提现总金额为}}</span>
       <span class="totleAmount_num">¥8000.00</span>
       <Tooltip
         theme="light"
         placement="right"
-        content="账户可提现金额=现金余额-欠票金额"
+        :content="i18n.账户可提现金额现金余额欠票金额"
         class="totleAmount_tooltip"
       >
         <img src="../../../assets/img/wenti_icon@2x.png" alt="" />
       </Tooltip>
     </div>
     <div class="tableTitle">
-      请从以下充值订单中选择进行提现：<span style="color: #13227a"
-        >（充值金额先充值先使用，已消费使用金额不可通过充值订单提现）</span
+      {{i18n.请从以下充值订单中选择进行提现}}<span style="color: #13227a"
+        >{{i18n.充值金额先充值先使用已消费使用金额不可通过充值订单提现}}</span
       >
     </div>
     <Table
@@ -24,14 +24,14 @@
       :height="(480 / 1080) * screenHeight"
     >
       <template slot="action" slot-scope="{ row, index }">
-        <div style="color: #13227a" @click="withdraw(row, index)">提现</div>
+        <div style="color: #13227a" @click="withdraw(row, index)">{{i18n.提现}}</div>
       </template>
     </Table>
     <Page class="orderPage" :current="page"></Page>
 
     <Modal class="withdrawModal" v-model="isShow">
       <template slot="header">
-        <div class="withdrawModal_title">提现</div>
+        <div class="withdrawModal_title">{{i18n.提现}}</div>
       </template>
       <Form
         class="withdrawForm"
@@ -39,35 +39,35 @@
         :label-width="100"
         :model="formData"
       >
-        <FormItem label="提现金额：" class="form_item">
+        <FormItem :label="i18n.提现金额modal" class="form_item">
           <Input class="form_input short" v-model="formData.amount" ref="withdrawAmount" @on-change="withdrawLimit">
             <Icon type="logo-yen" slot="prefix" />
           </Input>
           <span class="form_tip" style="margin-left: 20px"
-            >提现金额不得超过¥2000.00</span
+            >{{i18n.提现金额不得超过}}¥2000.00</span
           >
         </FormItem>
-        <FormItem label="提现到账号：" class="form_item">
+        <FormItem :label="i18n.提现到账号" class="form_item">
           <Input class="form_input long" v-model="formData.account" disabled></Input>
         </FormItem>
-        <FormItem label="收款人名称：" class="form_item">
+        <FormItem :label="i18n.收款人名称" class="form_item">
           <div>{{ formData.payeeName }}</div>
         </FormItem>
-        <FormItem label="开户银行：" class="form_item">
+        <FormItem :label="i18n.开户银行" class="form_item">
           <Input class="form_input long" v-model="formData.bank" disabled></Input>
           <div class="form_tip">
-            请补全提现的银行账号信息(提现只可返回到原充值时的付款账号)
+            {{i18n.请补全提现的银行账号信息提现只可返回到原充值时的付款账号}}
           </div>
         </FormItem>
-        <FormItem label="验证码：" class="form_item">
+        <FormItem :label="i18n.验证码" class="form_item">
           <Input class="form_input short" v-model="formData.code"></Input>
-          <Button class="form_btn short">发送验证码</Button>
+          <Button class="form_btn short">{{i18n.发送验证码}}</Button>
           <div class="form_tip">验证码将发送至您绑定的手机：152****0783</div>
         </FormItem>
       </Form>
       <template slot="footer">
-        <Button class="cancelBtn" @click.native="cancel()">取消</Button>
-        <Button class="confirmBtn" @click.native="confirm()">确认</Button>
+        <Button class="cancelBtn" @click.native="cancel()">{{i18n.取消}}</Button>
+        <Button class="confirmBtn" @click.native="confirm()">{{i18n.确认}}</Button>
       </template>
     </Modal>
   </div>
@@ -93,33 +93,57 @@ export default {
           title: "充值订单号",
           key: "rechargeOrder",
           minWidth: 80,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.充值订单号);
+          },
         },
         {
           title: "充值时间",
           key: "rechargeTime",
-          minWidth: 80,
+          width: 160,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.充值时间);
+          },
         },
         {
           title: "充值金额",
           key: "rechargeAmount",
+          width:160,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.充值金额);
+          },
         },
         {
           title: "可提现金额",
           key: "withdrawable",
+          width:160,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.可提现金额);
+          },
         },
         {
           title: "提现渠道",
           key: "channel",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.提现渠道);
+          },
         },
         {
           title: "提现到账账号",
           key: "account",
+          width:160,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.提现到账账号);
+          },
           render:(h,parmas)=>{
             return h("div",{},parmas.row.account.substring(0,3)+"****"+parmas.row.account.substring(12))
           }
         },
         {
           title: "操作",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
           slot: "action",
         },
       ],
@@ -152,6 +176,11 @@ export default {
         this.screenWidth = window.fullWidth; // 宽
       })();
     };
+  },
+  computed:{
+    i18n(){
+      return this.$t("index.Withdraw");
+    }
   },
   methods: {
     withdraw(row, index) {
@@ -221,6 +250,9 @@ export default {
       margin-left: 30px;
       width: 14px;
       height: 14px;
+      /deep/ .ivu-tooltip-inner{
+        max-width: 500px;
+      }
       /deep/ .ivu-tooltip-rel img {
         width: 14px;
         height: 14px;

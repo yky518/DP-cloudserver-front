@@ -1,11 +1,11 @@
 <template>
   <div>
     <Breadcrumb
-      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px' }"
+      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px',marginTop:'5px' }"
       separator="-"
     >
-      <BreadcrumbItem>结果总览</BreadcrumbItem>
-      <BreadcrumbItem>文件总览</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.结果总览}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.文件总览}}</BreadcrumbItem>
     </Breadcrumb>
     <Card
       class="col-card"
@@ -19,8 +19,8 @@
     >
       <h2 slot="title" class="Title">
         <Tabs :value="fileChosen" @on-click="fileTab" class="titleTab">
-          <TabPane label="文件总览" name="all"></TabPane>
-          <TabPane label="回收站" name="delete"></TabPane>
+          <TabPane :label="i18n.输出文件" name="all"></TabPane>
+          <TabPane :label="i18n.回收站" name="delete"></TabPane>
         </Tabs>
         <div
           style="
@@ -69,24 +69,26 @@
             @click.native="deleteFile(row, index)"
             :disabled="$refs.fileTable.objData[index]._isDisabled"
           >
-            <img
-              :src="getFileUrl(index, 'shanchu')"
-              alt=""
-              style="width: 18px; height: 18px"
-            />
+            <Tooltip :content="$refs.fileTable.objData[index].isDel||$refs.fileTable.objData[index].recycleBin? i18n.彻底删除:i18n.移至回收站"
+              ><img
+                :src="getFileUrl(index, 'shanchu')"
+                alt=""
+                style="width: 18px; height: 18px"
+            /></Tooltip>
           </Button>
           <Button
             type="text"
             size="small"
             style="margin-right: 5px; color: #13227a"
             :disabled="$refs.fileTable.objData[index]._isDisabled"
-            @click.native="downloadFile(row,index)"
+            @click.native="downloadFile(row, index)"
           >
-            <img
-              :src="getFileUrl(index, 'xiazai')"
-              alt=""
-              style="width: 18px; height: 18px"
-            />
+            <Tooltip :content="$refs.fileTable.objData[index].isDel||$refs.fileTable.objData[index].recycleBin? i18n.恢复:i18n.下载"
+              ><img
+                :src="getFileUrl(index, 'xiazai')"
+                alt=""
+                style="width: 18px; height: 18px"
+            /></Tooltip>
           </Button>
         </template>
 
@@ -97,10 +99,10 @@
                 style="display: inline-block"
                 @on-change="selectAllFile"
                 v-model="fileIsAllSelectd"
-                >全选</Checkbox
+                >{{i18n.全选}}</Checkbox
               >
               <div style="display: inline-block; float: right">
-                共选中任务{{ fileChosenNum }}条,总计费￥432.00元
+                {{i18n.共选中}}{{ fileChosenNum }}{{i18n.条}}
 
                 <Button
                   class="footerBtn Del"
@@ -110,22 +112,20 @@
                     src="../../assets/img/shanchuIconDel.png"
                     style="width: 16px"
                   />{{
-                    fileChosen == "all" ? "移至回收站" : "彻底删除"
+                    fileChosen == "all" ? i18n.移至回收站 : i18n.彻底删除
                   }}</Button
-                >
-                <Button :disabled="!fileIsSelectd" class="footerBtn"
-                  ><img
-                    src="../../assets/img/daochu_按钮@2x.png"
-                    style="width: 16px"
-                  />{{ fileChosen == "all" ? "导出信息" : "恢复" }}</Button
                 >
                 <Button
                   :disabled="!fileIsSelectd || fileChosen == 'delete'"
                   class="footerBtn"
                   ><img
-                    src="../../assets/img/xiazaiIconWhite.png"
+                    :src="
+                      fileChosen == 'all'
+                        ? require('../../assets/img/xiazaiIconWhite.png')
+                        : require('../../assets/img/daochu_按钮@2x.png')
+                    "
                     style="width: 16px"
-                  />下载</Button
+                  />{{ fileChosen == "all" ? i18n.下载 : i18n.恢复 }}</Button
                 >
               </div>
             </Col>
@@ -146,8 +146,8 @@
     >
       <h2 slot="title" class="Title">
         <Tabs :value="mirrorChosen" @on-click="mirrorTab" class="titleTab">
-          <TabPane label="镜像文件" name="all"></TabPane>
-          <TabPane label="回收站" name="delete"></TabPane>
+          <TabPane :label="i18n.镜像文件" name="all"></TabPane>
+          <TabPane :label="i18n.回收站" name="delete"></TabPane>
         </Tabs>
         <div
           style="
@@ -196,24 +196,25 @@
             :disabled="$refs.mirrorTable.objData[index]._isDisabled"
             @click.native="deleteMirror(row, index)"
           >
+          <Tooltip :content="$refs.mirrorTable.objData[index].isDel||$refs.mirrorTable.objData[index].recycleBin? i18n.彻底删除:i18n.移至回收站">
             <img
               :src="getMirrorUrl(index, 'shanchu')"
               alt=""
               style="width: 18px; height: 18px"
-            />
+            /></Tooltip>
           </Button>
           <Button
             type="text"
             size="small"
             style="margin-right: 5px; color: #13227a"
             :disabled="$refs.mirrorTable.objData[index]._isDisabled"
-            @click.native="downloadMirror(row,index)"
-          >
+            @click.native="downloadMirror(row, index)"
+          ><Tooltip :content="$refs.mirrorTable.objData[index].isDel||$refs.mirrorTable.objData[index].recycleBin? i18n.恢复:i18n.下载">
             <img
               :src="getMirrorUrl(index, 'xiazai')"
               alt=""
               style="width: 18px; height: 18px"
-            />
+            /></Tooltip>
           </Button>
         </template>
 
@@ -222,10 +223,10 @@
             style="display: inline-block"
             @on-change="selectAllMirror"
             v-model="mirrorIsAllSelectd"
-            >全选</Checkbox
+            >{{i18n.全选}}</Checkbox
           >
           <div style="display: inline-block; float: right">
-            共选中任务{{ mirrorChosenNum }}条,总计费￥432.00元
+            {{i18n.共选中}}{{ mirrorChosenNum }}{{i18n.条}}
 
             <Button
               class="footerBtn Del"
@@ -234,13 +235,7 @@
               ><img
                 src="../../assets/img/shanchuIconDel.png"
                 style="width: 16px"
-              />{{ mirrorChosen == "all" ? "移至回收站" : "彻底删除" }}</Button
-            >
-            <Button class="footerBtn" :disabled="!mirrorIsSelectd"
-              ><img
-                src="../../assets/img/daochu_按钮@2x.png"
-                style="width: 16px"
-              />{{ mirrorChosen == "all" ? "导出信息" : "恢复" }}</Button
+              />{{ mirrorChosen == "all" ? i18n.移至回收站 : i18n.彻底删除 }}</Button
             >
 
             <Button
@@ -248,9 +243,13 @@
               class="footerBtn"
               :disabled="!mirrorIsSelectd || mirrorChosen == 'delete'"
               ><img
-                src="../../assets/img/xiazaiIconWhite.png"
+                :src="
+                  mirrorChosen == 'all'
+                    ? require('../../assets/img/xiazaiIconWhite.png')
+                    : require('../../assets/img/daochu_按钮@2x.png')
+                "
                 style="width: 16px"
-              />下载</Button
+              />{{ mirrorChosen == "all" ? i18n.下载 : i18n.恢复 }}</Button
             >
           </div>
         </div>
@@ -259,11 +258,13 @@
 
     <Modal v-model="restoreModal" title="" class="restore">
       <template slot="header"
-        ><div class="restoreTitle">恢复成功</div></template
+        ><div class="restoreTitle">{{i18n.恢复成功}}</div></template
       >
-      <div class="restoreContent">文件已恢复</div>
+      <div class="restoreContent">{{i18n.文件已恢复}}</div>
       <template slot="footer">
-        <Button class="restoreBtn" @click.native="restoreModal = false">确定</Button>
+        <Button class="restoreBtn" @click.native="restoreModal = false"
+          >{{i18n.确定}}</Button
+        >
       </template>
     </Modal>
   </div>
@@ -401,6 +402,10 @@ export default {
           key: "file_id",
           sortable: true,
           width: 50,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.编号);
+          },
         },
         {
           title: "名称",
@@ -408,6 +413,10 @@ export default {
           sortable: true,
           tooltip: true,
           minWidth: 80,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.名称);
+          },
         },
         {
           title: "JOB ID",
@@ -415,6 +424,7 @@ export default {
           sortable: true,
           tooltip: true,
           minWidth: 40,
+          align: "center",
         },
 
         {
@@ -422,6 +432,10 @@ export default {
           key: "fileName",
           sortable: true,
           tooltip: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.文件名称);
+          },
         },
         {
           title: "创建时间",
@@ -429,22 +443,38 @@ export default {
           sortable: true,
           tooltip: true,
           minWidth: 80,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.创建时间);
+          },
         },
         {
           title: "文件大小",
           key: "fileSize",
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.文件大小);
+          },
         },
         {
           title: "存储时长",
           key: "duration",
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.存储时长);
+          },
         },
         {
           title: "费用",
           key: "cost",
           width: 110,
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.费用);
+          },
           render: (h, params) => {
             let a = require("../../assets/img/wenti_icon@2x.png");
             return h("div", [
@@ -466,6 +496,7 @@ export default {
                     width: "16px",
                     height: "16px",
                     display: "inline-block",
+                    marginLeft: "5px",
                   },
                 },
                 [
@@ -498,6 +529,9 @@ export default {
           slot: "remarks",
           align: "center",
           width: 200,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.备注);
+          },
           render: (h, params) => {
             let text = params.row.remarks;
             let toolText = text;
@@ -612,6 +646,9 @@ export default {
           slot: "action",
           align: "center",
           width: 150,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
         },
       ],
       mirrorList: [
@@ -665,38 +702,61 @@ export default {
           key: "mirror_id",
           sortable: true,
           width: 50,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.编号);
+          },
         },
         {
           title: "名称",
           key: "mirror_name",
           minWidth: 80,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.名称);
+          },
         },
         {
           title: "用户",
           key: "username",
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.用户);
+          },
         },
         {
           title: "GPU",
           key: "GPU",
+          align: "center",
         },
         {
           title: "CPU",
           key: "CPU",
+          align: "center",
         },
         {
           title: "Memory",
           key: "Memory",
+          align: "center",
         },
 
         {
           title: "存储时长",
           key: "save_time",
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.存储时长);
+          },
         },
         {
           title: "费用",
           key: "cost",
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.费用);
+          },
           render: (h, params) => {
             let a = require("../../assets/img/wenti_icon@2x.png");
             return h("div", [
@@ -718,6 +778,7 @@ export default {
                     width: "16px",
                     height: "16px",
                     display: "inline-block",
+                    marginLeft: "5px",
                   },
                 },
                 [
@@ -750,6 +811,9 @@ export default {
           slot: "action",
           align: "center",
           width: 180,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
         },
       ],
     };
@@ -767,15 +831,25 @@ export default {
   methods: {
     defaultUrl(type) {
       if (type == 1) {
-        return `<img class='tipImg' src=${require("../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>暂无任务</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.暂无任务"
+        )}</div>`;
       } else if (type == 2) {
-        return `<img class='tipImg' src=${require("../../assets/img/网络错误@2x.png")}><div class='tipTxt'>网络错误</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/网络错误@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.网络错误"
+        )}</div>`;
       } else if (type == 3) {
-        return `<img class='tipImg' src=${require("../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>无搜索结果</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.无搜索内容"
+        )}</div>`;
       } else if (type == 4) {
-        return `<img class='tipImg' src=${require("../../assets/img/无权限@2x.png")}><div class='tipTxt'>无权限</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/无权限@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.无权限"
+        )}</div>`;
       } else if (type == 5) {
-        return `<img class='tipImg' src=${require("../../assets/img/404@2x.png")}><div class='tipTxt'>404报错</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/404@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.404报错"
+        )}</div>`;
       }
     },
 
@@ -836,6 +910,12 @@ export default {
       )
         url += "Del";
       url += ".png";
+      if (
+        name == "xiazai" &&
+        (this.$refs.fileTable.objData[index].recycleBin ||
+          this.$refs.fileTable.objData[index].isDel)
+      )
+        return require("../../assets/img/daochu_按钮@2x.png");
       return require("../../assets/img/" + url);
     },
     getFileTop(index, name) {
@@ -865,11 +945,11 @@ export default {
       this.fileIsSelectd = selection.length ? true : false;
       this.fileIsAllSelectd = selection.length == num ? true : false;
     },
-    downloadFile(row,index){
-      if(row.recycleBin){
+    downloadFile(row, index) {
+      if (row.recycleBin) {
         this.fileList[index].recycleBin = false;
         this.restoreModal = true;
-      }else{
+      } else {
         //下载
       }
     },
@@ -1041,7 +1121,7 @@ export default {
           this.mirrorIsSelectd = false;
           this.mirrorIsAllSelectd = false;
         }
-      }else if(this.mirrorChosen == 'delete'){
+      } else if (this.mirrorChosen == "delete") {
         if (confirm("确认要删除吗?")) {
           for (let item in this.$refs.mirrorTable.objData) {
             if (this.$refs.mirrorTable.objData[item]._isChecked) {
@@ -1051,7 +1131,7 @@ export default {
           this.mirrorChosenNum = 0;
           this.mirrorIsSelectd = false;
           this.mirrorIsAllSelectd = false;
-        }  
+        }
       }
     },
     mirrorRowClassName(row, index) {
@@ -1072,6 +1152,12 @@ export default {
       )
         url += "Del";
       url += ".png";
+      if (
+        name == "xiazai" &&
+        (this.$refs.mirrorTable.objData[index].recycleBin ||
+          this.$refs.mirrorTable.objData[index].isDel)
+      )
+        return require("../../assets/img/daochu_按钮@2x.png");
       return require("../../assets/img/" + url);
     },
     getMirrorTop(index, name) {
@@ -1103,11 +1189,11 @@ export default {
       this.mirrorIsSelectd = selection.length ? true : false;
       this.mirrorIsAllSelectd = selection.length == num ? true : false;
     },
-    downloadMirror(row,index){
-      if(row.recycleBin){
+    downloadMirror(row, index) {
+      if (row.recycleBin) {
         this.mirrorList[index].recycleBin = false;
         this.restoreModal = true;
-      }else{
+      } else {
         //下载
       }
     },
@@ -1233,6 +1319,11 @@ export default {
       this.mirrorList.push(a[0]);
     },
   },
+  computed:{
+    i18n(){
+      return this.$t("index.File");
+    }
+  }
 };
 </script>
 
@@ -1240,12 +1331,12 @@ export default {
 .col-card {
   overflow: hidden;
   /deep/ .ivu-card-head {
-    height: 35px;
-    padding: 0;
+    height: 45px;
+    padding: 5px 0;
   }
   /deep/ .ivu-card-body {
     height: 35px;
-    padding-top: 0;
+    padding: 0 0 16px 0;
   }
   /deep/ .ivu-table {
     /deep/.ivu-table-cell {
@@ -1287,6 +1378,9 @@ export default {
     display: inline-block;
     margin-top: 7px;
     margin-left: 10px;
+  }
+  .ivu-tabs {
+    top: 4px;
   }
   .titleTab {
     display: inline-block;
@@ -1375,6 +1469,12 @@ export default {
 }
 
 .restore {
+  /deep/ .ivu-modal {
+    width: 400px !important;
+  }
+  /deep/ .ivu-modal-header {
+    border: 0;
+  }
   .restoreTitle {
     font-size: 18px;
     font-weight: 600;
@@ -1382,6 +1482,7 @@ export default {
   }
   .restoreContent {
     text-align: center;
+    padding: 8px 0;
   }
   .restoreBtn {
     width: 120px;
@@ -1392,6 +1493,7 @@ export default {
   }
   /deep/ .ivu-modal-footer {
     text-align: center;
+    border: 0;
   }
 }
 

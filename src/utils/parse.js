@@ -1,5 +1,19 @@
 import Layout from '@/layout/Layout.vue';
-export const asyncMenus = [{
+import i18n from '../assets/languages/i18n.js';
+export const asyncMenus = [
+  {
+    title: '总控制台',
+    name:'master',
+    icon:require('../assets/img/kongzhitai_icon@2x.png'),
+    path:'',
+    children:[{
+      title:'总体信息',
+      path:'/dashboard/infos',
+      name:'Infos',
+      icon:'',
+    }]
+  },
+  {
     title: '功能模块',
     name: 'jobs',
     // eslint-disable-next-line global-require
@@ -263,7 +277,7 @@ export const asyncRouters = [{
     }, ]
   }
 ];
-
+console.log(i18n.t("index"))
 export const asyncFunctions = [{
     name: 'lammps',
     path: '/jobs/function/lammps',
@@ -302,54 +316,54 @@ export const asyncFunctions = [{
   {
     path: '/business/businessModule/fund',
     name: 'fund',
-    title: '资金管理',
+    title: i18n.t("index").Finance.资金管理,
     children: [{
         path: '/business/businessModule/fund/recharge',
         name: 'recharge',
-        title: '充值',
+        title: i18n.t("index").Finance.充值,
       },
       {
         path: '/business/businessModule/fund/withdraw',
         name: 'withdraw',
-        title: '提现',
+        title: i18n.t("index").Finance.提现,
       },
       {
         path: '/business/businessModule/fund/voucher',
         name: 'voucher',
-        title: '代金券管理',
+        title: i18n.t("index").Finance.代金券管理,
       },
     ],
   },
   {
     path: '/business/businessModule/bill',
     name: 'bill',
-    title: '账单管理',
+    title: i18n.t("index").Finance.账单管理,
     children: [{
         path: '/business/businessModule/bill/expense',
         name: 'expense',
-        title: '费用账单',
+        title: i18n.t("index").Finance.费用账单,
       },
       {
         path: '/business/businessModule/bill/export',
         name: 'export',
-        title: '导出记录',
+        title: i18n.t("index").Finance.导出记录,
       },
     ]
   },
   {
     path: '/business/businessModule/invoice',
     name: 'invoice',
-    title: '发票管理',
+    title: i18n.t("index").Finance.发票管理,
     children: [{
       path: '/business/businessModule/invoice',
       name: 'invoice',
-      title: '发票管理',
+      title: i18n.t("index").Finance.发票管理,
     }]
   },
   {
     path: '/business/businessModule/charging',
     name: 'charging',
-    title: '计费说明',
+    title: i18n.t("index").Finance.计费说明,
   },
 ];
 

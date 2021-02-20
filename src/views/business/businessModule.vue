@@ -1,8 +1,8 @@
 <template>
   <div id="business">
     <Breadcrumb separator="-" class="businessBread">
-      <BreadcrumbItem>财务分析</BreadcrumbItem>
-      <BreadcrumbItem>财务模块</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.财务分析}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.财务模块}}</BreadcrumbItem>
       <BreadcrumbItem v-show="title1 != ''">{{ title1 }}</BreadcrumbItem>
       <BreadcrumbItem v-show="title2 != ''">{{ title2 }}</BreadcrumbItem>
     </Breadcrumb>
@@ -69,32 +69,32 @@
           <div class="username">HAN LAB</div>
         </div>
         <div class="balance">
-          <div class="balance_title">账户余额</div>
+          <div class="balance_title">{{i18n.账户余额}}</div>
           <div class="balance_num">¥{{ userBalance }}</div>
           <div class="balance_active">
             <Button
               class="balance_btn"
               style="background: #13227a; color: #ffffff"
               @click.native="recharge()"
-              >充值</Button
+              >{{i18n.充值}}</Button
             >
             <Button
               class="balance_btn"
               style="border: 1px solid #13227a; color: #13227a"
               @click.native="withdraw()"
-              >提现</Button
+              >{{i18n.提现}}</Button
             >
           </div>
         </div>
         <div class="remind">
-          <div class="remind_title">财务提醒</div>
+          <div class="remind_title">{{i18n.财务提醒}}</div>
           <div class="remind_main">
             <div class="remind_block" @click="invoice()">
-              <div class="remind_block_title">可索取发票</div>
+              <div class="remind_block_title">{{i18n.可索取发票}}</div>
               <div class="remind_block_info">¥3000.00</div>
             </div>
             <div class="remind_block" @click="voucher()">
-              <div class="remind_block_title">代金券数量</div>
+              <div class="remind_block_title">{{i18n.代金券数量}}</div>
               <div class="remind_block_info">2张</div>
             </div>
           </div>
@@ -110,35 +110,34 @@
       >
         <div
           slot="title"
-          v-show="title2 != '提现' && title2 != '充值'"
+          v-show="title2 != i18n.提现 && title2 != i18n.充值"
           class="cardTitle"
         >
           {{ getRouterTitle() }}
-          <div v-show="title2 == '导出记录'" class="refresh">
+          <div v-show="title2 == i18n.导出记录" class="refresh">
             <img src="../../assets/img/shuaxin_icon@2x.png" alt="" />
-            <span>刷新</span>
           </div>
         </div>
-        <div slot="title" v-show="title2 == '充值'">
+        <div slot="title" v-show="title2 == i18n.充值">
           <Tabs
             :value="rechargeTab"
             ref="rechargeTab"
             class="withdrawTab"
             @on-click="fundJump"
           >
-            <TabPane label="充值" name="recharge"></TabPane>
-            <TabPane label="充值记录" name="rechargeRecord"></TabPane>
+            <TabPane :label="i18n.充值" name="recharge"></TabPane>
+            <TabPane :label="i18n.充值记录" name="rechargeRecord"></TabPane>
           </Tabs>
         </div>
-        <div slot="title" v-show="title2 == '提现'">
+        <div slot="title" v-show="title2 == i18n.提现">
           <Tabs
             :value="withdrawTab"
             ref="withdrawTab"
             class="withdrawTab"
             @on-click="fundJump"
           >
-            <TabPane label="提现" name="withdraw"></TabPane>
-            <TabPane label="提现记录" name="withdrawRecord"></TabPane>
+            <TabPane :label="i18n.提现" name="withdraw"></TabPane>
+            <TabPane :label="i18n.提现记录" name="withdrawRecord"></TabPane>
           </Tabs>
         </div>
 
@@ -165,17 +164,15 @@ export default {
     title2: "",
     withdrawTab: "withdraw",
     rechargeTab: "recharge",
-    routerTitle: {
-      充值: "充值",
-      代金券管理: "代金券管理",
-      费用账单: "费用账单",
-      导出记录: "导出记录",
-      发票管理: "发票管理",
-    },
     screenHeight: document.documentElement.clientHeight,
     screenWidth: document.documentElement.clientWidth,
     userBalance: "",
   }),
+  computed:{
+    i18n(){
+      return this.$t("index.Finance");
+    }
+  },
   watch: {
     title2: {
       handler(newVal, oldVal) {
@@ -183,7 +180,7 @@ export default {
           document.getElementById("businessRouter") &&
           document.getElementById("moduleMain")
         ) {
-          if (newVal == "费用账单") {
+          if (newVal == this.i18n.费用账单) {
             document.getElementById("businessRouter").style.height =
               (1630 / 1080) * this.screenHeight + "px";
             document.getElementById("moduleMain").style.height =
@@ -195,7 +192,7 @@ export default {
               (740 / 1080) * this.screenHeight + "px";
             document.getElementById("moduleMain").style.height = "";
           }
-          if (oldVal == "费用账单") {
+          if (oldVal == this.i18n.费用账单) {
             document.getElementById("accountInf").style.width =
               this.$refs.businessRouter.$el.clientWidth + 16 + "px";
           }
@@ -218,6 +215,7 @@ export default {
     // 获取左侧菜单
     const functionList = ["fund", "bill", "invoice", "charging"];
     this.list = parseFunctions(functionList);
+    console.log(this.list)
     console.log("mounted");
     console.log(this.$refs.businessRouter.$el.clientWidth);
     if (this.$refs.businessRouter.$el.clientWidth != 0)
@@ -272,10 +270,10 @@ export default {
         x[0] = "recharge";
         this.rechargeTab = "rechargeRecord";
       } else if (x[0] == "invoice") {
-        this.title2 = "发票管理";
+        this.title2 = this.i18n.发票管理;
         this.$nextTick(() => {
-          this.$set(this.$refs.financialMenu, "activeName", "发票管理");
-          this.$set(this.$refs.financialMenu.openedNames, 0, "发票管理");
+          this.$set(this.$refs.financialMenu, "activeName", this.i18n.发票管理);
+          this.$set(this.$refs.financialMenu.openedNames, 0, this.i18n.发票管理);
           this.$nextTick(() => {
             this.$refs.financialMenu.updateOpened();
             this.$refs.financialMenu.updateActiveName();
@@ -309,28 +307,28 @@ export default {
       this.$router.push(item.path);
     },
     recharge() {
-      this.title1 = "资金管理";
-      this.title2 = "充值";
+      this.title1 = this.i18n.资金管理;
+      this.title2 = this.i18n.充值;
       this.$router.push("/business/businessModule/fund/recharge");
       this.rechargeTab = "recharge";
       this.refreshMenu();
     },
     withdraw() {
-      this.title1 = "资金管理";
-      this.title2 = "提现";
+      this.title1 = this.i18n.资金管理;
+      this.title2 = this.i18n.提现;
       this.$router.push("/business/businessModule/fund/withdraw");
       this.withdrawTab = "withdraw";
       this.refreshMenu();
     },
     invoice() {
-      this.title1 = "发票管理";
-      this.title2 = "发票管理";
+      this.title1 = this.i18n.发票管理;
+      this.title2 = this.i18n.发票管理;
       this.$router.push("/business/businessModule/invoice");
       this.refreshMenu();
     },
     voucher() {
-      this.title1 = "资金管理";
-      this.title2 = "代金券管理";
+      this.title1 = this.i18n.资金管理;
+      this.title2 = this.i18n.代金券管理;
       this.$router.push("/business/businessModule/fund/voucher");
       this.refreshMenu();
     },
@@ -339,8 +337,9 @@ export default {
       this.$router.push(path);
     },
     getRouterTitle() {
-      if (this.title2 == "") return "近12个月消费趋势";
-      return this.routerTitle[this.title2];
+      console.log(this.title2)
+      if (this.title2 == "") return this.i18n.近12个月消费趋势;
+      return this.title2;
     },
     switchTab() {
       this.rechargeTab = "rechargeRecord";
@@ -348,8 +347,8 @@ export default {
       this.$router.push("/business/businessModule/fund/rechargeRecord");
     },
     jumpToexport() {
-      this.title1 = "账单管理";
-      this.title2 = "导出记录";
+      this.title1 = this.i18n.账单管理;
+      this.title2 = this.i18n.导出记录;
       this.$router.push("/business/businessModule/bill/export");
     },
     refreshMenu() {

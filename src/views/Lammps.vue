@@ -24,117 +24,22 @@
 
     <Card class="card-panel">
       <Machine type="lammps" @set="setMachine"></Machine>
-<!--      <h2>machine</h2>
-      <Form ref="form1" :model="machine" :label-width="100">
-        <FormItem label="平台" prop="platform">
-          <Select v-model="machine.platform" style="width:200px"
-                  @on-change="getBestPrice">
-            <Option value="ali">ali</Option>
-            <Option value="baiduyun">baiduyun</Option>
-          </Select>
-        </FormItem>
-        <h3>resources</h3>
-        <Row>
-          <Col span="8">
-            <FormItem label="gpu_type" prop="gpu_type">
-              <Select v-model="machine.resources.gpu_type" style="width:200px"
-                      @on-change="getBestPrice" clearable>
-                <Option v-for="gpu in gpu_list" :key="gpu" :value="gpu">{{gpu}}</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span="8">
-            <FormItem label="cpu_num" prop="cpu_num">
-              <Select v-model="machine.resources.cpu_num" style="width:200px"
-                      @on-change="getBestPrice">
-                <Option v-for="cpu in cpu_list" :key="cpu" :value="cpu">{{cpu}}</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span="7">
-            <FormItem label="mem_limit" prop="mem_limit">
-              <Select v-model="machine.resources.mem_limit" style="width:200px"
-                      @on-change="getBestPrice">
-                <Option v-for="memory in memory_list" :key="memory"
-                        :value="memory">{{memory}}</Option>
-              </Select>
-            </FormItem>
-          </Col>
-
-        </Row>
-        <Row>
-          &lt;!&ndash;              <Col span="8">
-                          <FormItem label="docker_name" prop="docker_name">
-                            <Select v-model="machine.resources.docker_name" style="width:200px">
-                              <Option value="deepmd-kit">deepmd-kit</Option>
-                              <Option value="vasp">vasp</Option>
-                            </Select>
-                          </FormItem>
-                        </Col>&ndash;&gt;
-          <div style="display: none;">
-            <Col span="8">
-              <FormItem label="type" prop="type">
-                <p style="color: #2b85e4">{{machine.resources.type}}</p>
-              </FormItem>
-            </Col>
-            <Col span="8">
-              <FormItem label="region" prop="region">
-                <p style="color: #2b85e4">{{machine.resources.region}}</p>
-              </FormItem>
-            </Col>
-            <Col span="8">
-              <FormItem label="zone" prop="zone">
-                <p style="color: #2b85e4">{{machine.resources.zone}}</p>
-              </FormItem>
-            </Col>
-          </div>
-
-          &lt;!&ndash;              <Col span="8">
-                          <FormItem label="image_name" prop="image_name">
-                            <Select v-model="machine.resources.image_name" style="width:200px">
-                              <Option value="fep-beta-v8">fep-beta-v8</Option>
-                              <Option value="fep-beta-v8">fep-beta-v8</Option>
-                            </Select>
-                          </FormItem>
-                        </Col>&ndash;&gt;
-          <Col span="8">
-            <FormItem label="time_limit" prop="time_limit">
-              <Input v-model="machine.resources.time_limit"
-                     placeholder="23:00：00" style="width:200px" />
-            </FormItem>
-          </Col>
-          <Col span="8">
-            <FormItem label="version" prop="version">
-              <Select v-model="machine.resources.version" style="width:200px">
-                <Option value="0.12">0.12</Option>
-                <Option value="1.2">1.2</Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col span="8">
-            <FormItem label="price" prop="price">
-              <p style="color:#681752">{{price}} ¥</p>
-            </FormItem>
-          </Col>
-        </Row>
-
-      </Form>-->
     </Card>
 
     <div style="margin: 10px 0;width:100%;text-align:center;">
-      <Button type="primary" @click="parseJson" long style="width:200px;height:40px;background:#13227A;border-radius: 20px;display:inline-block;">确定</Button>
+      <Button type="primary" @click="parseJson" long style="width:200px;height:40px;background:#13227A;border-radius: 20px;display:inline-block;">{{i18n.确定}}</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">
       <Form ref="form4" :label-width="100" :rules="submitRules" :model="submitConfig">
-        <FormItem label="任务名" prop="name" >
+        <FormItem :label="i18n.任务名" prop="name" >
           <Input v-model="submitConfig.name" style="width:200px"/>
         </FormItem>
-        <FormItem label="json参数" prop="json">
+        <FormItem :label="i18n.json参数" prop="json">
           <Input v-model="submitConfig.inputJsonString"
                  :rows="6" type="textarea" placeholder="Enter something..." />
         </FormItem>
-        <FormItem  label="训练数据" prop="data">
+        <FormItem :label="i18n.训练数据" prop="data">
           <Upload action="/" :before-upload="handleUpload">
             <Button icon="ios-cloud-upload-outline">Upload files</Button>
           </Upload>
@@ -146,13 +51,13 @@
 
         <Row :gutter="16">
           <Col span="12">
-            <FormItem label="文件目录" prop="fileJson">
+            <FormItem :label="i18n.文件目录" prop="fileJson">
               <Input v-model="submitConfig.fileString" :rows="6" type="textarea"
                      placeholder="Click the button to upload file..." />
             </FormItem>
           </Col>
           <Col span="12">
-            <FormItem label="参考文件" prop="fileReference">
+            <FormItem :label="i18n.参考文件" prop="fileReference">
               <Input v-model="submitConfig.fileReference" :rows="6" type="textarea"
                      placeholder="Enter something..." disabled/>
             </FormItem>
@@ -160,8 +65,8 @@
         </Row>
       </Form>
       <div style="text-align: center;">
-        <Button type="primary" :disabled="progress<100" @click="handleSubmit">提交</Button>
-        <Button @click="handleReset" style="margin-left: 8px">取消</Button>
+        <Button type="primary" :disabled="progress<100" @click="handleSubmit">{{i18n.提交}}</Button>
+        <Button @click="handleReset" style="margin-left: 8px">{{i18n.取消}}</Button>
       </div>
     </Card>
   </div>
@@ -236,7 +141,10 @@ graph.003.pb`,
       showJson: false,
     };
   },
-  created() {
+  computed:{
+    i18n(){
+      return this.$t("index.Algorithm");
+    }
   },
   methods: {
     setMachine(machine) {
@@ -255,13 +163,13 @@ graph.003.pb`,
         };
         insertJob(data).then((res) => {
           console.log(res);
-          alert('任务提交成功');
+          alert(this.i18n.任务提交成功);
           this.$router.push(`/user/userinfo/${this.$store.state.user.name}`);
         }).catch((err) => {
           console.log(err);
         });
       } else {
-        alert('请务必上传下zip格式的训练数据');
+        alert(this.i18n.请务必上传下zip格式的训练数据);
       }
     },
     handleReset() {
@@ -340,7 +248,7 @@ graph.003.pb`,
                   console.log(result);
                   const url = `http://dpcloudserver.oss-cn-shenzhen.aliyuncs.com/${result.name}`;
 
-                  alert('上传成功');
+                  alert(this.i18n.上传成功);
                   that.oss_path = url;
                   that.submitConfig.file = file;
                 } catch (e) {
@@ -364,14 +272,14 @@ graph.003.pb`,
             });
           } else {
             that.file = null;
-            alert('训练数据缺少文件');
+            alert(this.i18n.训练数据缺少文件);
           }
         }, (e) => {
           console.log(e);
         });
       } else {
         this.file = null;
-        alert('请上传zip格式文件');
+        alert(this.i18n.请上传zip格式文件);
       }
     },
     upload() {

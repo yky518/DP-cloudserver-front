@@ -24,37 +24,38 @@
     </div>
     <div id="loginMain">
       <div class="loginMainPadding">
-        <h3 class="loginTitle">欢迎登陆</h3>
+        <h3 class="loginTitle">{{i18n.欢迎登陆}}</h3>
         <Form
           ref="formCustom"
           :model="formCustom"
           :rules="ruleCustom"
           label-position="right"
-          :label-width="80"
+          :label-width="100"
           class="loginForm"
         >
-          <FormItem label="账号" prop="name">
+          <FormItem :label="i18n.账号" prop="name">
             <Input type="text" v-model="formCustom.name"></Input>
           </FormItem>
-          <FormItem label="密码" prop="passwd">
+          <FormItem :label="i18n.密码" prop="passwd">
             <Input type="password" v-model="formCustom.passwd"></Input>
           </FormItem>
-          <FormItem label="验证" prop="verify">
+          <FormItem :label="i18n.验证" prop="verify">
             <Verify
               @success="success"
               @error="alert('error')"
               :show-button="false"
               :type="3"
               :bar-size="{ width: '100%', height: '36px' }"
-              explain="滑过验证"
+              :explain="i18n.滑过验证"
               class="loginVerify"
+              ref="verify"
             ></Verify>
           </FormItem>
           <FormItem>
             <Row class="pwd">
-              <Col span="12">
+              <Col span="24">
                 <router-link to="/account/forget" style="float: left"
-                  >忘记密码?</router-link
+                  >{{i18n.忘记密码}}</router-link
                 >
               </Col>
             </Row>
@@ -66,12 +67,12 @@
               long
               @click="handleSubmit('formCustom')"
               class="loginBtn"
-              >登录</Button
+              >{{i18n.登录}}</Button
             >
           </FormItem>
         </Form>
         <div class="register">
-          还没有帐号,去<router-link to="/account/register">注册</router-link>
+          {{i18n.还没有帐号}}<router-link to="/account/register">{{i18n.注册}}</router-link>
         </div>
       </div>
     </div>
@@ -104,6 +105,11 @@ export default {
       screenHeight: document.documentElement.clientHeight,
     };
   },
+  computed: {
+    i18n() {
+      return this.$t("index.Login");
+    },
+  },
   mounted() {
     window.onresize = () => {
       return (() => {
@@ -113,6 +119,7 @@ export default {
         this.screenWidth = window.fullWidth; // 宽
       })();
     };
+    console.log(this.$refs.verify)
   },
   methods: {
     handleSubmit(name) {
@@ -247,7 +254,7 @@ body,
     .loginMainPadding {
       width: 100%;
       height: 100%;
-      padding: 8% 20% 0 10%;
+      padding: 8% 20% 0 5%;
       .loginTitle {
         width: 100%;
         height: 56px;
@@ -265,8 +272,8 @@ body,
           border-radius: 30px;
           border: 1px solid #e8e8e8;
         }
-        /deep/ .ivu-form-item{
-          margin-bottom:25px;
+        /deep/ .ivu-form-item {
+          margin-bottom: 25px;
         }
         .loginVerify {
           width: 100%;

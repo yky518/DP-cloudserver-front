@@ -1,7 +1,7 @@
 <template>
   <div id="scc">
     <img src="../../assets/img/暂无任务@2x.png" alt="" class="empty" />
-    <span class="emptyTxt">暂不开放</span>
+    <span class="emptyTxt">{{$t("index.Default.暂不开放")}}</span>
   </div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
   <div id="authority">
     <Breadcrumb separator="-">
-      <BreadcrumbItem>用户设置</BreadcrumbItem>
-      <BreadcrumbItem>信息修改</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.用户设置}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.信息修改}}</BreadcrumbItem>
     </Breadcrumb>
 
     <!-- License管理区 -->
@@ -19,7 +19,7 @@
               <Form :model="license" :disabled="!licenseRevising">
                 <Row :gutter="80">
                   <Col span="16">
-                    <FormItem prop="licenseManagement" label="License管理">
+                    <FormItem prop="licenseManagement" :label="i18n.License管理">
                       <Input
                         type="text"
                         v-model="license.licenseManagement"
@@ -42,13 +42,13 @@
               shape="circle"
               :disabled="licenseRevising"
               @click.native="licenseRevising = !licenseRevising"
-              >修改</Button
+              >{{i18n.修改}}</Button
             >
             <Button
               shape="circle"
               :disabled="!licenseRevising"
               @click.native="licenseRevising = !licenseRevising"
-              >保存</Button
+              >{{i18n.保存}}</Button
             >
           </div>
         </Card>
@@ -63,7 +63,7 @@
           <Form :model="license" :disabled="!noticeRevising">
             <Row :gutter="16">
               <Col span="12">
-                <FormItem label="集群当前储存上限" prop="name">
+                <FormItem :label="i18n.集群当前储存上限" prop="name">
                   <Input type="text" v-model="license.cluster">
                     <template slot="suffix">
                       <div style="line-height: 32px">GB</div>
@@ -72,7 +72,7 @@
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="套餐当前储存上限" prop="name">
+                <FormItem :label="i18n.套餐当前储存上限" prop="name">
                   <Input type="text" v-model="license.setMeal">
                     <template slot="suffix">
                       <div style="line-height: 32px">GB</div>
@@ -85,7 +85,7 @@
               <Col span="24">
                 <FormItem
                   prop="notice"
-                  label="通知(以下情况通知我)"
+                  :label="i18n.通知+'('+i18n.以下情况通知我+')'"
                   class="checkForm"
                 >
                   <i-switch v-model="license.isNotice" />
@@ -95,34 +95,34 @@
                         <Checkbox
                           label="notEnough"
                           :disabled="!license.isNotice"
-                          >账户余额不足</Checkbox
+                          >{{i18n.账户余额不足}}</Checkbox
                         >
                       </Col>
                       <Col span="6">
                         <Checkbox label="discount" :disabled="!license.isNotice"
-                          >优惠活动</Checkbox
+                          >{{i18n.优惠活动}}</Checkbox
                         >
                       </Col>
                       <Col span="6">
                         <Checkbox label="end" :disabled="!license.isNotice"
-                          >任务结束</Checkbox
+                          >{{i18n.任务结束}}</Checkbox
                         >
                       </Col>
                       <Col span="6">
                         <Checkbox label="email" :disabled="!license.isNotice"
-                          >邮件提醒</Checkbox
+                          >{{i18n.邮件提醒}}</Checkbox
                         >
                       </Col>
                     </Row>
                     <Row>
                       <Col span="6">
                         <Checkbox label="sms" :disabled="!license.isNotice"
-                          >短信提醒</Checkbox
+                          >{{i18n.短信提醒}}</Checkbox
                         >
                       </Col>
                       <Col>
                         <Checkbox label="space" :disabled="!license.isNotice"
-                          >剩余空间不足:</Checkbox
+                          >{{i18n.剩余空间不足}}:</Checkbox
                         >
                         <Input
                           type="text"
@@ -153,20 +153,20 @@
               shape="circle"
               :disabled="noticeRevising"
               @click.native="noticeRevising = !noticeRevising"
-              >修改</Button
+              >{{i18n.修改}}</Button
             >
             <Button
               shape="circle"
               :disabled="!noticeRevising"
               @click.native="noticeRevising = !noticeRevising"
-              >保存</Button
+              >{{i18n.保存}}</Button
             >
           </div>
         </Card>
       </Col>
     </Row>
     <Card :style="{ height: (560 / 1080) * screenHeight + 'px' }">
-      <p slot="title">发票抬头</p>
+      <p slot="title">{{i18n.发票抬头}}</p>
       <Card
         style="width: 240px; height: 120px; float: left; margin-right: 50px"
         v-for="(item, index) in invoiceList"
@@ -193,14 +193,14 @@
           "
           @click="isShow = true"
         >
-          +添加发票抬头
+          +{{i18n.添加发票抬头}}
         </div>
       </Card>
     </Card>
 
     <Modal v-model="isShow" title="">
       <template slot="header">
-        <div>添加发票抬头</div>
+        <div>{{i18n.添加发票抬头}}</div>
       </template>
       <Form
         :model="detail"
@@ -211,15 +211,15 @@
       >
         <Row :gutter="24">
           <Col span="12">
-            <FormItem prop="invoiceDetails" label="抬头类型" class="checkForm">
+            <FormItem prop="invoiceDetails" :label="i18n.抬头类型" class="checkForm">
               <CheckboxGroup v-model="detail.invoiceDetails" size="large">
-                <Checkbox label="account">企业单位</Checkbox>
-                <Checkbox label="finance">个人/非个人单位</Checkbox>
+                <Checkbox label="account">{{i18n.企业单位}}</Checkbox>
+                <Checkbox label="finance">{{i18n.个人非个人单位}}</Checkbox>
               </CheckboxGroup>
             </FormItem>
           </Col>
           <Col span="12">
-            <FormItem prop="corporateName" label="公司名称">
+            <FormItem prop="corporateName" :label="i18n.公司名称">
               <Input type="text" v-model="detail.corporateName"></Input>
             </FormItem>
           </Col>
@@ -227,12 +227,12 @@
 
         <Row :gutter="24">
           <Col span="12">
-            <FormItem prop="taxNum" label="公司税号">
+            <FormItem prop="taxNum" :label="i18n.公司税号">
               <Input type="text" v-model="detail.taxNum"></Input>
             </FormItem>
           </Col>
           <Col span="12">
-            <FormItem prop="address" label="公司地址(非必填)">
+            <FormItem prop="address" :label="i18n.公司地址+'('+i18n.非必填+')'">
               <Input type="text" v-model="detail.address"></Input>
             </FormItem>
           </Col>
@@ -240,12 +240,12 @@
 
         <Row :gutter="24">
           <Col span="12">
-            <FormItem prop="bankOfDeposit" label="公司开户行(非必填)">
+            <FormItem prop="bankOfDeposit" :label="i18n.公司开户行+'('+i18n.非必填+')'">
               <Input type="text" v-model="detail.bankOfDeposit"></Input>
             </FormItem>
           </Col>
           <Col span="12">
-            <FormItem prop="accountNum" label="开户行账号(非必填)">
+            <FormItem prop="accountNum" :label="i18n.开户行账号+'('+i18n.非必填+')'">
               <Input type="text" v-model="detail.accountNum"></Input>
             </FormItem>
           </Col>
@@ -253,7 +253,7 @@
 
         <Row :gutter="24">
           <Col span="12">
-            <FormItem prop="remarks" label="备注(非必填)">
+            <FormItem prop="remarks" :label="i18n.备注+'('+i18n.非必填+')'">
               <Input type="text" v-model="detail.remarks"></Input>
             </FormItem>
           </Col>
@@ -267,7 +267,7 @@
             type="primary"
             :disabled="revising"
             @click="revising = true"
-            >修改</Button
+            >{{i18n.修改}}</Button
           >
           <Button
             shape="circle"
@@ -277,7 +277,7 @@
               revising = false;
             "
             :disabled="!revising"
-            >保存</Button
+            >{{i18n.保存}}</Button
           >
         </div>
       </template>
@@ -369,6 +369,11 @@ export default {
         this.screenWidth = window.fullWidth; // 宽
       })();
     };
+  },
+  computed:{
+    i18n(){
+      return this.$t("index.ModifyInformation");
+    }
   },
   methods: {},
 };

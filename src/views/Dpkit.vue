@@ -293,19 +293,19 @@
       </Form>
     </Card>
     <div style="margin: 10px 0;text-align: center;width:100%">
-      <Button type="primary" @click="parseJson" long style="width:200px;height:40px;background:#13227A;border-radius: 20px;display:inline-block;">确定</Button>
+      <Button type="primary" @click="parseJson" long style="width:200px;height:40px;background:#13227A;border-radius: 20px;display:inline-block;">{{i18n.确定}}</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">
       <Form ref="form4" :label-width="100" :rules="submitRules" :model="submitConfig">
-        <FormItem label="任务名" prop="name">
+        <FormItem :label="i18n.任务名" prop="name">
           <Input v-model="submitConfig.name" style="width:200px"/>
         </FormItem>
-        <FormItem label="json参数" prop="json">
+        <FormItem :label="i18n.json参数" prop="json">
           <Input v-model="submitConfig.inputJsonString" :rows="6"
                  type="textarea" placeholder="Enter something..." />
         </FormItem>
-        <FormItem  label="训练数据" prop="file">
+        <FormItem :label="i18n.训练数据" prop="file">
           <Upload action="/" :before-upload="handleUpload">
             <Button icon="ios-cloud-upload-outline">Upload Files</Button>
           </Upload>
@@ -316,13 +316,13 @@
         </FormItem>
         <Row :gutter="16">
           <Col span="12">
-            <FormItem label="文件目录" prop="fileJson">
+            <FormItem :label="i18n.文件目录" prop="fileJson">
               <Input v-model="submitConfig.fileString" :rows="6" type="textarea"
                      placeholder="Click the button to upload file..." />
             </FormItem>
           </Col>
           <Col span="12">
-            <FormItem label="参考文件" prop="fileReference">
+            <FormItem :label="i18n.参考文件" prop="fileReference">
               <Input v-model="submitConfig.fileReference" :rows="6" type="textarea"
                      placeholder="Enter something..." disabled/>
             </FormItem>
@@ -331,8 +331,8 @@
 
       </Form>
       <div style="text-align: center;">
-        <Button type="primary" :disabled="progress<100" @click="handleSubmit">提交</Button>
-        <Button @click="handleReset" style="margin-left: 8px">取消</Button>
+        <Button type="primary" :disabled="progress<100" @click="handleSubmit">{{i18n.提交}}</Button>
+        <Button @click="handleReset" style="margin-left: 8px">{{i18n.取消}}</Button>
       </div>
     </Card>
 
@@ -540,7 +540,10 @@ data/init/00.liq/state.0400.1.00e04.00/vasp/data/set.000/
       },
     };
   },
-  created() {
+  computed: {
+    i18n(){
+      return this.$t("index.Algorithm");
+    }
   },
   methods: {
     setMachine(machine) {
@@ -558,7 +561,7 @@ data/init/00.liq/state.0400.1.00e04.00/vasp/data/set.000/
         insertJob(data).then((res) => {
           console.log(res);
           if (res.status === 200) {
-            alert('任务提交成功');
+            alert(this.i18n.任务提交成功);
             // eslint-disable-next-line no-restricted-globals
             this.$router.push(`/user/userinfo/${this.$store.state.user.name}`);
           }
@@ -566,7 +569,7 @@ data/init/00.liq/state.0400.1.00e04.00/vasp/data/set.000/
           console.log(err);
         });
       } else {
-        alert('请务必上传下zip格式的训练数据');
+        alert(this.i18n.请务必上传下zip格式的训练数据);
       }
     },
     handleReset() {
@@ -633,7 +636,7 @@ data/init/00.liq/state.0400.1.00e04.00/vasp/data/set.000/
         });
       } else {
         console.log('error submit!!');
-        alert('请补充参数');
+        alert(this.i18n.请补充参数);
         return false;
       }
     },
@@ -721,7 +724,7 @@ data/init/00.liq/state.0400.1.00e04.00/vasp/data/set.000/
 
                   const url = `http://dpcloudserver.oss-cn-shenzhen.aliyuncs.com/${resMulti.name}`;
 
-                  alert('上传成功');
+                  alert(this.i18n.上传成功);
                   that.oss_path = url;
                   that.submitConfig.file = file;
                 } catch (e) {
@@ -745,14 +748,14 @@ data/init/00.liq/state.0400.1.00e04.00/vasp/data/set.000/
             });
           } else {
             that.file = null;
-            alert('训练数据缺少文件');
+            alert(this.i18n.训练数据缺少文件);
           }
         }, (e) => {
           console.log(e);
         });
       } else {
         this.file = null;
-        alert('请上传zip格式文件');
+        alert(this.i18n.请上传zip格式文件);
       }
     },
     upload() {

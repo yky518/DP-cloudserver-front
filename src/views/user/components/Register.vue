@@ -24,37 +24,37 @@
     </div>
     <div id="registerMain">
       <div class="registerMainPadding">
-        <h3 class="registerTitle">注册账号</h3>
+        <h3 class="registerTitle">{{ i18n.注册账号 }}</h3>
         <Form
           ref="formCustom"
           :model="formCustom"
           :rules="ruleCustom"
           label-position="right"
-          :label-width="80"
+          :label-width="100"
           class="registerForm"
         >
-          <FormItem prop="username" label="用户名">
+          <FormItem prop="username" :label="i18n.用户名">
             <Input type="text" v-model="formCustom.username"></Input>
           </FormItem>
-          <FormItem prop="name" label="真实姓名">
+          <FormItem prop="name" :label="i18n.真实姓名">
             <Input type="text" v-model="formCustom.name"></Input>
           </FormItem>
-          <FormItem prop="email" label="邮箱">
+          <FormItem prop="email" :label="i18n.邮箱">
             <Input type="text" v-model="formCustom.email"></Input>
           </FormItem>
-          <FormItem prop="passwd" label="密码">
+          <FormItem prop="passwd" :label="i18n.密码">
             <Input type="password" v-model="formCustom.passwd"></Input>
           </FormItem>
-          <FormItem label="确认密码" prop="passwd2">
+          <FormItem :label="i18n.确认密码" prop="passwd2">
             <Input type="password" v-model="formCustom.passwd2"></Input>
           </FormItem>
-          <FormItem prop="verify" label="验证">
+          <FormItem prop="verify" :label="i18n.验证">
             <Verify
               @success="success"
               :show-button="false"
               :type="3"
               :bar-size="{ width: '100%', height: '36px' }"
-              explain="滑过验证"
+              :explain="i18n.滑过验证"
               class="registerVerify"
             ></Verify>
           </FormItem>
@@ -65,12 +65,13 @@
               long
               @click="handleSubmit('formCustom')"
               class="registerBtn"
-              >注册</Button
+              >{{ i18n.注册 }}</Button
             >
           </FormItem>
         </Form>
         <div class="login">
-          已有帐号?去<router-link to="/account/login">登录</router-link>
+          {{ i18n.已有帐号
+          }}<router-link to="/account/login">{{ i18n.登录 }}</router-link>
         </div>
       </div>
     </div>
@@ -133,6 +134,11 @@ export default {
       screenWidth: document.documentElement.clientWidth,
       screenHeight: document.documentElement.clientHeight,
     };
+  },
+  computed: {
+    i18n() {
+      return this.$t("index.Register");
+    },
   },
   mounted() {
     window.onresize = () => {
@@ -256,7 +262,7 @@ body,
     .registerMainPadding {
       width: 100%;
       height: 100%;
-      padding: 5% 20% 0 10%;
+      padding: 5% 20% 0 5%;
       .registerTitle {
         width: 100%;
         height: 56px;

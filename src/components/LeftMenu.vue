@@ -18,15 +18,6 @@
       :class="menuitemClasses"
       accordion
     >
-      <MenuItem name="/dashboard/infos" to="/dashboard/infos">
-        <img
-          src="../assets/img/kongzhitai_icon@2x.png"
-          alt=""
-          class="icon-img"
-        />
-        总体信息
-      </MenuItem>
-
       <Submenu
         :name="menu.name"
         v-for="(menu, index) in menus"
@@ -34,7 +25,7 @@
       >
         <template slot="title">
           <img :src="menu.icon" alt="" class="icon-img" />
-          <span style="vertical-align: middle">{{ menu.title }}</span>
+          <span style="vertical-align: middle">{{$t("index.LeftMenu."+menu.title)}}</span>
         </template>
         <MenuItem
           :name="child.path"
@@ -42,7 +33,7 @@
           v-for="(child, iindex) in menu.children"
           :key="'subitem' + iindex"
         >
-          {{ child.title }}
+          {{ $t("index.LeftMenu."+child.title) }}
         </MenuItem>
       </Submenu>
     </Menu>
@@ -50,18 +41,23 @@
     <Card class="userCard">
       <div style="overflow: hidden">
         <p @click="$router.push('/user/modify')" class="userInfo">
-          <img
-            src="../assets/img/yonghutouxiang@2x.png"
-            alt=""
-          />
+          <img src="../assets/img/yonghutouxiang@2x.png" alt="" />
           <span class="item-text">{{ $store.state.user.name }}</span>
         </p>
-        <p
-          @click="isShow = true"
-          class="quit"
-        >
+        <Dropdown class="languageDropDown" transfer>
+          <div>
+            {{ language == "zh" ? "简体中文" : "English" }}
+            <Icon type="ios-arrow-down"></Icon>
+          </div>
+          <DropdownMenu slot="list">
+            <DropdownItem @click.native="changeLanguage()">
+              {{ language == "zh" ? "English" : "简体中文" }}
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        <p @click="isShow = true" class="quit">
           <img src="../assets/img/icon_tuichu.png" alt="" />
-          <span>退出</span>
+          <span>{{$t("index.LeftMenu.退出")}}</span>
         </p>
       </div>
     </Card>
@@ -87,11 +83,13 @@ export default {
       active: "",
       openNames: [],
       isShow: false,
+      language:'',
     };
   },
   created() {
     // const menus = this.$store.state.routes.routes;
     const menus = [
+      "Infos",
       "function",
       "cloud",
       "create",
@@ -103,10 +101,12 @@ export default {
       "businessModule",
     ];
     this.menus = parseMenus(asyncMenus, menus);
+    console.log(this.menus)
     this.$nextTick(() => {
       this.active = this.$route.path;
       this.openNames = [this.$route.path.split("/")[1]];
     });
+    this.language = localStorage.getItem("lang");
   },
   watch: {
     openNames() {
@@ -127,6 +127,16 @@ export default {
         this.$Message.success("退出登录");
         this.$router.push("/account/login");
       });
+    },
+    changeLanguage() {
+      if (this.language == "zh") {
+        this.$i18n.locale = "en";
+        localStorage.setItem("lang", "en");
+      }else{
+        this.$i18n.locale = "zh";
+        localStorage.setItem("lang", "zh");
+      }
+      location.reload();
     },
   },
 };
@@ -220,6 +230,9 @@ export default {
     bottom: 0;
     background: #ffffff;
     padding-top: 3px;
+    /deep/ .ivu-card-body{
+      padding-bottom: 0;
+    }
     .userInfo {
       height: 30px;
       line-height: 30px;
@@ -234,6 +247,9 @@ export default {
         color: #333333;
         vertical-align: middle;
       }
+    }
+    .languageDropDown{
+      float: right;
     }
     .quit {
       height: 30px;
@@ -259,7 +275,7 @@ export default {
   /deep/ .ivu-modal-content {
     text-align: center;
   }
-  /deep/ .ivu-modal-body{
+  /deep/ .ivu-modal-body {
     height: 100px !important;
   }
   /deep/ .ivu-modal-close {

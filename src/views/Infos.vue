@@ -1,8 +1,8 @@
 <template>
   <div id="infos">
     <Breadcrumb separator="—">
-      <BreadcrumbItem>总控制台</BreadcrumbItem>
-      <BreadcrumbItem>总体信息</BreadcrumbItem>
+      <BreadcrumbItem>{{ i18n.总控制台 }}</BreadcrumbItem>
+      <BreadcrumbItem>{{ i18n.总体信息 }}</BreadcrumbItem>
     </Breadcrumb>
     <div
       :style="{
@@ -38,7 +38,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              账户余额
+              {{ i18n.账户余额 }}
             </p>
             <h2
               class="col-h2"
@@ -70,7 +70,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              子用户数量
+              {{ i18n.子用户数量 }}
             </p>
             <h2
               class="col-h2"
@@ -79,7 +79,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              ¥{{ cost }}
+              {{ cost }}个
             </h2>
           </div>
         </Col>
@@ -102,7 +102,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              当前任务数
+              {{ i18n.当前任务数 }}
             </p>
             <h2
               class="col-h2"
@@ -111,7 +111,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_job }}
+              {{ all_job }}个
             </h2>
           </div>
         </Col>
@@ -134,7 +134,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              当前服务器数
+              {{ i18n.当前服务器数 }}
             </p>
             <h2
               class="col-h2"
@@ -143,7 +143,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_task }}
+              {{ all_task }}个
             </h2>
           </div>
         </Col>
@@ -166,7 +166,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              集群当前存储用量
+              {{ i18n.集群当前存储用量 }}
             </p>
             <h2
               class="col-h2"
@@ -175,7 +175,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_task }}
+              {{ all_task }}/{{ all_task }}GB
             </h2>
           </div>
         </Col>
@@ -198,7 +198,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              套餐当前存储用量
+              {{ i18n.套餐当前存储用量 }}
             </p>
             <h2
               class="col-h2"
@@ -207,7 +207,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_task }}
+              {{ all_task }}/{{ all_task }}GB
             </h2>
           </div>
         </Col>
@@ -220,7 +220,11 @@
           :style="{ height: (300 / 1080) * screenHeight + 'px' }"
         >
           <h2 slot="title" class="Title">
-            <span style="vertical-align: middle" @click="$router.push('/business/businessModule/bill/expense')">费用统计</span>
+            <span
+              style="vertical-align: middle"
+              @click="$router.push('/business/businessModule/bill/expense')"
+              >{{ i18n.费用统计 }}</span
+            >
             <RadioGroup
               v-model="timeChosen"
               type="button"
@@ -231,9 +235,9 @@
                 margin-top: -7px;
               "
             >
-              <Radio label="今日"></Radio>
-              <Radio label="本周"></Radio>
-              <Radio label="本月"></Radio>
+              <Radio label="今日">{{ i18n.今日 }}</Radio>
+              <Radio label="本周">{{ i18n.本周 }}</Radio>
+              <Radio label="本月">{{ i18n.本月 }}</Radio>
             </RadioGroup>
           </h2>
           <div
@@ -256,7 +260,10 @@
           }"
         >
           <h2 slot="title" class="Title">
-            <span @click="$router.push('/business/businessModule/bill/expense')">消费变化</span>
+            <span
+              @click="$router.push('/business/businessModule/bill/expense')"
+              >{{ i18n.消费变化 }}</span
+            >
 
             <RadioGroup
               v-model="consumeTimeChosen"
@@ -274,25 +281,27 @@
                   open = false;
                   customize = false;
                 "
-                ><Radio label="今日"></Radio
-              ></span>
+                ><Radio label="今日">{{ i18n.今日 }}</Radio></span
+              >
               <span
                 @click="
                   open = false;
                   customize = false;
                 "
-                ><Radio label="本周"></Radio
-              ></span>
+                ><Radio label="本周">{{ i18n.本周 }}</Radio></span
+              >
               <span
                 @click="
                   open = false;
                   customize = false;
                 "
-                ><Radio label="本月"></Radio
-              ></span>
+                ><Radio label="本月">{{ i18n.本月 }}</Radio></span
+              >
               <span
-                ><Radio label="自定义" @click.native.stop="handleClick"></Radio
-              ></span>
+                ><Radio label="自定义" @click.native.stop="handleClick">{{
+                  i18n.自定义
+                }}</Radio></span
+              >
               <DatePicker
                 :open="open"
                 :value="timeLimit"
@@ -330,9 +339,13 @@
           }"
         >
           <h2 slot="title" class="Title">
-            <span style="vertical-align: middle" @click="$router.push('/result/task')">任务概览</span>
+            <span
+              style="vertical-align: middle"
+              @click="$router.push('/result/task')"
+              >{{ i18n.任务概览 }}</span
+            >
             <Tooltip
-              content="创建时间在区间中的任务的状态"
+              :content="i18n.创建时间在区间中的任务的状态"
               placement="right"
               theme="light"
               max-width="80"
@@ -351,7 +364,7 @@
               placeholder="Select date"
               style="font-size: 14px !important; float: right; margin-top: -5px"
             ></DatePicker>
-            <span class="datePickerTitle">创建时间:</span>
+            <span class="datePickerTitle">{{ i18n.创建时间 }}:</span>
           </h2>
           <div
             id="taskTable"
@@ -372,7 +385,9 @@
           }"
         >
           <h2 slot="title" class="Title">
-            <span @click="$router.push('/result/server')">服务器概览</span>
+            <span @click="$router.push('/result/server')">{{
+              i18n.服务器概览
+            }}</span>
             <DatePicker
               format="yyyy.MM.dd"
               type="daterange"
@@ -380,7 +395,7 @@
               placeholder="Select date"
               style="font-size: 14px !important; float: right; margin-top: -5px"
             ></DatePicker>
-            <span class="datePickerTitle">创建时间:</span>
+            <span class="datePickerTitle">{{ i18n.创建时间 }}:</span>
           </h2>
 
           <div
@@ -403,7 +418,13 @@
             minHeight: '430px',
           }"
         >
-          <h2 slot="title" class="Title" @click="$router.push('/admin/user_management')">子用户统计</h2>
+          <h2
+            slot="title"
+            class="Title"
+            @click="$router.push('/admin/user_management')"
+          >
+            {{ i18n.子用户统计 }}
+          </h2>
           <Row>
             <Col span="24" style="text-align: center">
               <Table
@@ -414,6 +435,7 @@
                   margin: '10px 24px',
                   minHeight: '320px',
                 }"
+                class="subUserTable"
               >
               </Table>
               <Page
@@ -546,24 +568,43 @@ export default {
         {
           title: "用户名",
           key: "username",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.用户名);
+          },
         },
         {
           title: "总任务数",
           key: "all_task",
+          width: 120,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.总任务数);
+          },
         },
         {
           title: "未完成任务数",
           key: "working_task",
+          width: 150,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.未完成任务数);
+          },
         },
         {
           title: "最后提交时间",
           key: "create_time",
           sortable: true,
-          minWidth: 80,
+          width: 200,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.最后提交时间);
+          },
         },
         {
           title: "费用",
           key: "cost",
+          align:"center",
           renderHeader: (h, params) => {
             let a = require("../assets/img/wenti_icon@2x.png");
             return h("div", [
@@ -575,7 +616,7 @@ export default {
                     verticalAlign: "middle",
                   },
                 },
-                "费用"
+                this.i18n.费用
               ),
               h(
                 "Tooltip",
@@ -583,13 +624,14 @@ export default {
                   props: {
                     placement: "top",
                     transfer: true,
-                    theme:"light"
+                    theme: "light",
                   },
                   style: {
                     width: "16px",
                     height: "16px",
                     verticalAlign: "middle",
                     display: "inline-block",
+                    marginLeft:"5px"
                   },
                 },
                 [
@@ -608,10 +650,10 @@ export default {
                       slot: "content",
                       style: {
                         whiteSpace: "normal",
-                        fontSize:"12px",
+                        fontSize: "12px",
                       },
                     },
-                    "创建该子用户以来的所有费用"
+                    this.i18n.创建该子用户以来的所有费用
                   ),
                 ]
               ),
@@ -641,6 +683,11 @@ export default {
       tableData4: [],
       tableData5: [],
     };
+  },
+  computed: {
+    i18n() {
+      return this.$t("index.Info");
+    },
   },
   mounted() {
     window.onresize = () => {
@@ -689,7 +736,13 @@ export default {
           },
 
           xAxis: {
-            data: ["总数", "完成", "排队", "计算中", "失败"],
+            data: [
+              this.i18n.总数,
+              this.i18n.完成,
+              this.i18n.排队,
+              this.i18n.计算中,
+              this.i18n.失败,
+            ],
             axisTick: { show: false },
             axisLine: { show: false },
           },
@@ -705,7 +758,7 @@ export default {
 
           series: [
             {
-              name: "任务",
+              name: this.i18n.任务,
               type: "bar",
               barWidth: 24,
               data: [
@@ -828,7 +881,9 @@ export default {
                 this.pending_task +
                 this.working_task
               ).toFixed(2) +
-              "}\n{b|已消费}",
+              "}\n{b|" +
+              this.i18n.已消费 +
+              "}",
             left: "19%",
             top: "27%",
             textAlign: "center",
@@ -851,7 +906,7 @@ export default {
             },
           },
           legend: {
-            data: ["计算", "存储", "流量"],
+            data: [this.i18n.计算, this.i18n.存储, this.i18n.流量],
             left: "45%",
             top: "11%",
             orient: "vertical",
@@ -862,7 +917,11 @@ export default {
             icon: "circle",
             formatter: (name) => {
               var index = 0;
-              var clientlabels = ["计算", "存储", "流量"];
+              var clientlabels = [
+                this.i18n.计算,
+                this.i18n.存储,
+                this.i18n.流量,
+              ];
               var clientcounts = [
                 this.finished_task,
                 this.pending_task,
@@ -882,7 +941,7 @@ export default {
                     (clientcounts[0] + clientcounts[1] + clientcounts[2])) *
                   100
                 ).toFixed(2) +
-                "%}      {c|¥" +
+                "%}   {c|¥" +
                 clientcounts[index] +
                 "}"
               );
@@ -892,16 +951,17 @@ export default {
                 a: {
                   fontSize: (24 / 1080) * this.screenHeight,
                   color: "#000000",
+                  width: 70,
                 },
                 b: {
                   fontSize: (24 / 1080) * this.screenHeight,
                   color: "#999999",
-                  width: "80%",
+                  width: 80,
                 },
                 c: {
                   fontSize: (24 / 1080) * this.screenHeight,
                   color: "#999999",
-                  width: "10%",
+                  width: 70,
                 },
               },
             },
@@ -910,7 +970,7 @@ export default {
           series: [
             {
               startAngle: 180,
-              name: "费用统计",
+              name: this.i18n.费用统计,
               type: "pie",
               radius: ["35%", "50%"],
               center: ["20%", "32.5%"],
@@ -919,9 +979,9 @@ export default {
                 show: false,
               },
               data: [
-                { value: this.finished_task, name: "计算" },
-                { value: this.pending_task, name: "存储" },
-                { value: this.working_task, name: "流量" },
+                { value: this.finished_task, name: this.i18n.计算 },
+                { value: this.pending_task, name: this.i18n.存储 },
+                { value: this.working_task, name: this.i18n.流量 },
               ],
             },
           ],
@@ -934,7 +994,15 @@ export default {
         const consumeLineOption = {
           xAxis: {
             type: "category",
-            data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+            data: [
+              this.i18n.周一,
+              this.i18n.周二,
+              this.i18n.周三,
+              this.i18n.周四,
+              this.i18n.周五,
+              this.i18n.周六,
+              this.i18n.周日,
+            ],
             splitLine: { show: false },
             axisTick: { show: false },
             axisLine: { show: false },
@@ -944,6 +1012,7 @@ export default {
             type: "value",
             axisTick: { show: false },
             axisLine: { show: false },
+            axisLabel:{formatter:'¥{value} '},
             splitLine: {
               lineStyle: {
                 color: "#F9FAFD",
@@ -1111,7 +1180,7 @@ export default {
           this.tableData3.push({
             username: data[i].username,
             all_task: data[i].all_task,
-            working_task:data[i].working_task,
+            working_task: data[i].working_task,
             cost: `¥${data[i].cost.toFixed(2)}`,
             create_time: data[i].create_time,
           });
@@ -1335,13 +1404,14 @@ export default {
       }
     }
     .titleTooltip {
+      margin-left: 5px;
       display: inline-block;
       vertical-align: middle;
       /deep/ .ivu-tooltip-light .ivu-tooltip-content {
         font-size: 12px !important;
         font-weight: 500;
       }
-      /deep/ .ivu-tooltip-inner-with-width{
+      /deep/ .ivu-tooltip-inner-with-width {
         text-align: left;
       }
     }
@@ -1373,5 +1443,9 @@ export default {
     padding: 0;
     position: relative;
   }
+}
+
+/deep/ .ivu-table-cell div {
+  display: inline-block;
 }
 </style>

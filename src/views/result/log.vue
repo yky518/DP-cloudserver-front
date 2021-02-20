@@ -1,7 +1,7 @@
 <template>
   <div id="log">
     <div>
-      JobInfo: JobID:{{ logInf.job.job_id }}; JobName:{{ logInf.job.job_name }};
+      JobInfo:  JobID:{{ logInf.job.job_id }}; JobName:{{ logInf.job.job_name }};
       JobType:{{ logInf.job.job_type }}; UserName:{{ logInf.job.username }}
     </div>
     <div>

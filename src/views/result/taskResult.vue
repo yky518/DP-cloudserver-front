@@ -7,23 +7,23 @@
       <template slot="header"></template>
       <Machine type="lammps" @set="setMachine"></Machine>
       <template slot="footer">
-        <Button class="cancelBtn" @click.native="cancel()">取消</Button>
-        <Button class="confirmBtn" @click.native="confirm()">确定</Button>
+        <Button class="cancelBtn" @click.native="cancel()">{{i18n.取消}}</Button>
+        <Button class="confirmBtn" @click.native="confirm()">{{i18n.确定}}</Button>
       </template>
     </Modal>
-    <Breadcrumb :style="{marginLeft:30/1080*screenHeight+'px'}"  separator="-">
-      <BreadcrumbItem>结果总览</BreadcrumbItem>
-      <BreadcrumbItem>任务总览</BreadcrumbItem>
+    <Breadcrumb :style="{marginLeft:30/1080*screenHeight+'px',marginTop:'5px'}"  separator="-">
+      <BreadcrumbItem>{{i18n.结果总览}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.任务总览}}</BreadcrumbItem>
     </Breadcrumb>
     <Card class="col-card" ref="jobCard" :style="'height:'+590/1080*screenHeight+'px;margin:'+30/1080*screenHeight+'px;margin-top:0;'">
       <h2 slot="title" class="Title">
-        <span class="tableTitle">Job 概览</span>
+        <span class="tableTitle">{{i18n.Job概览}}</span>
         <div style="float:right;font-size: 12px;vertical-align: middle;margin-top:9px;padding:0 5px;" @click="refreshJob()">
           <img src="../../assets/img/shuaxin_icon@2x.png" alt="" style="height:14px;float:left;">
           <div style="height:14px;line-height:14px;float:left"></div>
         </div>
         <Form inline label-position="left" :model="searchData" class="searchForm">
-          <FormItem FormItem label="任务类型:" prop="type" :style="{width: 110/1080*screenWidth+'px'}">
+          <FormItem FormItem :label="i18n.任务类型+':'" prop="type" :style="{width: 110/1080*screenWidth+'px'}">
             <Select v-model="searchData.type" style="width: 80px">
               <Option
                 v-for="item in jobType"
@@ -33,7 +33,7 @@
               >
             </Select>
           </FormItem>
-          <FormItem label="创建时间:" prop="date" :style="{width: 65/1080*screenWidth+'px',verticalAlign: 'middle'}">
+          <FormItem :label="i18n.创建时间+':'" prop="date" :style="{width: 85/1080*screenWidth+'px',verticalAlign: 'middle'}">
             <DatePicker
               v-model="searchData.date"
               format="yyyy.MM.dd"
@@ -49,10 +49,10 @@
             <img src="../../assets/img/rili_icon@2x.png" alt="" style="width:16px;" @click="open = true">
             </DatePicker>
           </FormItem>
-          <FormItem label="编号范围:" prop="range" :style="{width: 155/1080*screenWidth+'px'}">
+          <FormItem :label="i18n.编号范围" prop="range" :style="{width: 155/1080*screenWidth+'px'}">
             <Input
               type="number"
-              placeholder="起点"
+              :placeholder="i18n.起点"
               v-model="searchData.range.begin"
               style="width: 60px"
               class="searchFormItem"
@@ -60,7 +60,7 @@
             —
             <Input
               type="number"
-              placeholder="终点"
+              :placeholder="i18n.终点"
               v-model="searchData.range.end"
               style="width: 60px"
               class="searchFormItem"
@@ -69,7 +69,7 @@
           <FormItem prop="search" :style="{width: 100/1080*screenWidth+'px'}">
             <Input
               type="text"
-              placeholder="输入编号/名称/类型以搜索任务"
+              :placeholder="i18n.输入编号名称类型以搜索"
               v-model="searchData.search"
               class="searchFormItem"
             ></Input>
@@ -77,17 +77,17 @@
           <FormItem prop="search">
             <Button
               type="primary"
-              style="background: #13227a; border-radius: 20px;height: 25px;width:60px;"
+              style="background: #13227a; border-radius: 20px;"
               @click.native="searchTask()"
               class="searchFormBtn"
-              >任务搜索</Button
+              >{{i18n.任务搜索}}</Button
             >
           </FormItem>
         </Form>
         <RadioGroup v-model="jobChosen" type="button" style="float: right;font-size:14px;font-weight:500;margin-top:1px;" size="small">
-          <Radio label="100">全部({{ allJobNum }})</Radio>
-          <Radio label="2">完成({{ finishedJobNum }})</Radio>
-          <Radio label="1">运行({{ workingJobNum }})</Radio>
+          <Radio label="100">{{i18n.全部}}({{ allJobNum }})</Radio>
+          <Radio label="2">{{i18n.完成}}({{ finishedJobNum }})</Radio>
+          <Radio label="1">{{i18n.运行}}({{ workingJobNum }})</Radio>
         </RadioGroup>
       </h2>
       <Table
@@ -123,59 +123,49 @@
             style="margin-right: 5px; color: #13227a"
             :disabled="$refs.jobTable.objData[index]._isDisabled"
             @click.native="edit(row,index)"
-            ><img :src="getJobUrl(index, 'bianji')" style="width: 18px; height: 18px"></img></Button>
+            ><Tooltip :content="i18n.编辑">
+              <img :src="getJobUrl(index, 'bianji')" style="width: 18px; height: 18px"></img></Tooltip></Button>
           <Button
             type="text"
             size="small"
             style="margin-right: 5px; color: #13227a"
             :disabled="$refs.jobTable.objData[index]._isDisabled"
             @click="deleteJob(row, index)"
-            ><img
+            ><Tooltip :content="i18n.删除"><img
               :src="getJobUrl(index, 'shanchu')"
               alt=""
               style="width: 18px; height: 18px"
-            /></Button>
+            /></Tooltip></Button>
           <Button
             type="text"
             size="small"
             style="margin-right: 5px; color: #13227a"
             :disabled="$refs.jobTable.objData[index]._isDisabled"
-            ><img
+            ><Tooltip :content="i18n.下载"><img
               :src="getJobUrl(index, 'xiazai')"
               alt=""
               style="width: 18px; height: 18px"
-            /></Button>
-            <img
-              src="../../assets/img/yishanchu@2x.png"
-              alt=""
-              v-if="$refs.jobTable.objData[index]._isDisabled"
-              class="deleteIcon"
-            />
+            /></Tooltip></Button>
         </template>
         <div slot="footer" :style="'height:'+48/1080*screenHeight+'px;'" class="footer">
           <Checkbox
             style="display: inline-block"
             @on-change="selectAllJob"
             v-model="jobIsAllSelectd"
-            >全选</Checkbox
+            >{{i18n.全选}}</Checkbox
           >
           <div style="display: inline-block; float: right">
-            共选中任务{{ jobChosenNum }}条,总计费￥{{jobChosenCost}}元
+            {{i18n.共选中}}{{ jobChosenNum }}{{i18n.条}}
             <Button
                   class="footerBtn Del"
                   :disabled="!jobIsSelectd"
                   @click.native="deleteAllJob()"
-                  ><img src="../../assets/img/shanchuIconDel.png" style="width:16px;">删除</Button
+                  ><img src="../../assets/img/shanchuIconDel.png" style="width:16px;">{{i18n.删除}}</Button
                 >
                 <Button
                   class="footerBtn"
                   :disabled="!jobIsSelectd"
-                  ><img src="../../assets/img/daochu_按钮@2x.png" style="width:16px;">导出</Button
-                >
-                <Button
-                  class="footerBtn"
-                  :disabled="!jobIsSelectd"
-                  ><img src="../../assets/img/xiazaiIconWhite.png" style="width:16px;">下载</Button
+                  ><img src="../../assets/img/xiazaiIconWhite.png" style="width:16px;">{{i18n.下载}}</Button
                 >
           </div>
         </div>
@@ -183,25 +173,26 @@
     </Card>
 
     <Row :gutter="16">
-      <Col span="9">
+      <Col span="10">
         <Card class="col-card" :style="'height:'+421/1080*screenHeight+'px;margin-left:'+30/1080*screenHeight+'px;'">
           <h2 slot="title" class="Title">
-            <span class="tableTitle">Task 概览</span>
+            <span class="tableTitle">{{i18n.Task概览}}</span>
             <div style="float:right;font-size: 12px;margin-top:9px;padding:0 5px;" @click="refreshTask()">
               <img src="../../assets/img/shuaxin_icon@2x.png" alt="" style="height:14px;float:left;">
               <div style="height:14px;line-height:14px;float:left"></div>
             </div>
             <RadioGroup v-model="taskChosen" type="button" style="float: right;font-size:14px;font-weight:500;margin-top:1px;" size="small" @on-change="taskListFilter">
-              <Radio label="">全部({{ allTaskNum }})</Radio>
-              <Radio label="2">完成({{ finishedTaskNum }})</Radio>
-              <Radio label="1">运行({{ workingTaskNum }})</Radio>
-              <Radio label="-1">失败({{ failedTaskNum }})</Radio>
+              <Radio label="">{{i18n.全部}}({{ allTaskNum }})</Radio>
+              <Radio label="2">{{i18n.完成}}({{ finishedTaskNum }})</Radio>
+              <Radio label="1">{{i18n.运行}}({{ workingTaskNum }})</Radio>
+              <Radio label="-1">{{i18n.失败}}({{ failedTaskNum }})</Radio>
             </RadioGroup>
           </h2>
           <Table
             :columns="task"
             :data="taskList"
             ref="taskTable"
+            highlight-row
             @on-selection-change="taskIsSelect"
             @on-row-click="showLog"
             :row-class-name="taskRowClassName"
@@ -209,7 +200,6 @@
             :no-data-text="defaultUrl(taskUrlType)"
             :loading="taskLoading"
           >
-          
             <template slot-scope="{ row, index }" slot="top"> 
               <img :src="getTaskTop(index, 'zhiding')" style="width: 18px; height: 18px" @click="isTaskTop(row,index)">
             </template>
@@ -223,7 +213,7 @@
                 "
                 :disabled="$refs.taskTable.objData[index]._isDisabled&&!row.result"
                 @click="download(row)"
-                >下载</Button
+                >{{i18n.下载}}</Button
               >
             </template>
             <template slot-scope="{ row, index }" slot="output">
@@ -235,7 +225,7 @@
                   border-radius: 20px;
                 "
                 :disabled="$refs.taskTable.objData[index]._isDisabled"
-                @click="downloadInput(row)">下载</Button
+                @click="downloadInput(row)">{{i18n.下载}}</Button
               >
             </template>
 
@@ -244,39 +234,40 @@
                 style="display: inline-block;margin-left:5px"
                 @on-change="selectAllTask"
                 v-model="taskIsAllSelectd"
-                >全选</Checkbox
+                >{{i18n.全选}}</Checkbox
               >
               <div style="display: inline-block; float: right;font-size:12px;width:370px;" 
             class="taskFooterBtn">
-                共选中任务{{ taskChosenNum }}条,总计费￥{{taskChosenCost}}元
+                {{i18n.共选中}}{{ taskChosenNum }}{{i18n.条}},总计费￥{{taskChosenCost}}元
                 <Button
                 class="footerBtn Del"
                   size="small"
                   :disabled="!taskIsSelectd"
                   @click.native="deleteAllTask()"
-                  ><img src="../../assets/img/shanchuIconDel.png" style="width:12px;">删除</Button
-                >
-                <Button class="footerBtn"
-                  size="small"
-                  :disabled="!taskIsSelectd"
-                  ><img src="../../assets/img/daochu_按钮@2x.png" style="width:12px;">导出</Button
+                  ><img src="../../assets/img/shanchuIconDel.png" style="width:12px;">{{i18n.删除}}</Button
                 >
                 <Button  class="footerBtn"
                   size="small"
                   :disabled="!taskIsSelectd"
-                  ><img src="../../assets/img/xiazaiIconWhite.png" style="width:12px;">下载</Button
+                  ><img src="../../assets/img/xiazaiIconWhite.png" style="width:12px;">{{i18n.输入}}</Button
+                >
+                <Button
+                  class="footerBtn"
+                  size="small"
+                  :disabled="!taskIsSelectd"
+                  ><img src="../../assets/img/xiazaiIconWhite.png" style="width:12px;">{{i18n.输出}}</Button
                 >
               </div>
             </div>
           </Table>
         </Card>
       </Col>
-      <Col span="15">
+      <Col span="14">
         <Card class="col-card" :style="'height:'+421/1080*screenHeight+'px;margin-right:'+30/1080*screenHeight+'px;'" ref="log">
           <h2 slot="title" class="Title">
-            <span class="tableTitle">日志信息</span>
+            <span class="tableTitle">{{i18n.日志信息}}</span>
             <Icon :type="logFullScreen?'md-contract':'md-qr-scanner'" style="margin-top:5px;" @click.native="fullScreen()"/>
-            <span style="font-size:12px;" @click="fullScreen()">{{!logFullScreen?"全屏":"缩小"}}</span>
+            <span style="font-size:12px;" @click="fullScreen()">{{!logFullScreen?i18n.全屏:i18n.缩小}}</span>
           <a
             style="
               float: right;
@@ -286,7 +277,7 @@
               margin-right:20px;
             "
             @click="log()"
-            >在新标签页中展示日志信息</a
+            >{{i18n.在新标签页中展示日志信息}}</a
           >
           </h2>
           <Input
@@ -294,7 +285,7 @@
             v-model="journal"
             :row="(410/1080*screenHeight-100)/27"
             :autosize="{ minRows: (410/1080*screenHeight)/27, maxRows: (410/1080*screenHeight)/27 }"
-            style="margin-top:12px"
+            style="padding:12px"
           ></Input>
         </Card>
       </Col>
@@ -419,6 +410,9 @@ export default {
           sortable: true,
           align: "center",
           width: 50,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.编号);
+          },
         },
         {
           title: "名称",
@@ -426,6 +420,9 @@ export default {
           width:60,
           tooltip:true,
           align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.名称);
+          },
         },
 
         {
@@ -434,16 +431,22 @@ export default {
           width:50,
           tooltip:true,
           align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.用户);
+          },
         },
         {
           title: "类型",
           key: "job_type",
-          
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.类型);
+          },
         },
         {
           title: "状态",
           key: "state",
-          width: 45,
+          width: 50,
           align:"center",
           render: (h, params) => {
             let bgColor = "#2EC6A8";
@@ -469,7 +472,7 @@ export default {
                     verticalAlign: "middle",
                   },
                 },
-                "状态"
+                this.i18n.状态
               ),
               h(
                 "Tooltip",
@@ -484,6 +487,7 @@ export default {
                     height: "16px",
                     verticalAlign: "middle",
                     display: "inline-block",
+                    marginLeft:"5px"
                   },
                 },
                 [
@@ -514,7 +518,7 @@ export default {
                               color: "#2EC6A8",
                             },
                           },
-                          "成功"
+                          this.i18n.成功
                         ),
                         "/",
                         h(
@@ -524,7 +528,7 @@ export default {
                               color: "#F06149",
                             },
                           },
-                          "失败"
+                          this.i18n.失败
                         ),
                         "/",
                         h(
@@ -534,7 +538,7 @@ export default {
                               color: "#F0C249",
                             },
                           },
-                          "运行"
+                          this.i18n.运行
                         ),
                         "/",
                         h(
@@ -544,7 +548,7 @@ export default {
                               color: "#999999",
                             },
                           },
-                          "等待"
+                          this.i18n.等待
                         ),
                       ]),
                     ]
@@ -569,7 +573,7 @@ export default {
                     verticalAlign: "middle",
                   },
                 },
-                "子任务数"
+                this.i18n.子任务数
               ),
               h(
                 "Tooltip",
@@ -584,6 +588,7 @@ export default {
                     height: "16px",
                     verticalAlign: "middle",
                     display: "inline-block",
+                    marginLeft:"5px"
                   },
                 },
                 [
@@ -609,7 +614,7 @@ export default {
                       h(
                         "div",
                         { style: { textAlign: "center" } },
-                        "总子任务数"
+                        this.i18n.总子任务数
                       ),
                       h("div", { style: { textAlign: "center" } }, [
                         h(
@@ -619,7 +624,7 @@ export default {
                               color: "#2EC6A8",
                             },
                           },
-                          "成功"
+                          this.i18n.成功
                         ),
                         "/",
                         h(
@@ -629,7 +634,7 @@ export default {
                               color: "#F06149",
                             },
                           },
-                          "失败"
+                          this.i18n.失败
                         ),
                         "/",
                         h(
@@ -639,7 +644,7 @@ export default {
                               color: "#F0C249",
                             },
                           },
-                          "运行"
+                          this.i18n.运行
                         ),
                         "/",
                         h(
@@ -649,7 +654,7 @@ export default {
                               color: "#999999",
                             },
                           },
-                          "等待"
+                          this.i18n.等待
                         ),
                       ]),
                     ]
@@ -665,6 +670,9 @@ export default {
           sortable: true,
           align: "center",
           width: 135,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.创建时间);
+          },
           render: (h, params) => {
             return this.$createElement(
               "div",
@@ -682,6 +690,9 @@ export default {
           sortable: true,
           align: "center",
           width:120,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.运行时间);
+          },
           render: (h, params) => {
             let hour = 0;
             let minute = 0;
@@ -703,6 +714,10 @@ export default {
           title: "费用",
           key: "cost",
           sortable: true,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.费用);
+          },
           render: (h, params) => {
             let a = require("../../assets/img/wenti_icon@2x.png");
             return h("div", [
@@ -715,39 +730,7 @@ export default {
                   },
                 },
                 "¥" + params.row.cost.toFixed(2)
-              ),
-              h(
-                "Tooltip",
-                {
-                  style: {
-                    verticalAlign: "middle",
-                    display: "inline-block",
-                    width: "16px",
-                    height: "16px",
-                  },
-                },
-                [
-                  h("img", {
-                    style: {
-                      width: "16px",
-                      height: "16px",
-                    },
-                    domProps: {
-                      src: a,
-                    },
-                  }),
-                  h(
-                    "div",
-                    {
-                      slot: "content",
-                      style: {
-                        whiteSpace: "normal",
-                      },
-                    },
-                    "Cost: ¥10/h✖10.3h = ¥" + params.row.cost.toFixed(2) //整个的信息即气泡内文字)
-                  ),
-                ]
-              ),
+              )
             ]);
           },
         },
@@ -755,6 +738,9 @@ export default {
           title: "备注",
           slot: "remarks",
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.备注);
+          },
           render: (h, params) => {
             let text = params.row.remarks;
             let toolText = text;
@@ -867,6 +853,9 @@ export default {
           slot: "action",
           align: "center",
           width: 180,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
         },
       ],
       taskList: [],
@@ -888,10 +877,17 @@ export default {
           sortable: true,
           width: 50,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.编号);
+          },
         },
         {
           title: "状态",
           key: "state",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.状态);
+          },
           render: (h, params) => {
             let bgColor = "#2EC6A8";
             if (params.row.state == 1) bgColor = "#F0C249";
@@ -900,6 +896,7 @@ export default {
               style: {
                 width: "14px",
                 height: "14px",
+                marginLeft:"25px",
                 background: bgColor,
                 borderRadius: "100%",
               },
@@ -911,11 +908,19 @@ export default {
           key: "spend_time",
           sortable: true,
           minWidth: 35,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.运行时间);
+          },
         },
         {
           title: "费用",
           key: "cost",
           sortable: true,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.费用);
+          },
           render: (h, params) => {
             return h("div", {}, "¥" + params.row.cost.toFixed(2));
           },
@@ -924,11 +929,17 @@ export default {
           title: "输入",
           slot: "input",
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.输入);
+          },
         },
         {
           title: "输出",
           slot: "output",
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.输出);
+          },
         },
       ],
       journal: "",
@@ -1073,15 +1084,15 @@ export default {
   methods: {
     defaultUrl(type) {
       if (type == 1) {
-        return `<img class='tipImg' src=${require("../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>暂无任务</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>${this.$t("index.Default.暂无任务")}</div>`;
       } else if (type == 2) {
-        return `<img class='tipImg' src=${require("../../assets/img/网络错误@2x.png")}><div class='tipTxt'>网络错误</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/网络错误@2x.png")}><div class='tipTxt'>${this.$t("index.Default.网络错误")}</div>`;
       } else if (type == 3) {
-        return `<img class='tipImg' src=${require("../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>无搜索结果</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>${this.$t("index.Default.无搜索结果")}</div>`;
       } else if (type == 4) {
-        return `<img class='tipImg' src=${require("../../assets/img/无权限@2x.png")}><div class='tipTxt'>无权限</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/无权限@2x.png")}><div class='tipTxt'>${this.$t("index.Default.无权限")}</div>`;
       } else if (type == 5) {
-        return `<img class='tipImg' src=${require("../../assets/img/404@2x.png")}><div class='tipTxt'>404报错</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/404@2x.png")}><div class='tipTxt'>${this.$t("index.Default.404报错")}</div>`;
       }
     },
 
@@ -1591,6 +1602,11 @@ export default {
       this.showModal = false;
     },
   },
+  computed:{
+    i18n(){
+      return this.$t("index.Task");
+    }
+  }
 };
 </script>
 
@@ -1627,12 +1643,12 @@ export default {
 .col-card {
   overflow: hidden;
   /deep/ .ivu-card-head {
-    height: 35px;
-    padding: 0;
+    height: 45px;
+    padding: 5px 0;
   }
   /deep/ .ivu-card-body {
     height: 35px;
-    padding-top: 0;
+    padding: 0 0 16px 0;
   }
   /deep/ .ivu-table {
     /deep/ .ivu-table-cell {
@@ -1671,6 +1687,7 @@ export default {
       margin-top: 7px;
       margin-left: 10px;
       float: left;
+      font-size: 16px;
     }
     .searchForm {
       margin-left: 10px;
@@ -1686,10 +1703,9 @@ export default {
       .searchFormBtn {
         background: #13227a;
         border-radius: 20px;
-        height: 25px;
         width: 60px;
         font-size: 12px;
-        padding: 0;
+        padding: 0 5px;
       }
     }
     /deep/ .ivu-radio-group {

@@ -22,21 +22,21 @@
         :style="{ margin: (20 / 1080) * screenHeight + 'px 0' }"
       >
         <div style="float: left; height: 38px; padding-top: 6px">
-          子账户消费汇总
+          {{i18n.子账户消费汇总}}
         </div>
 
         <div class="filter">
-          <span class="period">账期：</span>
+          <span class="period">{{i18n.账期}}:</span>
           <Date-picker
             type="month"
             format="yyyy-MM"
             placeholder="选择日期"
             class="period_datePicker"
           ></Date-picker>
-          <Button class="searchBtn">搜索</Button>
+          <Button class="searchBtn">{{i18n.搜索}}</Button>
           <Button class="exportBtn" @click.native="isShow = true">
             <img src="../../../assets/img/daochu_按钮@2x.png" alt="" />
-            导出月度账单
+            {{i18n.导出月度账单}}
           </Button>
         </div>
       </div>
@@ -44,6 +44,7 @@
         :columns="subConsume"
         :data="subConsumeList"
         :height="(400 / 1080) * screenHeight"
+        :no-data-text="defaultUrl(subUrlType)"
       ></Table>
     </div>
     <div class="table">
@@ -51,12 +52,13 @@
         class="table_title"
         :style="{ margin: (20 / 1080) * screenHeight + 'px 0' }"
       >
-        产品消费汇总
+        {{i18n.产品消费汇总}}
       </div>
       <Table
         :columns="product"
         :data="productList"
         :height="(400 / 1080) * screenHeight"
+        :no-data-text="defaultUrl(productUrlType)"
       ></Table>
     </div>
     <Page style="text-align: center; margin-top: 20px"></Page>
@@ -70,22 +72,22 @@
             line-height: 32px;
           "
         >
-          导出月度账单
+          {{i18n.导出月度账单}}
         </div>
       </template>
       <div class="modal_tip">
         <img src="../../../assets/img/tishi_icon@2x.png" alt="" />
-        <span>提示：您导出的账单为详细账单，请在导出记录中下载。</span>
+        <span>{{i18n.提示您导出的账单为详细账单请在导出记录中下载}}</span>
       </div>
       <Form label-position="right" :label-width="80" class="modal_form">
-        <FormItem label="账期：">
+        <FormItem :label="i18n.账期+':'">
           <Date-picker
             type="daterange"
             format="yyyy/MM/dd"
-            placeholder="选择日期和时间"
+            :placeholder="i18n.选择日期和时间"
           ></Date-picker>
         </FormItem>
-        <FormItem label="验证码：">
+        <FormItem :label="i18n.验证码">
           <Verify
             :type="1"
             :codeLength="4"
@@ -96,13 +98,13 @@
         </FormItem>
       </Form>
       <template slot="footer">
-        <Button @click.native="submit()" class="confirmBtn"> 确定 </Button>
+        <Button @click.native="submit()" class="confirmBtn"> {{i18n.确定}} </Button>
       </template>
     </Modal>
 
     <Modal v-model="exportSuccess" title="" class="exportResult" width="450">
       <template slot="header">
-        <div class="resultHeader">导出成功</div>
+        <div class="resultHeader">{{i18n.导出成功}}</div>
       </template>
       <div class="resultStatu">
         <img
@@ -112,10 +114,10 @@
         />
       </div>
       <div class="resultTxt">
-        费用账单导出成功，文件导出后暂存在平台上，7天后自动删除，快去导出记录里下载吧！
+        {{i18n.费用账单导出成功文件导出后暂存在平台上7天后自动删除快去导出记录里下载吧}}
       </div>
       <div slot="footer" style="text-align: center">
-        <Button class="resultBtn" @click.native="download()">去下载</Button>
+        <Button class="resultBtn" @click.native="download()">{{i18n.去下载}}</Button>
       </div>
     </Modal>
   </div>
@@ -128,6 +130,8 @@ import { getTrades, getBills } from "@/api/finance";
 export default {
   data() {
     return {
+      subUrlType:1,
+      productUrlType:1,
       screenHeight: document.documentElement.clientHeight,
       screenWidth: document.documentElement.clientWidth,
       testData: [
@@ -145,38 +149,74 @@ export default {
         {
           title: "账期",
           key: "period",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.账期);
+          },
         },
         {
           title: "账号",
           key: "account",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.账号);
+          },
         },
         {
           title: "子账户名称",
           key: "subAccount",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.子账户名称);
+          },
         },
         {
           title: "原价",
           key: "original_price",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.原价);
+          },
         },
         {
           title: "优惠金额",
           key: "discounted_price",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.优惠金额);
+          },
         },
         {
           title: "应付金额",
           key: "amounts_payable",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.应付金额);
+          },
         },
         {
           title: "现金支付",
           key: "cash_payment",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.现金支付);
+          },
         },
         {
           title: "代金券支付",
           key: "voucher_payment",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.代金券支付);
+          },
         },
         {
           title: "欠费金额",
           key: "arrears",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.欠费金额);
+          },
         },
       ],
       subConsumeList: [
@@ -263,40 +303,75 @@ export default {
           title: "账期",
           key: "period",
           width: 90,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.账期);
+          },
         },
         {
           title: "账号",
           key: "account",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.账号);
+          },
         },
         {
           title: "产品明细",
           key: "details",
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.产品明细);
+          },
         },
         {
           title: "原价",
           key: "original_price",
           minWidth: 30,
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.原价);
+          },
         },
         {
           title: "优惠金额",
           key: "discounted_price",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.优惠金额);
+          },
         },
         {
           title: "应付金额",
           key: "amounts_payable",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.应付金额);
+          },
         },
         {
           title: "现金支付",
           key: "cash_payment",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.现金支付);
+          },
         },
         {
           title: "代金券支付",
           key: "voucher_payment",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.代金券支付);
+          },
         },
         {
           title: "欠费金额",
           key: "arrears",
+          align:"center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.欠费金额);
+          },
         },
       ],
       productList: [
@@ -381,6 +456,11 @@ export default {
       totelAmount: [1200, 1500, 1500, 1500, 2300, 2200],
     };
   },
+  computed:{
+    i18n(){
+      return this.$t("index.Expense");
+    }
+  },
   mounted() {
     window.onresize = () => {
       return (() => {
@@ -400,7 +480,7 @@ export default {
     const trend = this.$echarts.init(document.getElementById("trend"));
     const trendOption = {
       title: {
-        text: "消费趋势(近6个月)",
+        text: this.i18n.消费趋势近6个月,
         top: 0,
         left: 0,
         textStyle: {
@@ -450,7 +530,7 @@ export default {
         {
           type: "value",
           axisLabel:{formatter:'¥{value} '},
-          data: ["¥0", "¥100,000", "¥200,000", "¥300,000", "¥400,000"],
+          // data: ["¥0", "¥100,000", "¥200,000", "¥300,000", "¥400,000"],
           splitLine: { show: false },
           axisLine: { show: false },
           axisTick: { show: false },
@@ -560,7 +640,7 @@ export default {
     );
     const distributionOption = {
       title: {
-        text: "产品消费分布（2021-01）",
+        text: this.i18n.产品消费分布+"（2021-01）",
         top: 0,
         left: 0,
         textStyle: {
@@ -628,10 +708,23 @@ export default {
     Verify,
   },
   methods: {
+    defaultUrl(type) {
+      if (type == 1) {
+        return `<img class='tipImg' src=${require("../../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>${this.$t("index.Default.暂无任务")}</div>`;
+      } else if (type == 2) {
+        return `<img class='tipImg' src=${require("../../../assets/img/网络错误@2x.png")}><div class='tipTxt'>${this.$t("index.Default.网络错误")}</div>`;
+      } else if (type == 3) {
+        return `<img class='tipImg' src=${require("../../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>${this.$t("index.Default.无搜索结果")}</div>`;
+      } else if (type == 4) {
+        return `<img class='tipImg' src=${require("../../../assets/img/无权限@2x.png")}><div class='tipTxt'>${this.$t("index.Default.无权限")}</div>`;
+      } else if (type == 5) {
+        return `<img class='tipImg' src=${require("../../../assets/img/404@2x.png")}><div class='tipTxt'>${this.$t("index.Default.404报错")}</div>`;
+      }
+    },
     verifyReady() {
       this.$nextTick(() => {
         document.getElementsByClassName("verify-change-code")[0].innerHTML =
-          "看不清，换一张";
+          this.i18n.看不清换一张;
       });
     },
     submit() {
@@ -644,7 +737,7 @@ export default {
         this.$refs.expense_verify.refresh();
       } else {
         // 验证码输入错误,刷新下验证码
-        this.$Message.error("验证码错误");
+        this.$Message.error(this.i18n.验证码错误);
         this.$refs.expense_verify.refresh();
       }
     },
@@ -658,6 +751,14 @@ export default {
 
 <style lang="scss" scoped>
 #expense {
+  /deep/ .ivu-table-tip {
+    .tipImg {
+      width: 15%;
+    }
+    .tipTxt {
+      font-size: 12px;
+    }
+  }
   .table {
     margin-top: 20px;
     .table_title {

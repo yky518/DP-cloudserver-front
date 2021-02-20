@@ -10,19 +10,19 @@
     </Card>
 
     <div style="margin: 10px 0;width:100%;text-align: center;">
-      <Button type="primary" @click="parseJson" style="width:200px;height:40px;background:#13227A;border-radius: 20px;display: inline-block;">确定</Button>
+      <Button type="primary" @click="parseJson" style="width:200px;height:40px;background:#13227A;border-radius: 20px;display: inline-block;">{{i18n.确定}}</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">
       <Form ref="form4" :label-width="100">
-        <FormItem label="任务名" prop="name">
+        <FormItem :label="i18n.任务名" prop="name">
           <Input v-model="name" style="width:200px"/>
         </FormItem>
-        <FormItem label="json参数" prop="json">
+        <FormItem :label="i18n.json参数" prop="json">
           <Input v-model="inputJsonString" :rows="6"
                  type="textarea" placeholder="Enter something..." />
         </FormItem>
-        <FormItem  label="训练数据" prop="data">
+        <FormItem :label="i18n.训练数据" prop="data">
           <Upload action="/" :before-upload="handleUpload">
             <Button icon="ios-cloud-upload-outline">Upload files</Button>
           </Upload>
@@ -31,14 +31,14 @@
             <Progress :percent="progress" />
           </div>
         </FormItem>
-        <FormItem label="文件目录" prop="fileJson" v-if="file !== null">
+        <FormItem :label="i18n.文件目录" prop="fileJson" v-if="file !== null">
           <Input v-model="fileString" :rows="6"
                  type="textarea" placeholder="Enter something..." />
         </FormItem>
       </Form>
       <div style="text-align: center;">
-        <Button type="primary" :disabled="progress<100" @click="handleSubmit">提交</Button>
-        <Button @click="handleReset" style="margin-left: 8px">取消</Button>
+        <Button type="primary" :disabled="progress<100" @click="handleSubmit">{{i18n.提交}}</Button>
+        <Button @click="handleReset" style="margin-left: 8px">{{i18n.取消}}</Button>
       </div>
     </Card>
   </div>
@@ -84,8 +84,10 @@ export default {
       showJson: false,
     };
   },
-  created() {
-
+  computed: {
+    i18n(){
+      return this.$t("index.Algorithm");
+    }
   },
   mounted() {
     let task = {
@@ -116,14 +118,14 @@ export default {
         };
         insertJob(data).then((data) => {
           console.log(data);
-          alert('任务提交成功');
+          alert(this.i18n.任务提交成功);
           // this.$router.push(`/job/${data.data.job_id}`);
           this.$router.push(`/user/userinfo/${this.$store.state.user.name}`);
         }).catch((err) => {
           console.log(err);
         });
       } else {
-        alert('请务必上传下zip格式的训练数据');
+        alert(this.i18n.请务必上传下zip格式的训练数据);
       }
     },
     handleReset() {
@@ -158,7 +160,7 @@ export default {
           // && entryList.indexOf('data/POSCAR') >= 0 && entryList.indexOf('data/POTCAR') >= 0
 
           if (entryList.indexOf('data/input.json')) {
-            alert('训练数据格式正确');
+            alert(this.i18n.训练数据格式正确);
 
             let fileString = '';
             for (const entry of entryList) {
@@ -205,7 +207,7 @@ export default {
                   console.log(result);
                   const url = `http://dpcloudserver.oss-cn-shenzhen.aliyuncs.com/${result.name}`;
 
-                  alert('上传成功');
+                  alert(this.i18n.上传成功);
                   that.oss_path = url;
                 } catch (e) {
                   console.log(e);
@@ -228,14 +230,14 @@ export default {
             });
           } else {
             that.file = null;
-            alert('训练数据缺少文件');
+            alert(this.i18n.训练数据缺少文件);
           }
         }, (e) => {
           console.log(e);
         });
       } else {
         this.file = null;
-        alert('请上传zip格式文件');
+        alert(this.i18n.请上传zip格式文件);
       }
     },
     upload() {

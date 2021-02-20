@@ -1,14 +1,14 @@
 <template>
   <div id="voucher">
     <div class="date">
-      <span class="date_title">激活时间：</span>
+      <span class="date_title">{{i18n.激活时间}}</span>
       <Date-picker
         type="daterange"
         format="yyyy/MM/dd"
         placeholder="选择日期和时间"
         class="datePicker"
       ></Date-picker>
-      <Button class="date_btn">搜索</Button>
+      <Button class="date_btn">{{i18n.搜索}}</Button>
     </div>
     <Table
       :columns="voucher"
@@ -16,6 +16,7 @@
       :height="(500 / 1080) * screenHeight"
       ref="voucherTable"
       class="voucherTable"
+      :no-data-text="defaultUrl(voucherUrlType)"
     >
       <template slot="action">
         <div style="text-align: center; color: #13227a">使用明细</div>
@@ -29,6 +30,7 @@
 export default {
   data() {
     return {
+      voucherUrlType:1,
       screenHeight: document.documentElement.clientHeight,
       screenWidth: document.documentElement.clientWidth,
       editIndex: -1,
@@ -38,36 +40,54 @@ export default {
           key: "voucherNum",
           width: 140,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.代金券编号);
+          },
         },
         {
           title: "面值",
           key: "value",
           width: 100,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.面值);
+          },
         },
         {
           title: "余额",
           key: "balance",
           width: 100,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.余额);
+          },
         },
         {
           title: "使用产品",
           key: "produce",
           width: 100,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.使用产品);
+          },
         },
         {
           title: "适用范围",
           key: "scope",
           minWidth: 200,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.适用范围);
+          },
         },
         {
           title: "订单类型",
           key: "type",
           width: 150,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.订单类型);
+          },
         },
         {
           title: "金额限制",
@@ -77,12 +97,18 @@ export default {
           },
           width: 120,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.金额限制);
+          },
         },
         {
           title: "状态",
           key: "state",
           width: 80,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.状态);
+          },
         },
         {
           title: "生效时间/失效时间",
@@ -95,11 +121,17 @@ export default {
           },
           width: 180,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.生效时间失效时间);
+          },
         },
         {
           title: "备注",
           width: 150,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.备注);
+          },
           render: (h, params) => {
             let text = params.row.remarks;
             let toolText = text;
@@ -216,6 +248,9 @@ export default {
           slot: "action",
           minWidth: 100,
           align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
         },
       ],
       voucherList: [
@@ -297,11 +332,39 @@ export default {
       })();
     };
   },
+  computed:{
+    i18n(){
+      return this.$t("index.Voucher");
+    }
+  },
+  methods: {
+    defaultUrl(type) {
+      if (type == 1) {
+        return `<img class='tipImg' src=${require("../../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>${this.$t("index.Default.暂无任务")}</div>`;
+      } else if (type == 2) {
+        return `<img class='tipImg' src=${require("../../../assets/img/网络错误@2x.png")}><div class='tipTxt'>${this.$t("index.Default.网络错误")}</div>`;
+      } else if (type == 3) {
+        return `<img class='tipImg' src=${require("../../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>${this.$t("index.Default.无搜索结果")}</div>`;
+      } else if (type == 4) {
+        return `<img class='tipImg' src=${require("../../../assets/img/无权限@2x.png")}><div class='tipTxt'>${this.$t("index.Default.无权限")}</div>`;
+      } else if (type == 5) {
+        return `<img class='tipImg' src=${require("../../../assets/img/404@2x.png")}><div class='tipTxt'>${this.$t("index.Default.404报错")}</div>`;
+      }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 #voucher {
+  /deep/ .ivu-table-tip {
+    .tipImg {
+      width: 15%;
+    }
+    .tipTxt {
+      font-size: 12px;
+    }
+  }
   .date {
     margin-bottom: 10px;
     .date_title {

@@ -1,11 +1,11 @@
 <template>
   <div>
     <Breadcrumb
-      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px' }"
+      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px',marginTop:'5px' }"
       separator="-"
     >
-      <BreadcrumbItem>结果总览</BreadcrumbItem>
-      <BreadcrumbItem>服务器总览</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.结果总览}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.服务器总览}}</BreadcrumbItem>
     </Breadcrumb>
     <Card
       class="col-card"
@@ -18,7 +18,7 @@
       "
     >
       <h2 slot="title" class="Title">
-        <span class="tableTitle">服务器概览</span>
+        <span class="tableTitle">{{i18n.服务器概览}}</span>
         <div
           style="
             float: right;
@@ -65,11 +65,11 @@
               $refs.serverTable && $refs.serverTable.objData[index]._isDisabled
             "
             @click="deleteServer(row, index)"
-            ><img
+            ><Tooltip :content="i18n.释放"><img
               src="../../assets/img/shanchuIcon.png"
               alt=""
               style="width: 18px; height: 18px"
-          /></Button>
+          /></Tooltip></Button>
           <Button
             type="text"
             size="small"
@@ -77,8 +77,11 @@
             :disabled="
               $refs.serverTable && $refs.serverTable.objData[index]._isDisabled
             "
-            ><Icon type="ios-play"
-          /></Button>
+            ><Tooltip :content="i18n.停止"><img
+              src="../../assets/img/zanting-2@2x.png"
+              alt=""
+              style="width: 18px; height: 18px"
+          /></Tooltip></Button>
           <Button
             type="text"
             size="small"
@@ -87,11 +90,11 @@
               $refs.serverTable && $refs.serverTable.objData[index]._isDisabled
             "
             @click.native="createMirror(row, index)"
-            ><img
-              src="../../assets/img/创建镜像@2x.png"
+            ><Tooltip :content="i18n.创建镜像"><img
+              src="../../assets/img/baocun@2x.png"
               alt=""
               style="width: 18px; height: 18px"
-          /></Button>
+          /></Tooltip></Button>
         </template>
 
         <div slot="footer" class="footer">
@@ -99,10 +102,10 @@
             style="display: inline-block"
             @on-change="selectAllServer"
             v-model="serverIsAllSelectd"
-            >全选</Checkbox
+            >{{i18n.全选}}</Checkbox
           >
           <div style="display: inline-block; float: right">
-            共选中任务{{ serverChosenNum }}条,总计费￥432.00元
+            {{i18n.共选中}}{{ serverChosenNum }}{{i18n.条}}
             <Button
               class="footerBtn Del"
               :disabled="!serverIsSelectd"
@@ -110,7 +113,7 @@
               ><img
                 src="../../assets/img/shanchuIconDel.png"
                 style="width: 16px"
-              />删除</Button
+              />{{i18n.删除}}</Button
             >
             <Button
               type="primary"
@@ -119,7 +122,7 @@
               ><img
                 src="../../assets/img/xiazaiIconWhite.png"
                 style="width: 16px"
-              />下载</Button
+              />{{i18n.下载}}</Button
             >
           </div>
         </div>
@@ -137,7 +140,7 @@
       "
     >
       <h2 slot="title" class="Title">
-        <span class="tableTitle">镜像概览</span>
+        <span class="tableTitle">{{i18n.镜像概览}}</span>
         <div
           style="
             float: right;
@@ -182,11 +185,11 @@
               $refs.mirrorTable && $refs.mirrorTable.objData[index]._isDisabled
             "
             @click.native="deleteMirror(row, index)"
-            ><img
+            ><Tooltip :content="i18n.删除镜像"><img
               src="../../assets/img/shanchuIcon.png"
               alt=""
               style="width: 18px; height: 18px"
-          /></Button>
+          /></Tooltip></Button>
           <Button
             type="text"
             size="small"
@@ -194,11 +197,11 @@
             :disabled="
               $refs.mirrorTable && $refs.mirrorTable.objData[index]._isDisabled
             "
-            ><img
-              src="../../assets/img/chongqiIcon.png"
+            ><Tooltip :content="i18n.创建机器"><img
+              src="../../assets/img/xinjian@2x.png"
               alt=""
               style="width: 18px; height: 18px"
-          /></Button>
+          /></Tooltip></Button>
         </template>
 
         <div slot="footer" class="footer">
@@ -206,10 +209,10 @@
             style="display: inline-block"
             @on-change="selectAllMirror"
             v-model="mirrorIsAllSelectd"
-            >全选</Checkbox
+            >{{i18n.全选}}</Checkbox
           >
           <div style="display: inline-block; float: right">
-            共选中任务{{ mirrorChosenNum }}条,总计费￥432.00元
+            {{i18n.共选中}}{{ mirrorChosenNum }}{{i18n.条}}
             <Button
               class="footerBtn Del"
               :disabled="!mirrorIsSelectd"
@@ -217,7 +220,7 @@
               ><img
                 src="../../assets/img/shanchuIconDel.png"
                 style="width: 16px"
-              />删除</Button
+              />{{i18n.删除}}</Button
             >
             <Button
               type="primary"
@@ -226,7 +229,7 @@
               ><img
                 src="../../assets/img/xiazaiIconWhite.png"
                 style="width: 16px"
-              />下载</Button
+              />{{i18n.下载}}</Button
             >
           </div>
         </div>
@@ -234,11 +237,11 @@
     </Card>
     <Modal v-model="createMirrorModal" title="" class="createMirror">
       <template slot="header">
-        <div class="createMirrorTitle">创建个人镜像</div>
+        <div class="createMirrorTitle">{{i18n.创建个人镜像}}</div>
       </template>
-      个人镜像名称:<Input placeholder="" class="createMirrorInput"></Input>
+      {{i18n.个人镜像名称}}<Input placeholder="" class="createMirrorInput"></Input>
       <template slot="footer">
-        <Button class="createMirrorBtn">保存镜像</Button>
+        <Button class="createMirrorBtn">{{i18n.保存镜像}}</Button>
       </template>
     </Modal>
   </div>
@@ -336,6 +339,9 @@ export default {
           sortable: true,
           align: "center",
           width: 80,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.编号);
+          },
         },
         {
           title: "名称",
@@ -344,44 +350,67 @@ export default {
           sortable: true,
           align: "center",
           width: 80,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.名称);
+          },
         },
 
         {
           title: "IP",
           key: "ip",
           minWidth: 50,
+          align: "center",
         },
         {
           title: "用户",
           key: "username",
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.用户);
+          },
         },
         {
           title: "GPU",
           key: "gpu",
+          align: "center",
         },
         {
           title: "CPU",
           key: "cpu_core",
+          align: "center",
         },
         {
           title: "Memory",
           key: "memory",
+          align: "center",
         },
         {
           title: "创建时间",
           key: "create_time",
           sortable: true,
           minWidth: 80,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.创建时间);
+          },
         },
         {
           title: "运行时长",
           key: "alive_time",
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.运行时长);
+          },
         },
         {
           title: "累计费用",
           key: "cost",
           sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.累计费用);
+          },
           render: (h, params) => {
             let a = require("../../assets/img/wenti_icon@2x.png");
             return h("div", [
@@ -403,6 +432,7 @@ export default {
                     width: "16px",
                     height: "16px",
                     display: "inline-block",
+                    marginLeft: "5px",
                   },
                   props: {
                     placement: "bottom",
@@ -429,8 +459,8 @@ export default {
                       },
                     },
                     [
-                      h("div", {}, "已结算费用: 计算公式"),
-                      h("div", {}, "未结算费用: 计算公式"),
+                      h("div", {}, this.i18n.已结算费用+": 计算公式"),
+                      h("div", {}, this.i18n.未结算费用+": 计算公式"),
                     ]
                   ),
                 ]
@@ -443,6 +473,9 @@ export default {
           slot: "action",
           align: "center",
           width: 150,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
         },
       ],
       mirror: [
@@ -462,44 +495,67 @@ export default {
           key: "mirror_id",
           sortable: true,
           width: 50,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.编号);
+          },
         },
         {
           title: "名称",
           key: "mirror_name",
           minWidth: 80,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.名称);
+          },
         },
         {
           title: "用户",
           key: "username",
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.用户);
+          },
         },
         {
           title: "IP",
           key: "IP",
           minWidth: 50,
+          align: "center",
         },
         {
           title: "GPU",
           key: "GPU",
+          align: "center",
         },
         {
           title: "CPU",
           key: "CPU",
+          align: "center",
         },
         {
           title: "Memory",
           key: "Memory",
+          align: "center",
         },
         {
           title: "创建时间",
           key: "create_time",
           sortable: true,
           minWidth: 80,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.创建时间);
+          },
         },
         {
           title: "操作",
           slot: "action",
           align: "center",
           minWidth: 80,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.操作);
+          },
         },
       ],
     };
@@ -572,15 +628,25 @@ export default {
   methods: {
     defaultUrl(type) {
       if (type == 1) {
-        return `<img class='tipImg' src=${require("../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>暂无任务</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/暂无任务@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.暂无任务"
+        )}</div>`;
       } else if (type == 2) {
-        return `<img class='tipImg' src=${require("../../assets/img/网络错误@2x.png")}><div class='tipTxt'>网络错误</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/网络错误@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.网络错误"
+        )}</div>`;
       } else if (type == 3) {
-        return `<img class='tipImg' src=${require("../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>无搜索结果</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/无搜索内容@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.无搜索结果"
+        )}</div>`;
       } else if (type == 4) {
-        return `<img class='tipImg' src=${require("../../assets/img/无权限@2x.png")}><div class='tipTxt'>无权限</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/无权限@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.无权限"
+        )}</div>`;
       } else if (type == 5) {
-        return `<img class='tipImg' src=${require("../../assets/img/404@2x.png")}><div class='tipTxt'>404报错</div>`;
+        return `<img class='tipImg' src=${require("../../assets/img/404@2x.png")}><div class='tipTxt'>${this.$t(
+          "index.Default.404报错"
+        )}</div>`;
       }
     },
 
@@ -833,6 +899,11 @@ export default {
       this.mirrorList.push(a[0]);
     },
   },
+  computed:{
+    i18n(){
+      return this.$t("index.Server");
+    }
+  }
 };
 </script>
 
@@ -840,12 +911,12 @@ export default {
 .col-card {
   overflow: hidden;
   /deep/ .ivu-card-head {
-    height: 35px;
-    padding: 0;
+    height: 45px;
+    padding: 5px 0;
   }
   /deep/ .ivu-card-body {
     height: 35px;
-    padding-top: 0;
+    padding: 0 0 16px 0;
   }
   /deep/ .ivu-table-wrapper {
   }
@@ -939,8 +1010,12 @@ export default {
 }
 
 .createMirror {
+  /deep/ .ivu-modal {
+    width: 400px !important;
+  }
   /deep/ .ivu-modal-body {
-    padding: 20px 50px;
+    padding: 20px 30px;
+    text-align: center;
   }
   .createMirrorTitle {
     text-align: center;
@@ -957,7 +1032,11 @@ export default {
     border-radius: 20px;
     color: #ffffff;
   }
+  /deep/ .ivu-modal-header {
+    border: 0;
+  }
   /deep/ .ivu-modal-footer {
+    border: 0;
     text-align: center;
   }
 }

@@ -2,7 +2,7 @@
   <div id="machine">
     <h2>machine</h2>
     <Form ref="machine" :model="machine" :label-width="100">
-      <FormItem label="平台" prop="platform">
+      <FormItem :label="this.i18n.平台" prop="platform">
         <Select v-model="machine.platform" style="width:200px"
                 @on-change="getBestPrice">
           <Option value="ali">ali</Option>
@@ -138,6 +138,11 @@ export default {
       },
       deep: true,
     },
+  },
+  computed:{
+    i18n(){
+      return this.$t("index.Machine");
+    }
   },
   created() {
     getInstanceType().then((res) => {

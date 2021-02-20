@@ -24,31 +24,32 @@
     </div>
     <div id="loginMain">
       <div class="loginMainPadding">
-        <h3 class="loginTitle">修改密码</h3>
+        <h3 class="loginTitle">{{i18n.修改密码标题}}</h3>
         <Form
           ref="formCustom"
           :model="formCustom"
           :rules="ruleCustom"
-          label-position="top"
+          label-position="right"
+          :label-width="100"
           class="loginForm"
         >
-          <FormItem label="原密码" prop="passwd">
+          <FormItem :label="i18n.原密码" prop="passwd">
             <Input type="text" v-model="formCustom.passwd"></Input>
           </FormItem>
-          <FormItem label="新密码" prop="passwd2">
+          <FormItem :label="i18n.新密码" prop="passwd2">
             <Input type="password" v-model="formCustom.passwd2"></Input>
           </FormItem>
-          <FormItem label="确认密码" prop="passwd3">
+          <FormItem :label="i18n.确认密码" prop="passwd3">
             <Input type="password" v-model="formCustom.passwd3"></Input>
           </FormItem>
-          <FormItem label="验证" prop="verify">
+          <FormItem :label="i18n.验证" prop="verify">
             <Verify
               @success="success"
               @error="alert('error')"
               :show-button="false"
               :type="3"
               :bar-size="{ width: '100%', height: '36px' }"
-              explain="滑过验证"
+              :explain="i18n.滑过验证"
               class="loginVerify"
             ></Verify>
           </FormItem>
@@ -59,7 +60,7 @@
               long
               @click="handleSubmit('formCustom')"
               class="loginBtn"
-              >修改密码</Button
+              >{{i18n.修改密码按钮}}</Button
             >
           </FormItem>
         </Form>
@@ -113,6 +114,11 @@ export default {
       screenWidth: document.documentElement.clientWidth,
       screenHeight: document.documentElement.clientHeight,
     };
+  },
+  computed:{
+    i18n(){
+      return this.$t("index.Forget");
+    }
   },
   mounted() {
     window.onresize = () => {
@@ -225,21 +231,25 @@ body,
     .loginMainPadding {
       width: 100%;
       height: 100%;
-      padding: 8% 15% 0 15%;
+      padding: 8% 20% 0 10%;
       .loginTitle {
         width: 100%;
         height: 56px;
         line-height: 56px;
         text-align: center;
         color: #1f2676;
-        font-size: 30px;
+        font-size: 26px;
         letter-spacing: 4px;
+        margin-bottom: 10%;
       }
       .loginForm {
         /deep/ .ivu-input {
           background: #fafafa;
           border-radius: 30px;
           border: 1px solid #e8e8e8;
+        }
+        /deep/ .ivu-form-item {
+          margin-bottom: 25px;
         }
         .loginVerify {
           width: 100%;

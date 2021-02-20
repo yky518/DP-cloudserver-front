@@ -1,8 +1,8 @@
 <template>
   <div id="function">
     <Breadcrumb separator="-" style="z-index:14;">
-      <BreadcrumbItem>功能模块</BreadcrumbItem>
-      <BreadcrumbItem>功能选择</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.功能模块}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.算法模块}}</BreadcrumbItem>
       <BreadcrumbItem>{{title}}</BreadcrumbItem>
     </Breadcrumb>
     <div
@@ -20,7 +20,7 @@
         <Input prefix="ios-search" placeholder="Enter text" style="width: auto;border-radius: 20px;" v-model="searchTxt" @on-change="search()" @on-focus="search()" @on-blur="isShowSearch = false"/>
         <DropdownMenu slot="list">
           <DropdownItem v-for="(item,index) in searchList" :key="index" :name="index">{{item.title}}</DropdownItem>
-          <DropdownItem v-if="searchList.length == 0">无搜索结果</DropdownItem>
+          <DropdownItem v-if="searchList.length == 0">{{i18n.无搜索结果}}</DropdownItem>
         </DropdownMenu>
       </Dropdown>
       <Menu theme="light" style="width: 215px" :active-name="title" @on-select="selectMenu" ref="funcMenu">
@@ -49,31 +49,31 @@
         "
         @click="showContactModal = true"
       >
-        我想使用的软件不在列表中？
+        {{i18n.我想使用的软件不在列表中}}
       </div>
     </div>
     <Modal v-model="showStateModal" footer-hide width="50rem">
       <div style="text-align:center;">
         <img :src="imgUrl" style="display:inline-block;width:5rem;"></img>
-        <h5 style="text-align:center;">{{State?"任务已提交":"任务提交失败"}}</h5>
+        <h5 style="text-align:center;">{{State?i18n.任务已提交:i18n.任务提交失败}}</h5>
         <Table 
         :columns="taskStateTable"
         :data="taskState"
         ref="taskStateTable">
       </Table>
-      <Button style="width:200px;height:40px;background:#13227A;border-radius: 20px;display: inline-block;color:#FFFFFF;">{{State?"查看结果":"重新编辑"}}</Button>
+      <Button style="width:200px;height:40px;background:#13227A;border-radius: 20px;display: inline-block;color:#FFFFFF;">{{State?i18n.查看结果:i18n.重新编辑}}</Button>
       </div>
     </Modal>
 
     <Modal v-model="showContactModal" footer-hide width="30rem" id="contactUs" label-position="top">
-      <h3 style="text-align: center">联系我们</h3>
+      <h3 style="text-align: center">{{i18n.联系我们}}</h3>
       <Form ref="formInline" :model="formContact" style="padding: 0px 60px" :rules="formRule">
-        <FormItem prop="email" label="邮箱">
+        <FormItem prop="email" :label="i18n.邮箱">
           <Input type="text" v-model="formContact.email" placeholder="Username">
             <img src="../../assets/img/youxiang_icon@2x.png" alt="" class="contactIcon" slot="prefix">
           </Input>
         </FormItem>
-        <FormItem prop="weixin" label="微信">
+        <FormItem prop="weixin" :label="i18n.微信">
           <Input
             type="text"
             v-model="formContact.weixin"
@@ -82,17 +82,17 @@
             <img src="../../assets/img/weixin_icon @2x.png" alt="" class="contactIcon" slot="prefix">
           </Input>
         </FormItem>
-        <FormItem prop="phone" label="电话">
+        <FormItem prop="phone" :label="i18n.电话">
           <Input type="text" v-model="formContact.phone" placeholder="Password">
             <img src="../../assets/img/dianhua_icon@2x.png" alt="" class="contactIcon" slot="prefix">
             
           </Input>
         </FormItem>
-        <FormItem prop="question" label="请描述你的问题">
+        <FormItem prop="question" :label="i18n.请描述你的问题">
           <Input
             v-model="formContact.question"
             type="textarea"
-            placeholder="请把你的问题写在这里"
+            :placeholder="i18n.请把你的问题写在这里"
             :row="4"
             :autosize="{ minRows: 4, maxRows: 4 }"
           />
@@ -103,7 +103,7 @@
             long
             class="contact-button"
             @click="contactSubmit()"
-            >提交</Button
+            >{{i18n.提交}}</Button
           >
         </FormItem>
       </Form>
@@ -124,9 +124,9 @@ export default {
     const emailRule = (rule, value, callback) => {
       let reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
       if (!reg.test(value) && value != "") {
-        callback(new Error("邮箱格式错误"));
+        callback(new Error(this.i18n.邮箱格式错误));
       } else if (value == "") {
-        callback("邮箱不能为空");
+        callback(this.i18n.邮箱不能为空);
       } else {
         callback();
       }
@@ -192,6 +192,9 @@ export default {
       let url = this.State ? "chenggong" : "shibai";
       return require("../../assets/img/tijiao" + url + ".png");
     },
+    i18n(){
+      return this.$t("index.Algorithm")
+    }
   },
   created() {
     const functionList = ["dpkit", "cp2k", "lammps", "vasp"];

@@ -61,9 +61,9 @@
       >
         <template slot="header">
           <div class="noticeHeader">
-            <span class="noticeTitle">通知({{ notice.length }})</span>
+            <span class="noticeTitle">{{$t("index.Layout.通知")}}({{ notice.length }})</span>
             <span class="noticeHasRead" @click="readAllNotice()"
-              >全部标为已读</span
+              >{{$t("index.Layout.全部标为已读")}}</span
             >
           </div>
         </template>
@@ -74,9 +74,9 @@
           class="noticeTab"
           ref="noticeTab"
         >
-          <TabPane name="" label="全部"></TabPane>
-          <TabPane name="error" label="警告"></TabPane>
-          <TabPane name="warning" label="提醒"></TabPane>
+          <TabPane name="" :label="$t('index.Layout.全部')"></TabPane>
+          <TabPane name="error" :label="$t('index.Layout.警告')"></TabPane>
+          <TabPane name="warning" :label="$t('index.Layout.提醒')"></TabPane>
         </Tabs>
         <div
           v-for="(item, index) in noticeList(noticeTabName)"
@@ -95,7 +95,7 @@
               class="noticeUnfold"
               v-show="needUnfold(index)"
               @click="unfold(index)"
-              >展开</span
+              >{{$t('index.Layout.展开')}}</span
             >
           </div>
           <Badge color="red" v-if="!item.hasRead" class="noticeBadge" />
@@ -133,6 +133,7 @@ import helpDoc from "@/components/helpDoc.vue";
 export default {
   name: "MyLayout",
   mounted() {
+    console.log(this.i18n)
     window.onresize = () => {
       return (() => {
         window.fullHeight = document.documentElement.clientHeight;
@@ -417,10 +418,10 @@ export default {
     unfold(index) {
       if (this.$refs.noticeItem[index].className == "noticeList") {
         this.$refs.noticeItem[index].className = "testList";
-        this.$refs.noticeItem[index].children[1].children[2].innerHTML = "收起";
+        this.$refs.noticeItem[index].children[1].children[2].innerHTML = this.$t('index.Layout.收起');
       } else {
         this.$refs.noticeItem[index].className = "noticeList";
-        this.$refs.noticeItem[index].children[1].children[2].innerHTML = "展开";
+        this.$refs.noticeItem[index].children[1].children[2].innerHTML = this.$t('index.Layout.展开');
       }
     },
   },

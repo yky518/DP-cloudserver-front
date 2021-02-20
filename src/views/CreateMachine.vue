@@ -1,8 +1,8 @@
 <template>
   <div id="machine">
     <Breadcrumb separator="-">
-      <BreadcrumbItem>算法</BreadcrumbItem>
-      <BreadcrumbItem>开机</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.功能模块}}</BreadcrumbItem>
+      <BreadcrumbItem>{{i18n.开机模块}}</BreadcrumbItem>
     </Breadcrumb>
     <Card class="card-panel">
       <Machine type="create_machine" @set="setMachine"></Machine>
@@ -10,22 +10,22 @@
     </Card>
 
     <div style="margin: 10px 0">
-      <Button type="primary" @click="parseJson" long>确定</Button>
+      <Button type="primary" @click="parseJson" long>{{i18n.确定}}</Button>
     </div>
 
     <Card class="card-panel" v-if="showJson">
       <Form ref="form4" :label-width="100" :rules="submitRules" :model="submitConfig">
-        <FormItem label="机器数" prop="number" >
+        <FormItem :label="i18n.机器数" prop="number" >
           <InputNumber :max="10" :min="1" v-model="submitConfig.number"></InputNumber>
         </FormItem>
-        <FormItem label="json参数" prop="json">
+        <FormItem :label="i18n.json参数" prop="json">
           <Input v-model="submitConfig.inputJsonString"
                  :rows="6" type="textarea" placeholder="Enter something..." />
         </FormItem>
       </Form>
       <div style="text-align: center;">
-        <Button type="primary" @click="handleSubmit">提交</Button>
-        <Button @click="handleReset" style="margin-left: 8px">取消</Button>
+        <Button type="primary" @click="handleSubmit">{{i18n.提交}}</Button>
+        <Button @click="handleReset" style="margin-left: 8px">{{i18n.取消}}</Button>
       </div>
     </Card>
 
@@ -77,7 +77,10 @@ export default {
       inputJsonString: '',
     };
   },
-  created() {
+  computed:{
+    i18n(){
+      return this.$t("index.CreateMachine");
+    }
   },
   methods: {
     setMachine(machine) {

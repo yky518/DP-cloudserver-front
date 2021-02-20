@@ -25,14 +25,14 @@
           alt=""
           class="modifyItemIcon"
         />
-        <span class="modifyItemSpan">邮箱</span>
+        <span class="modifyItemSpan">{{i18n.邮箱}}</span>
         <Input
           type="text"
           class="modifyItemInput"
           v-model="userInfo.email"
           :disabled="editNum == -1 || editNum != 1"
         ></Input>
-        <Button class="modifyItemBtn" @click="modify(1)">修改</Button>
+        <Button class="modifyItemBtn" @click="modify(1)">{{i18n.修改}}</Button>
       </div>
       <div class="modifyItem">
         <img
@@ -40,14 +40,14 @@
           alt=""
           class="modifyItemIcon"
         />
-        <span class="modifyItemSpan">电话</span>
+        <span class="modifyItemSpan">{{i18n.电话}}</span>
         <Input
           type="text"
           class="modifyItemInput"
           v-model="userInfo.phone"
           :disabled="editNum == -1 || editNum != 2"
         ></Input>
-        <Button class="modifyItemBtn" @click="modify(2)">修改</Button>
+        <Button class="modifyItemBtn" @click="modify(2)">{{i18n.修改}}</Button>
       </div>
       <div class="modifyItem">
         <img
@@ -55,14 +55,14 @@
           alt=""
           class="modifyItemIcon"
         />
-        <span class="modifyItemSpan">密码</span>
+        <span class="modifyItemSpan">{{i18n.密码}}</span>
         <Input
           type="text"
           class="modifyItemInput"
           v-model="pwd"
           disabled
         ></Input>
-        <Button class="modifyItemBtn" @click="modify(3)">修改</Button>
+        <Button class="modifyItemBtn" @click="modify(3)">{{i18n.修改}}</Button>
       </div>
       <div class="modifyItem">
         <img
@@ -70,14 +70,14 @@
           alt=""
           class="modifyItemIcon"
         />
-        <span class="modifyItemSpan">机构</span>
+        <span class="modifyItemSpan">{{i18n.机构}}</span>
         <Input
           type="text"
           class="modifyItemInput"
           v-model="mechanism"
           disabled
         ></Input>
-        <Button class="modifyItemBtn">修改</Button>
+        <Button class="modifyItemBtn">{{i18n.修改}}</Button>
       </div>
     </Card>
   </div>
@@ -98,6 +98,11 @@ export default {
       screenWidth: document.documentElement.clientWidth,
       screenHeight: document.documentElement.clientHeight,
     };
+  },
+  computed:{
+    i18n(){
+      return this.$t("index.Modify");
+    }
   },
   mounted() {
     window.onresize = () => {
