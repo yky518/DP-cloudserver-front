@@ -47,7 +47,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              ¥{{ all_user }}
+              ¥{{ overviewInf.balance }}
             </h2>
           </div>
         </Col>
@@ -79,7 +79,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ cost }}个
+              {{ overviewInf.sub_user_count }}个
             </h2>
           </div>
         </Col>
@@ -111,7 +111,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_job }}个
+              {{ overviewInf.job_count }}个
             </h2>
           </div>
         </Col>
@@ -143,7 +143,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_task }}个
+              {{ overviewInf.machine_count }}个
             </h2>
           </div>
         </Col>
@@ -175,7 +175,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_task }}/{{ all_task }}GB
+              {{ overviewInf.nas_size ? overviewInf.nas_size : "***" }}
             </h2>
           </div>
         </Col>
@@ -207,7 +207,7 @@
                 marginLeft: (50 / 1080) * screenWidth + 'px',
               }"
             >
-              {{ all_task }}/{{ all_task }}GB
+              {{ overviewInf.oss_count ? overviewInf.oss_count : "***" }}
             </h2>
           </div>
         </Col>
@@ -235,9 +235,9 @@
                 margin-top: -7px;
               "
             >
-              <Radio label="今日">{{ i18n.今日 }}</Radio>
-              <Radio label="本周">{{ i18n.本周 }}</Radio>
-              <Radio label="本月">{{ i18n.本月 }}</Radio>
+              <Radio label="0">{{ i18n.今日 }}</Radio>
+              <Radio label="1">{{ i18n.本周 }}</Radio>
+              <Radio label="2">{{ i18n.本月 }}</Radio>
             </RadioGroup>
           </h2>
           <div
@@ -274,15 +274,14 @@
                 position: relative;
                 margin-top: -7px;
               "
-              @on-change="handleClick"
             >
-              <span
+              <!-- <span
                 @click="
                   open = false;
                   customize = false;
                 "
                 ><Radio label="今日">{{ i18n.今日 }}</Radio></span
-              >
+              > -->
               <span
                 @click="
                   open = false;
@@ -298,7 +297,7 @@
                 ><Radio label="本月">{{ i18n.本月 }}</Radio></span
               >
               <span
-                ><Radio label="自定义" @click.native.stop="handleClick">{{
+                ><Radio label="自定义">{{
                   i18n.自定义
                 }}</Radio></span
               >
@@ -344,27 +343,6 @@
               @click="$router.push('/result/task')"
               >{{ i18n.任务概览 }}</span
             >
-            <Tooltip
-              :content="i18n.创建时间在区间中的任务的状态"
-              placement="right"
-              theme="light"
-              max-width="80"
-              class="titleTooltip"
-            >
-              <img
-                src="../assets/img/shuoming_icon@2x.png"
-                alt=""
-                style="width: 16px"
-              />
-            </Tooltip>
-            <DatePicker
-              format="yyyy.MM.dd"
-              type="daterange"
-              placement="bottom-start"
-              placeholder="Select date"
-              style="font-size: 14px !important; float: right; margin-top: -5px"
-            ></DatePicker>
-            <span class="datePickerTitle">{{ i18n.创建时间 }}:</span>
           </h2>
           <div
             id="taskTable"
@@ -394,6 +372,7 @@
               placement="bottom-start"
               placeholder="Select date"
               style="font-size: 14px !important; float: right; margin-top: -5px"
+              @on-change="machineFilter"
             ></DatePicker>
             <span class="datePickerTitle">{{ i18n.创建时间 }}:</span>
           </h2>
@@ -423,7 +402,7 @@
             class="Title"
             @click="$router.push('/admin/user_management')"
           >
-            {{ i18n.子用户统计 }}
+            {{ i18n.Job收藏夹 }}
           </h2>
           <Row>
             <Col span="24" style="text-align: center">
@@ -438,12 +417,6 @@
                 class="subUserTable"
               >
               </Table>
-              <Page
-                class="page"
-                :total="all_user"
-                :page-size="6"
-                @on-change="changePage3"
-              />
             </Col>
           </Row>
         </Card>
@@ -453,7 +426,7 @@
 </template>
 
 <script>
-import { getJobSummary, getMachineSummary, getUserSummary } from "@/api/info";
+import { overview, fee, feeChange, Job, Jobs, Machine } from "@/api/info";
 let echarts = require("echarts/lib/echarts");
 export default {
   name: "Infos",
@@ -461,11 +434,35 @@ export default {
     return {
       screenWidth: document.documentElement.clientWidth,
       screenHeight: document.documentElement.clientHeight,
+      overviewInf: {
+        balance: "",
+        sub_user_count: "",
+        job_count: "",
+        machine_count: "",
+        nas_size: "",
+        oss_count: "",
+      },
+      feeInf: {
+        machine: 0,
+        network_flow: 0,
+        store: 0,
+      },
+      feeChangeInf: [],
+      jobInf: {
+        fail_count: 0,
+        pending_count: 0,
+        success_count: 0,
+        total: 0,
+        working_count: 0,
+      },
+      machineInf: [],
+      jobTimeFilter: {},
+      machineTimeFilter: {},
       open: false,
       timeLimit: "",
-      consumeTimeChosen: "今日",
+      consumeTimeChosen: "本周",
       customize: false,
-      timeChosen: "今日",
+      timeChosen: "0",
       all_job: 0,
       all_user: 0,
       all_machine: 0,
@@ -566,46 +563,81 @@ export default {
       tableData2: [],
       columns3: [
         {
-          title: "用户名",
-          key: "username",
-          align:"center",
+          title: "编号",
+          key: "id",
+          align: "center",
+          width: 80,
           renderHeader: (h) => {
-            return h("div", {}, this.i18n.用户名);
+            return h("div", {}, this.i18n.编号);
           },
         },
         {
-          title: "总任务数",
-          key: "all_task",
-          width: 120,
-          align:"center",
+          title: "名称",
+          key: "job_name",
+          width: 100,
+          tooltip: true,
+          align: "center",
           renderHeader: (h) => {
-            return h("div", {}, this.i18n.总任务数);
+            return h("div", {}, this.i18n.名称);
           },
         },
         {
-          title: "未完成任务数",
-          key: "working_task",
-          width: 150,
-          align:"center",
-          renderHeader: (h) => {
-            return h("div", {}, this.i18n.未完成任务数);
+          title: "状态",
+          key: "status",
+          width: 80,
+          align: "center",
+          render: (h, params) => {
+            let bgColor = "#2EC6A8";
+            if (params.row.state == "1") bgColor = "#F0C249";
+            else if (params.row.state == "-1") bgColor = "#F06149";
+            return h("div", {
+              style: {
+                width: "14px",
+                height: "14px",
+                background: bgColor,
+                borderRadius: "100%",
+              },
+            });
           },
         },
+
         {
-          title: "最后提交时间",
+          title: "创建时间",
           key: "create_time",
-          sortable: true,
-          width: 200,
-          align:"center",
+          align: "center",
+          width: 185,
           renderHeader: (h) => {
-            return h("div", {}, this.i18n.最后提交时间);
+            return h("div", {}, this.i18n.创建时间);
+          },
+          render: (h, params) => {
+            return this.$createElement(
+              "div",
+              {
+                ref: "test",
+                class: "test1",
+              },
+              [h("span", {}, params.row.create_time)]
+            );
+          },
+        },
+        {
+          title: "运行时间",
+          key: "spend_time",
+          align: "center",
+          width: 120,
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.运行时间);
           },
         },
         {
           title: "费用",
           key: "cost",
-          align:"center",
-          renderHeader: (h, params) => {
+          sortable: true,
+          align: "center",
+          renderHeader: (h) => {
+            return h("div", {}, this.i18n.费用);
+          },
+          render: (h, params) => {
             let a = require("../assets/img/wenti_icon@2x.png");
             return h("div", [
               h(
@@ -616,46 +648,7 @@ export default {
                     verticalAlign: "middle",
                   },
                 },
-                this.i18n.费用
-              ),
-              h(
-                "Tooltip",
-                {
-                  props: {
-                    placement: "top",
-                    transfer: true,
-                    theme: "light",
-                  },
-                  style: {
-                    width: "16px",
-                    height: "16px",
-                    verticalAlign: "middle",
-                    display: "inline-block",
-                    marginLeft:"5px"
-                  },
-                },
-                [
-                  h("img", {
-                    style: {
-                      width: "16px",
-                      height: "16px",
-                    },
-                    domProps: {
-                      src: a,
-                    },
-                  }),
-                  h(
-                    "div",
-                    {
-                      slot: "content",
-                      style: {
-                        whiteSpace: "normal",
-                        fontSize: "12px",
-                      },
-                    },
-                    this.i18n.创建该子用户以来的所有费用
-                  ),
-                ]
+                "¥" + params.row.cost.toFixed(2)
               ),
             ]);
           },
@@ -684,6 +677,80 @@ export default {
       tableData5: [],
     };
   },
+  watch: {
+    timeChosen(newval, oldval) {
+      let begin, end;
+      let date = new Date();
+      console.log(newval);
+      end =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      if (newval == 0) {
+        begin =
+          date.getFullYear() +
+          "-" +
+          (date.getMonth() + 1) +
+          "-" +
+          date.getDate();
+      } else if (newval == 1) {
+        var date2 = new Date(date);
+        date2.setDate(date.getDate() - 7);
+        begin =
+          date2.getFullYear() +
+          "-" +
+          (date2.getMonth() + 1) +
+          "-" +
+          date2.getDate();
+      } else {
+        let date2 = new Date(date);
+        date2.setDate(date.getDate() - 30);
+        begin =
+          date2.getFullYear() +
+          "-" +
+          (date2.getMonth()+1) +
+          "-" +
+          date2.getDate();
+      }
+      this.getFee(begin, end);
+    },
+    consumeTimeChosen(newval, oldval) {
+      let begin, end;
+      let date = new Date();
+      console.log(newval);
+      end =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      if (newval == "今日") {
+        begin =
+          date.getFullYear() +
+          "-" +
+          (date.getMonth() + 1) +
+          "-" +
+          date.getDate();
+      } else if (newval == "本周") {
+        var date2 = new Date(date);
+        date2.setDate(date.getDate() - 7);
+        begin =
+          date2.getFullYear() +
+          "-" +
+          (date2.getMonth() + 1) +
+          "-" +
+          date2.getDate();
+      } else if (newval == "本月") {
+        let date2 = new Date(date);
+        date2.setDate(date.getDate() - 30);
+        begin =
+          date2.getFullYear() +
+          "-" +
+          (date2.getMonth()+1) +
+          "-" +
+          date2.getDate();
+      } else {
+        this.customize = !this.customize;
+        this.open = !this.open;
+        return;
+      }
+      this.getFeeChange(begin, end);
+    },
+  },
   computed: {
     i18n() {
       return this.$t("index.Info");
@@ -704,580 +771,54 @@ export default {
         this.open = false;
       });
 
-    // 任务
-    getJobSummary()
+    //总览信息
+    overview()
       .then((res) => {
-        const { data } = res;
-        const all = res.all_summary;
-        this.all_job = all.all_job;
-        this.spend_time = all.spend_time;
-        this.cost = all.cost.toFixed(2);
-        this.all_task = all.all_task;
-        this.all_task = all.failed_task;
-        this.finished_task = all.finished_task;
-        this.pending_task = all.pending_task;
-        this.working_task = all.working_task;
-
-        this.tableData5.push({
-          all_task: all.all_task,
-          finished_task: all.finished_task,
-          pending_task: all.pending_task,
-          working_task: all.working_task,
-          failed_task: all.failed_task,
-        });
-
-        const taskTable = this.$echarts.init(
-          document.getElementById("taskTable")
-        );
-        const taskOption = {
-          tooltip: {},
-          legend: {
-            data: [],
-          },
-
-          xAxis: {
-            data: [
-              this.i18n.总数,
-              this.i18n.完成,
-              this.i18n.排队,
-              this.i18n.计算中,
-              this.i18n.失败,
-            ],
-            axisTick: { show: false },
-            axisLine: { show: false },
-          },
-          yAxis: {
-            axisTick: { show: false },
-            axisLine: { show: false },
-            splitLine: {
-              lineStyle: {
-                color: "#F9FAFD",
-              },
-            },
-          },
-
-          series: [
-            {
-              name: this.i18n.任务,
-              type: "bar",
-              barWidth: 24,
-              data: [
-                all.all_task,
-                all.finished_task,
-                all.pending_task,
-                all.working_task,
-                all.failed_task,
-              ],
-              itemStyle: {
-                normal: {
-                  color: function (params) {
-                    var colorList = [
-                      new echarts.graphic.LinearGradient(
-                        0,
-                        0,
-                        0,
-                        1,
-                        [
-                          {
-                            offset: 0,
-                            color: "#03B957", // 0% 处的颜色
-                          },
-                          {
-                            offset: 1,
-                            color: "#92DD87", // 100% 处的颜色
-                          },
-                        ],
-                        false
-                      ),
-                      new echarts.graphic.LinearGradient(
-                        0,
-                        0,
-                        0,
-                        1,
-                        [
-                          {
-                            offset: 0,
-                            color: "#3357FE", // 0% 处的颜色
-                          },
-                          {
-                            offset: 1,
-                            color: "#2893F7", // 100% 处的颜色
-                          },
-                        ],
-                        false
-                      ),
-                      new echarts.graphic.LinearGradient(
-                        0,
-                        0,
-                        0,
-                        1,
-                        [
-                          {
-                            offset: 0,
-                            color: "#64E8F9", // 0% 处的颜色
-                          },
-                          {
-                            offset: 1,
-                            color: "#23999D", // 100% 处的颜色
-                          },
-                        ],
-                        false
-                      ),
-                      new echarts.graphic.LinearGradient(
-                        0,
-                        0,
-                        0,
-                        1,
-                        [
-                          {
-                            offset: 0,
-                            color: "#FFB92C", // 0% 处的颜色
-                          },
-                          {
-                            offset: 1,
-                            color: "#E98216", // 100% 处的颜色
-                          },
-                        ],
-                        false
-                      ),
-                      new echarts.graphic.LinearGradient(
-                        0,
-                        0,
-                        0,
-                        1,
-                        [
-                          {
-                            offset: 0,
-                            color: "#D37F09", // 0% 处的颜色
-                          },
-                          {
-                            offset: 1,
-                            color: "#A84804", // 100% 处的颜色
-                          },
-                        ],
-                        false
-                      ),
-                    ];
-                    return colorList[params.dataIndex];
-                  },
-                },
-              },
-            },
-          ],
-        };
-        taskTable.setOption(taskOption);
-
-        const myPie = this.$echarts.init(document.getElementById("myPie"));
-        const option = {
-          tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b}: {c} ({d}%)",
-          },
-          title: {
-            text:
-              "{a|¥" +
-              (
-                this.finished_task +
-                this.pending_task +
-                this.working_task
-              ).toFixed(2) +
-              "}\n{b|" +
-              this.i18n.已消费 +
-              "}",
-            left: "19%",
-            top: "27%",
-            textAlign: "center",
-            textStyle: {
-              rich: {
-                a: {
-                  color: "#333333",
-                  fontSize: (24 / 1080) * this.screenHeight,
-                  fontWeight: 600,
-                  align: "center",
-                  width: "3%",
-                },
-                b: {
-                  color: "#333333",
-                  fontSize: (20 / 1080) * this.screenHeight,
-                  align: "center",
-                  width: "3%",
-                },
-              },
-            },
-          },
-          legend: {
-            data: [this.i18n.计算, this.i18n.存储, this.i18n.流量],
-            left: "45%",
-            top: "11%",
-            orient: "vertical",
-            align: "left",
-            itemHeight: (14 / 1080) * this.screenHeight,
-            itemWidth: (14 / 1080) * this.screenHeight,
-            itemGap: (32 / 1080) * this.screenHeight,
-            icon: "circle",
-            formatter: (name) => {
-              var index = 0;
-              var clientlabels = [
-                this.i18n.计算,
-                this.i18n.存储,
-                this.i18n.流量,
-              ];
-              var clientcounts = [
-                this.finished_task,
-                this.pending_task,
-                this.working_task,
-              ];
-              clientlabels.forEach(function (value, i) {
-                if (value == name) {
-                  index = i;
-                }
-              });
-              return (
-                "{a|" +
-                name +
-                "}     {b|" +
-                (
-                  (clientcounts[index] /
-                    (clientcounts[0] + clientcounts[1] + clientcounts[2])) *
-                  100
-                ).toFixed(2) +
-                "%}   {c|¥" +
-                clientcounts[index] +
-                "}"
-              );
-            },
-            textStyle: {
-              rich: {
-                a: {
-                  fontSize: (24 / 1080) * this.screenHeight,
-                  color: "#000000",
-                  width: 70,
-                },
-                b: {
-                  fontSize: (24 / 1080) * this.screenHeight,
-                  color: "#999999",
-                  width: 80,
-                },
-                c: {
-                  fontSize: (24 / 1080) * this.screenHeight,
-                  color: "#999999",
-                  width: 70,
-                },
-              },
-            },
-          },
-          color: ["#47A2FF", "#50CCCB", "#9860E5", "#008BF4"],
-          series: [
-            {
-              startAngle: 180,
-              name: this.i18n.费用统计,
-              type: "pie",
-              radius: ["35%", "50%"],
-              center: ["20%", "32.5%"],
-              avoidLabelOverlap: true,
-              label: {
-                show: false,
-              },
-              data: [
-                { value: this.finished_task, name: this.i18n.计算 },
-                { value: this.pending_task, name: this.i18n.存储 },
-                { value: this.working_task, name: this.i18n.流量 },
-              ],
-            },
-          ],
-        };
-        myPie.setOption(option);
-
-        const consumeLine = this.$echarts.init(
-          document.getElementById("consume-line")
-        );
-        const consumeLineOption = {
-          xAxis: {
-            type: "category",
-            data: [
-              this.i18n.周一,
-              this.i18n.周二,
-              this.i18n.周三,
-              this.i18n.周四,
-              this.i18n.周五,
-              this.i18n.周六,
-              this.i18n.周日,
-            ],
-            splitLine: { show: false },
-            axisTick: { show: false },
-            axisLine: { show: false },
-            boundaryGap: false,
-          },
-          yAxis: {
-            type: "value",
-            axisTick: { show: false },
-            axisLine: { show: false },
-            axisLabel:{formatter:'¥{value} '},
-            splitLine: {
-              lineStyle: {
-                color: "#F9FAFD",
-              },
-            },
-            min: "dataMin", // 最小值
-          },
-          series: [
-            {
-              data: [820, 932, 901, 934, 1290, 1330, 1320],
-              type: "line",
-              smooth: true,
-              symbol: "none",
-              areaStyle: {
-                color: {
-                  type: "linear",
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    {
-                      offset: 0,
-                      color: "#5B68B6", // 0% 处的颜色
-                    },
-                    {
-                      offset: 1,
-                      color: "#FFFFFF", // 100% 处的颜色
-                    },
-                  ],
-                  global: false, // 缺省为 false
-                },
-              },
-            },
-          ],
-          itemStyle: {
-            color: "#7682C7",
-          },
-        };
-        consumeLine.setOption(consumeLineOption);
-        this.data1 = data;
-        for (let i = 0; i < 4; i++) {
-          this.tableData1.push({
-            id: data[i].job_id,
-            type: data[i].job_type,
-            username: data[i].username,
-            all_task: data[i].all_task,
-            finished_task: data[i].finished_task,
-            pending_task: data[i].pending_task,
-            working_task: data[i].working_task,
-            failed_task: data[i].failed_task,
-            create_time: data[i].create_time,
-            cost: `¥${data[i].cost.toFixed(2)}`,
-          });
-        }
+        this.overviewInf = res;
       })
       .catch((err) => {
         console.log(err);
       });
-    // 机器
-    getMachineSummary()
-      .then((data) => {
-        this.all_machine = data.alive_machines.length;
 
-        this.machine_data = {
-          machines_1_day: data.machines_1_day,
-          machines_7_day: data.machines_7_day,
-          machines_30_day: data.machines_30_day,
-        };
-        this.machine_count = data.machines_7_day.count;
-        this.cpu = data.machines_7_day.cpu;
-        this.gpu = data.machines_7_day.gpu;
-        this.data2 = data.alive_machines;
-        for (let i = 0; i < Math.min(4, this.all_machine); i++) {
-          this.tableData2.push({
-            machine_id: data.alive_machines[i].machine_id.substring(0, 6),
-            cpu_core: data.alive_machines[i].cpu_core,
-            memory: data.alive_machines[i].memory,
-            gpu: data.alive_machines[i].gpu,
-            job_type: data.alive_machines[i].job_type,
-            username: data.alive_machines[i].username,
-            cpu_ratio: data.alive_machines[i].cpu_ratio,
-            create_time: data.alive_machines[i].create_time,
-          });
-        }
-        const xData = [];
-        const cpuData = [];
-        const gpuData = [];
-        for (const key in data.history) {
-          xData.push(key.split(" ")[1]);
-          cpuData.push(data.history[key].cpu);
-          gpuData.push(data.history[key].gpu);
-        }
-        const myLine = this.$echarts.init(document.getElementById("myLine"));
-        const lineOptions = {
-          tooltip: {
-            trigger: "axis",
-            formatter(params) {
-              const item = params;
-              return `
-                CPU：${item[0].data}
-                GPU：${item[1].data}
-               `;
-            },
-          },
-          color: ["#2E5BFF", "#FD3C05"],
-          xAxis: {
-            type: "category",
-            data: xData,
-            axisLine: {
-              show: false,
-            },
-            axisTick: {
-              show: false,
-            },
-          },
-          yAxis: {
-            type: "value",
-            axisLine: {
-              show: false,
-            },
-            axisTick: {
-              show: false,
-            },
-            splitLine: { show: false },
-          },
-          series: [
-            {
-              name: "CPU",
-              type: "line",
-              data: cpuData,
-              itemStyle: {
-                normal: {
-                  lineStyle: {
-                    color: "#2E5BFF",
-                  },
-                },
-              },
-            },
-            {
-              name: "GPU",
-              type: "line",
-              data: gpuData,
-              itemStyle: {
-                normal: {
-                  lineStyle: {
-                    color: "#FD3C05",
-                  },
-                },
-              },
-            },
-          ],
-        };
-        myLine.setOption(lineOptions);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // 用户
-    getUserSummary()
-      .then((data) => {
-        this.all_user = data.length;
-        this.data3 = data;
-        for (let i = 0; i < 6; i++) {
-          this.tableData3.push({
-            username: data[i].username,
-            all_task: data[i].all_task,
-            working_task: data[i].working_task,
-            cost: `¥${data[i].cost.toFixed(2)}`,
-            create_time: data[i].create_time,
-          });
-        }
+    //费用统计
+    let date = new Date();
+    var date2 = new Date(date);
+    date2.setDate(date.getDate() - 7);
+    this.getFee(
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+    );
+
+    //消费变化
+    this.getFeeChange(
+      date2.getFullYear() +"-" +(date2.getMonth() + 1) +"-" +date2.getDate(),
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+    );
+
+    //任务概览
+    this.getJob();
+
+    //服务器概览
+    this.getMachine();
+
+    //收藏任务列表
+    Jobs({ star: 1 })
+      .then((res) => {
+        this.tableData3 = res.items;
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
   },
   methods: {
-    changePage1(page) {
-      this.tableData1 = [];
-      for (let i = 0; i < Math.min(4, this.all_job - page * 4 + 4); i++) {
-        this.$set(this.tableData1, i, {
-          id: this.data1[page * 4 - 4 + i].job_id,
-          type: this.data1[page * 4 - 4 + i].job_type,
-          username: this.data1[page * 4 - 4 + i].username,
-          all_task: this.data1[page * 4 - 4 + i].all_task,
-          finished_task: this.data1[page * 4 - 4 + i].finished_task,
-          pending_task: this.data1[page * 4 - 4 + i].pending_task,
-          working_task: this.data1[page * 4 - 4 + i].working_task,
-          failed_task: this.data1[page * 4 - 4 + i].failed_task,
-          create_time: this.data1[page * 4 - 4 + i].create_time,
-          cost: `¥${this.data1[page * 4 - 4 + i].cost.toFixed(2)}`,
-        });
-      }
-    },
-    changePage2(page) {
-      this.tableData2 = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < Math.min(4, this.all_machine - page * 4 + 4); i++) {
-        this.$set(this.tableData2, i, {
-          machine_id: this.data2[page * 4 - 4 + i].machine_id.substring(0, 6),
-          cpu_core: this.data2[page * 4 - 4 + i].cpu_core,
-          memory: this.data2[page * 4 - 4 + i].memory,
-          gpu: this.data2[page * 4 - 4 + i].gpu,
-          job_type: this.data2[page * 4 - 4 + i].job_type,
-          username: this.data2[page * 4 - 4 + i].username,
-          cpu_ratio: this.data2[page * 4 - 4 + i].cpu_ratio,
-          create_time: this.data2[page * 4 - 4 + i].create_time,
-        });
-      }
-    },
-    changePage3(page) {
-      this.tableData3 = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < Math.min(6, this.all_user - page * 6 + 6); i++) {
-        this.$set(this.tableData3, i, {
-          username: this.data3[page * 6 - 6 + i].username,
-          all_task: this.data3[page * 6 - 6 + i].all_task,
-          working_task: this.data3[page * 6 - 6 + i].working_task,
-          cost: `¥${this.data3[page * 6 - 6 + i].cost.toFixed(2)}`,
-          create_time: this.data3[page * 6 - 6 + i].create_time,
-        });
-      }
-    },
-    parseTime(time) {
-      let timeString = "";
-      if (Math.floor(time / 86400) > 0) {
-        timeString += `${Math.floor(time / 86400)}天`;
-      }
-      if (Math.floor((time % 86400) / 3600) > 0) {
-        timeString += `${Math.floor((time % 86400) / 3600)}小时`;
-      }
-      if (Math.floor((time % 3600) / 60) > 0) {
-        timeString += `${Math.floor((time % 3600) / 60)}分`;
-      } else {
-        timeString += `${Math.floor(time % 60)}秒`;
-      }
-
-      return timeString;
-    },
-    machineTimeChange(value) {
-      if (value === "一天") {
-        this.machine_count = this.machine_data.machines_1_day.count;
-        this.cpu = this.machine_data.machines_1_day.cpu;
-        this.gpu = this.machine_data.machines_1_day.gpu;
-      } else if (value === "一周") {
-        this.machine_count = this.machine_data.machines_7_day.count;
-        this.cpu = this.machine_data.machines_7_day.cpu;
-        this.gpu = this.machine_data.machines_7_day.gpu;
-      } else if (value === "一月") {
-        this.machine_count = this.machine_data.machines_30_day.count;
-        this.cpu = this.machine_data.machines_30_day.cpu;
-        this.gpu = this.machine_data.machines_30_day.gpu;
-      }
-    },
-    handleClick(e) {
-      if (this.consumeTimeChosen == "自定义") {
-        this.consumeTimeChosen = "自定义";
-        if (e.target?.tagName === "INPUT") return;
-        this.customize = !this.customize;
-        this.open = !this.open;
-      }
-    },
     handleChange(date) {
-      this.timeLimit = date;
+      let start = date[0].split(".");
+      let end = date[1].split(".");
+      this.timeLimit = {
+        start: start.join("-"),
+        end: end.join("-"),
+      };
     },
     handleClear() {
       this.open = false;
@@ -1286,6 +827,461 @@ export default {
     handleOk() {
       this.open = false;
       this.customize = false;
+      this.getFeeChange(this.timeLimit.start, this.timeLimit.end);
+    },
+
+    //费用统计数据获取函数
+    getFee(start, end) {
+      fee({
+        start: start,
+        end: end,
+      })
+        .then((res) => {
+          this.feeInf = res;
+          const myPie = this.$echarts.init(document.getElementById("myPie"));
+          const option = {
+            tooltip: {
+              trigger: "item",
+              formatter: "{a} <br/>{b}: {c} ({d}%)",
+            },
+            title: {
+              text:
+                "{a|¥" + this.feeInf.total + "}\n{b|" + this.i18n.已消费 + "}",
+              left: "19%",
+              top: "27%",
+              textAlign: "center",
+              textStyle: {
+                rich: {
+                  a: {
+                    color: "#333333",
+                    fontSize: (24 / 1080) * this.screenHeight,
+                    fontWeight: 600,
+                    align: "center",
+                    width: "3%",
+                  },
+                  b: {
+                    color: "#333333",
+                    fontSize: (20 / 1080) * this.screenHeight,
+                    align: "center",
+                    width: "3%",
+                  },
+                },
+              },
+            },
+            legend: {
+              data: [this.i18n.计算, this.i18n.存储, this.i18n.流量],
+              left: "45%",
+              top: "11%",
+              orient: "vertical",
+              align: "left",
+              itemHeight: (14 / 1080) * this.screenHeight,
+              itemWidth: (14 / 1080) * this.screenHeight,
+              itemGap: (32 / 1080) * this.screenHeight,
+              icon: "circle",
+              formatter: (name) => {
+                var index = 0;
+                var clientlabels = [
+                  this.i18n.计算,
+                  this.i18n.存储,
+                  this.i18n.流量,
+                ];
+                var clientcounts = [
+                  this.feeInf.machine,
+                  this.feeInf.store,
+                  this.feeInf.network_flow,
+                ];
+                clientlabels.forEach(function (value, i) {
+                  if (value == name) {
+                    index = i;
+                  }
+                });
+                console.log("这里")
+                console.log(clientcounts[index] /0)
+                if((clientcounts[0] + clientcounts[1] + clientcounts[2]) == 0)
+                  return (
+                  "{a|" +
+                  name +
+                  "}     {b|" +
+                  '0'+
+                  "%}   {c|¥" +
+                  clientcounts[index] +
+                  "}"
+                );
+                return (
+                  "{a|" +
+                  name +
+                  "}     {b|" +
+                  (
+                    (clientcounts[index] /
+                      (clientcounts[0] + clientcounts[1] + clientcounts[2])) *
+                    100
+                  ).toFixed(2) +
+                  "%}   {c|¥" +
+                  clientcounts[index] +
+                  "}"
+                );
+              },
+              textStyle: {
+                rich: {
+                  a: {
+                    fontSize: (24 / 1080) * this.screenHeight,
+                    color: "#000000",
+                    width: 70,
+                  },
+                  b: {
+                    fontSize: (24 / 1080) * this.screenHeight,
+                    color: "#999999",
+                    width: 80,
+                  },
+                  c: {
+                    fontSize: (24 / 1080) * this.screenHeight,
+                    color: "#999999",
+                    width: 70,
+                  },
+                },
+              },
+            },
+            color: ["#47A2FF", "#50CCCB", "#9860E5", "#008BF4"],
+            series: [
+              {
+                startAngle: 180,
+                name: this.i18n.费用统计,
+                type: "pie",
+                radius: ["35%", "50%"],
+                center: ["20%", "32.5%"],
+                avoidLabelOverlap: true,
+                label: {
+                  show: false,
+                },
+                data: [
+                  { value: this.feeInf.machine, name: this.i18n.计算 },
+                  { value: this.feeInf.store, name: this.i18n.存储 },
+                  { value: this.feeInf.network_flow, name: this.i18n.流量 },
+                ],
+              },
+            ],
+          };
+          myPie.setOption(option, true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getFeeChange(start, end) {
+      feeChange({ start: start, end: end })
+        .then((res) => {
+          this.feeChangeInf = res.items;
+          let x = [];
+          let y = [];
+          this.feeChangeInf.forEach((item) => {
+            x.push(item.date);
+            y.push(item.fee);
+          });
+
+          const consumeLine = this.$echarts.init(
+            document.getElementById("consume-line")
+          );
+          const consumeLineOption = {
+            xAxis: {
+              type: "category",
+              data: x,
+              splitLine: { show: false },
+              axisTick: { show: false },
+              axisLine: { show: false },
+              boundaryGap: false,
+            },
+            yAxis: {
+              type: "value",
+              axisTick: { show: false },
+              axisLine: { show: false },
+              axisLabel: { formatter: "¥{value} " },
+              splitLine: {
+                lineStyle: {
+                  color: "#F9FAFD",
+                },
+              },
+              min: "dataMin", // 最小值
+            },
+            series: [
+              {
+                data: y,
+                type: "line",
+                smooth: true,
+                symbol: "none",
+                areaStyle: {
+                  color: {
+                    type: "linear",
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
+                    colorStops: [
+                      {
+                        offset: 0,
+                        color: "#5B68B6", // 0% 处的颜色
+                      },
+                      {
+                        offset: 1,
+                        color: "#FFFFFF", // 100% 处的颜色
+                      },
+                    ],
+                    global: false, // 缺省为 false
+                  },
+                },
+              },
+            ],
+            itemStyle: {
+              color: "#7682C7",
+            },
+          };
+          consumeLine.setOption(consumeLineOption, true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getJob() {
+      Job()
+        .then((res) => {
+          this.jobInf = res;
+          const taskTable = this.$echarts.init(
+            document.getElementById("taskTable")
+          );
+          const taskOption = {
+            tooltip: {},
+            legend: {
+              data: [],
+            },
+
+            xAxis: {
+              data: [
+                this.i18n.总数,
+                this.i18n.完成,
+                this.i18n.排队,
+                this.i18n.计算中,
+                this.i18n.失败,
+              ],
+              axisTick: { show: false },
+              axisLine: { show: false },
+            },
+            yAxis: {
+              axisTick: { show: false },
+              axisLine: { show: false },
+              splitLine: {
+                lineStyle: {
+                  color: "#F9FAFD",
+                },
+              },
+            },
+
+            series: [
+              {
+                name: this.i18n.任务,
+                type: "bar",
+                barWidth: 24,
+                data: [
+                  this.jobInf.total,
+                  this.jobInf.success_count,
+                  this.jobInf.pending_count,
+                  this.jobInf.working_count,
+                  this.jobInf.fail_count,
+                ],
+                itemStyle: {
+                  normal: {
+                    color: function (params) {
+                      var colorList = [
+                        new echarts.graphic.LinearGradient(
+                          0,
+                          0,
+                          0,
+                          1,
+                          [
+                            {
+                              offset: 0,
+                              color: "#03B957", // 0% 处的颜色
+                            },
+                            {
+                              offset: 1,
+                              color: "#92DD87", // 100% 处的颜色
+                            },
+                          ],
+                          false
+                        ),
+                        new echarts.graphic.LinearGradient(
+                          0,
+                          0,
+                          0,
+                          1,
+                          [
+                            {
+                              offset: 0,
+                              color: "#3357FE", // 0% 处的颜色
+                            },
+                            {
+                              offset: 1,
+                              color: "#2893F7", // 100% 处的颜色
+                            },
+                          ],
+                          false
+                        ),
+                        new echarts.graphic.LinearGradient(
+                          0,
+                          0,
+                          0,
+                          1,
+                          [
+                            {
+                              offset: 0,
+                              color: "#64E8F9", // 0% 处的颜色
+                            },
+                            {
+                              offset: 1,
+                              color: "#23999D", // 100% 处的颜色
+                            },
+                          ],
+                          false
+                        ),
+                        new echarts.graphic.LinearGradient(
+                          0,
+                          0,
+                          0,
+                          1,
+                          [
+                            {
+                              offset: 0,
+                              color: "#FFB92C", // 0% 处的颜色
+                            },
+                            {
+                              offset: 1,
+                              color: "#E98216", // 100% 处的颜色
+                            },
+                          ],
+                          false
+                        ),
+                        new echarts.graphic.LinearGradient(
+                          0,
+                          0,
+                          0,
+                          1,
+                          [
+                            {
+                              offset: 0,
+                              color: "#D37F09", // 0% 处的颜色
+                            },
+                            {
+                              offset: 1,
+                              color: "#A84804", // 100% 处的颜色
+                            },
+                          ],
+                          false
+                        ),
+                      ];
+                      return colorList[params.dataIndex];
+                    },
+                  },
+                },
+              },
+            ],
+          };
+          taskTable.setOption(taskOption, true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getMachine(start, end) {
+      Machine({
+        start: start,
+        end: end,
+      })
+        .then((res) => {
+          let cpu = [];
+          let gpu = [];
+          let time = [];
+          res.items.forEach((item) => {
+            cpu.push(item.cpu);
+            gpu.push(item.gpu);
+            time.push(item.time);
+          });
+          this.machineInf = {
+            cpu: cpu,
+            gpu: gpu,
+            time: time,
+          };
+          const myLine = this.$echarts.init(document.getElementById("myLine"));
+          const lineOptions = {
+            tooltip: {
+              trigger: "axis",
+              formatter(params) {
+                const item = params;
+                return `
+                CPU：${item[0].data}
+                GPU：${item[1].data}
+               `;
+              },
+            },
+            color: ["#2E5BFF", "#FD3C05"],
+            xAxis: {
+              type: "category",
+              data: this.machineInf.time,
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+            },
+            yAxis: {
+              type: "value",
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: { show: false },
+            },
+            series: [
+              {
+                name: "CPU",
+                type: "line",
+                data: this.machineInf.cpu,
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: "#2E5BFF",
+                    },
+                  },
+                },
+              },
+              {
+                name: "GPU",
+                type: "line",
+                data: this.machineInf.gpu,
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: "#FD3C05",
+                    },
+                  },
+                },
+              },
+            ],
+          };
+          myLine.setOption(lineOptions, true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    machineFilter(date) {
+      let start = date[0].split(".");
+      let end = date[1].split(".");
+      this.machineTimeFilter = {
+        start: start.join("-"),
+        end: end.join("-"),
+      };
+      this.getMachine(this.machineTimeFilter.start, this.machineTimeFilter.end);
     },
   },
 };

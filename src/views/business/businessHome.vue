@@ -4,7 +4,7 @@
       id="trend"
       ref="trend"
       :style="{
-        height: (640 / 1080) * screenHeight + 'px',
+        height: (840 / 1080) * screenHeight + 'px',
         width: '100%',
       }"
     ></div>

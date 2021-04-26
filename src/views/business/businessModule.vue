@@ -1,8 +1,8 @@
 <template>
   <div id="business">
     <Breadcrumb separator="-" class="businessBread">
-      <BreadcrumbItem>{{i18n.财务分析}}</BreadcrumbItem>
-      <BreadcrumbItem>{{i18n.财务模块}}</BreadcrumbItem>
+      <BreadcrumbItem>{{ i18n.财务分析 }}</BreadcrumbItem>
+      <BreadcrumbItem>{{ i18n.财务模块 }}</BreadcrumbItem>
       <BreadcrumbItem v-show="title1 != ''">{{ title1 }}</BreadcrumbItem>
       <BreadcrumbItem v-show="title2 != ''">{{ title2 }}</BreadcrumbItem>
     </Breadcrumb>
@@ -16,6 +16,33 @@
         background: '#F5F7F9',
       }"
     ></div>
+    <!-- userInfo -->
+    <Card class="userInfo">
+      <div class="userHead">
+        <div class="head" @click="$router.push('/user/modify')">
+          <img
+            src="../../assets/img/yonghutouxiang@2x.png"
+            alt=""
+            class="headImg"
+          />
+        </div>
+        <div class="username">HAN LAB</div>
+      </div>
+      <div class="balance_active">
+        <Button
+          class="balance_btn"
+          style="background: #13227a; color: #ffffff; margin-right: 5px"
+          @click.native="recharge()"
+          >{{ i18n.充值 }}</Button
+        >
+        <Button
+          class="balance_btn"
+          style="border: 1px solid #13227a; color: #13227a; margin-left: 5px"
+          @click.native="withdraw()"
+          >{{ i18n.提现 }}</Button
+        >
+      </div>
+    </Card>
     <!-- 左侧菜单 -->
     <div class="function-sider">
       <Menu
@@ -41,12 +68,11 @@
       :style="{
         marginLeft: '240px',
         overflow: 'hidden',
-        paddingTop: (220 / 1080) * screenHeight + 'px',
       }"
       id="moduleMain"
     >
       <!-- 用户信息 -->
-      <Card
+      <!-- <Card
         id="accountInf"
         :style="{
           height: (220 / 1080) * screenHeight + 'px',
@@ -69,43 +95,42 @@
           <div class="username">HAN LAB</div>
         </div>
         <div class="balance">
-          <div class="balance_title">{{i18n.账户余额}}</div>
+          <div class="balance_title">{{ i18n.账户余额 }}</div>
           <div class="balance_num">¥{{ userBalance }}</div>
           <div class="balance_active">
             <Button
               class="balance_btn"
               style="background: #13227a; color: #ffffff"
               @click.native="recharge()"
-              >{{i18n.充值}}</Button
+              >{{ i18n.充值 }}</Button
             >
             <Button
               class="balance_btn"
               style="border: 1px solid #13227a; color: #13227a"
               @click.native="withdraw()"
-              >{{i18n.提现}}</Button
+              >{{ i18n.提现 }}</Button
             >
           </div>
         </div>
         <div class="remind">
-          <div class="remind_title">{{i18n.财务提醒}}</div>
+          <div class="remind_title">{{ i18n.财务提醒 }}</div>
           <div class="remind_main">
             <div class="remind_block" @click="invoice()">
-              <div class="remind_block_title">{{i18n.可索取发票}}</div>
+              <div class="remind_block_title">{{ i18n.可索取发票 }}</div>
               <div class="remind_block_info">¥3000.00</div>
             </div>
             <div class="remind_block" @click="voucher()">
-              <div class="remind_block_title">{{i18n.代金券数量}}</div>
+              <div class="remind_block_title">{{ i18n.代金券数量 }}</div>
               <div class="remind_block_info">2张</div>
             </div>
           </div>
         </div>
-      </Card>
+      </Card> -->
       <Card
         ref="businessRouter"
         id="businessRouter"
         :style="{
-          height: (940 / 1080) * screenHeight + 'px',
-          marginTop: (20 / 1080) * screenHeight + 'px',
+          height: (985 / 1080) * screenHeight + 'px',
         }"
       >
         <div
@@ -168,10 +193,10 @@ export default {
     screenWidth: document.documentElement.clientWidth,
     userBalance: "",
   }),
-  computed:{
-    i18n(){
+  computed: {
+    i18n() {
       return this.$t("index.Finance");
-    }
+    },
   },
   watch: {
     title2: {
@@ -184,18 +209,18 @@ export default {
             document.getElementById("businessRouter").style.height =
               (1630 / 1080) * this.screenHeight + "px";
             document.getElementById("moduleMain").style.height =
-              (1860 / 1080) * this.screenHeight + "px";
-            document.getElementById("accountInf").style.width =
-              this.$refs.businessRouter.$el.clientWidth + "px";
+              (1630 / 1080) * this.screenHeight + "px";
+            // document.getElementById("accountInf").style.width =
+            //   this.$refs.businessRouter.$el.clientWidth + "px";
           } else {
             document.getElementById("businessRouter").style.height =
-              (740 / 1080) * this.screenHeight + "px";
+              (985 / 1080) * this.screenHeight + "px";
             document.getElementById("moduleMain").style.height = "";
           }
-          if (oldVal == this.i18n.费用账单) {
-            document.getElementById("accountInf").style.width =
-              this.$refs.businessRouter.$el.clientWidth + 16 + "px";
-          }
+          // if (oldVal == this.i18n.费用账单) {
+          //   document.getElementById("accountInf").style.width =
+          //     this.$refs.businessRouter.$el.clientWidth + 16 + "px";
+          // }
         }
         let url = this.$route.path.split("/");
         if (url[4] == "recharge") this.rechargeTab = "recharge";
@@ -215,12 +240,12 @@ export default {
     // 获取左侧菜单
     const functionList = ["fund", "bill", "invoice", "charging"];
     this.list = parseFunctions(functionList);
-    console.log(this.list)
+    console.log(this.list);
     console.log("mounted");
     console.log(this.$refs.businessRouter.$el.clientWidth);
-    if (this.$refs.businessRouter.$el.clientWidth != 0)
-      document.getElementById("accountInf").style.width =
-        this.$refs.businessRouter.$el.clientWidth + 16 + "px";
+    // if (this.$refs.businessRouter.$el.clientWidth != 0)
+    //   document.getElementById("accountInf").style.width =
+    //     this.$refs.businessRouter.$el.clientWidth + 16 + "px";
     window.onresize = () => {
       return (() => {
         window.fullHeight = document.documentElement.clientHeight;
@@ -239,22 +264,24 @@ export default {
           document.getElementById("businessRouter").style.height =
             (1630 / 1080) * this.screenHeight + "px";
           document.getElementById("moduleMain").style.height =
-            (1860 / 1080) * this.screenHeight + "px";
+            (1630 / 1080) * this.screenHeight + "px";
         });
       }
       this.$router.push(path);
       return;
     }
     document.getElementById("businessRouter").style.height =
-      (740 / 1080) * this.screenHeight + "px";
-    document.getElementById("moduleMain").style.height = "";
+      (1630 / 1080) * this.screenHeight + "px";
+    document.getElementById("moduleMain").style.height =
+      (1630 / 1080) * this.screenHeight + "px";
+    // document.getElementById("moduleMain").style.height = "";
     this.$router.push("/business/businessModule/businessHome");
   },
   beforeUpdate() {
     let url = this.$route.path.split("/");
     if (url[3] == "businessHome") {
       document.getElementById("businessRouter").style.height =
-        (740 / 1080) * this.screenHeight + "px";
+        (1630 / 1080) * this.screenHeight + "px";
       document.getElementById("moduleMain").style.height = "";
       this.title1 = "";
       this.title2 = "";
@@ -273,7 +300,11 @@ export default {
         this.title2 = this.i18n.发票管理;
         this.$nextTick(() => {
           this.$set(this.$refs.financialMenu, "activeName", this.i18n.发票管理);
-          this.$set(this.$refs.financialMenu.openedNames, 0, this.i18n.发票管理);
+          this.$set(
+            this.$refs.financialMenu.openedNames,
+            0,
+            this.i18n.发票管理
+          );
           this.$nextTick(() => {
             this.$refs.financialMenu.updateOpened();
             this.$refs.financialMenu.updateActiveName();
@@ -337,7 +368,7 @@ export default {
       this.$router.push(path);
     },
     getRouterTitle() {
-      console.log(this.title2)
+      console.log(this.title2);
       if (this.title2 == "") return this.i18n.近12个月消费趋势;
       return this.title2;
     },
@@ -359,16 +390,6 @@ export default {
           this.$refs.financialMenu.updateOpened();
           this.$refs.financialMenu.updateActiveName();
         });
-      });
-    },
-    // 当layout中左菜单隐藏时,将business的accountInf调整到合适的位置
-    collapsedSider(isCollapsed) {
-      this.$nextTick(() => {
-        document.getElementById("accountInf").style.width =
-          this.$refs.businessRouter.$el.clientWidth + "px";
-        if (isCollapsed)
-          document.getElementById("accountInf").style.left = "260px";
-        else document.getElementById("accountInf").style.left = "460px";
       });
     },
   },
@@ -399,13 +420,36 @@ export default {
     justify-content: space-between;
   }
 
+  .userInfo {
+    position: fixed;
+    top: 40px;
+    margin: 0 0 20px 5px;
+    width: 225px;
+    height: 150px;
+    background: #fff;
+    .userHead {
+      text-align: center;
+      .head {
+        .headImg {
+          width: 65px;
+          border-radius: 100%;
+        }
+      }
+      .username {
+      }
+    }
+    .balance_active {
+      text-align: center;
+    }
+  }
+
   .function-sider {
     background-color: #ffffff;
     padding: 5px;
     position: fixed;
-    top: 40px;
+    top: 210px;
     margin-left: 5px;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 240px);
     .function-item {
       cursor: pointer;
       border-bottom: 1px solid #f4f4f4;
@@ -431,24 +475,24 @@ export default {
       padding: 0;
       overflow: hidden;
     }
-    .userInfo {
-      float: left;
-      width: 18%;
-      border-right: 1px solid #ebebeb;
-      .head {
-        width: 100%;
-        text-align: center;
-        border-radius: 100%;
-        .headImg {
-        }
-      }
-      .username {
-        width: 100%;
-        text-align: center;
-        color: #333333;
-        font-size: 16px;
-      }
-    }
+    // .userInfo {
+    //   float: left;
+    //   width: 18%;
+    //   border-right: 1px solid #ebebeb;
+    //   .head {
+    //     width: 100%;
+    //     text-align: center;
+    //     border-radius: 100%;
+    //     .headImg {
+    //     }
+    //   }
+    //   .username {
+    //     width: 100%;
+    //     text-align: center;
+    //     color: #333333;
+    //     font-size: 16px;
+    //   }
+    // }
     .balance {
       float: left;
       width: 35%;
@@ -520,9 +564,7 @@ export default {
         margin-bottom: 0;
         border: 0;
         height: 100%;
-        /deep/ .ivu-tabs-tab {
-          height: 43px;
-        }
+
         /deep/ .ivu-tabs-tab-active {
           color: #13227a;
         }
@@ -542,6 +584,18 @@ export default {
   }
   /deep/ .ivu-table-cell {
     font-size: 12px;
+  }
+  /deep/ .ivu-tabs-nav-container {
+    height: 100%;
+  }
+  /deep/ .ivu-tabs-nav {
+    height: 100%;
+  }
+  /deep/ .ivu-tabs-tab {
+    height: 43px;
+    /deep/ .ivu-tabs-nav {
+      height: 100%;
+    }
   }
 }
 </style>

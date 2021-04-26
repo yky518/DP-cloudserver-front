@@ -6,7 +6,7 @@
     <Table
       :columns="exportRecord"
       :data="exportList"
-      :height="(500 / 1080) * screenHeight + 'px'"
+      :height="(770 / 1080) * screenHeight + 'px'"
       :no-data-text="defaultUrl(exportUrlType)"
     >
       <template slot="action">

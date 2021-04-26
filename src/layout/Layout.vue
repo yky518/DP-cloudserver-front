@@ -380,7 +380,6 @@ export default {
     collapsedSider() {
       console.log(this.$refs.helpDocModal);
       this.isCollapsed = !this.isCollapsed;
-      this.$refs.routerView.collapsedSider(this.isCollapsed);
     },
     //用id去已读,index在切换状态时失效
     readNotice(data, index) {
@@ -479,13 +478,13 @@ export default {
   }
 }
 .noticeDrawer {
-  /deep/ .ivu-drawer-body {
+  .ivu-drawer-body {
     padding-top: 0;
   }
-  /deep/ .ivu-drawer {
+  .ivu-drawer {
     width: 350px !important;
   }
-  /deep/ .ivu-drawer-content {
+  .ivu-drawer-content {
     border-radius: 10px;
   }
 }

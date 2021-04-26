@@ -147,6 +147,7 @@ export default {
   created() {
     getInstanceType().then((res) => {
       this.gpu_list = res.data.gpu;
+      this.gpu_list[2] = "1 * NVIDIA P100"
       this.cpu_list = res.data.v_cpu;
       this.memory_list = res.data.memory;
       this.image_list = res.data.image_name;

@@ -1,11 +1,14 @@
 <template>
   <div>
     <Breadcrumb
-      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px',marginTop:'5px' }"
+      :style="{
+        marginLeft: (30 / 1080) * screenHeight + 'px',
+        marginTop: '.3125rem',
+      }"
       separator="-"
     >
-      <BreadcrumbItem>{{i18n.结果总览}}</BreadcrumbItem>
-      <BreadcrumbItem>{{i18n.服务器总览}}</BreadcrumbItem>
+      <BreadcrumbItem>{{ i18n.结果总览 }}</BreadcrumbItem>
+      <BreadcrumbItem>{{ i18n.服务器总览 }}</BreadcrumbItem>
     </Breadcrumb>
     <Card
       class="col-card"
@@ -18,22 +21,24 @@
       "
     >
       <h2 slot="title" class="Title">
-        <span class="tableTitle">{{i18n.服务器概览}}</span>
+        <span class="tableTitle">{{ i18n.服务器概览 }}</span>
         <div
           style="
             float: right;
-            font-size: 12px;
-            margin-top: 10px;
-            padding: 0 5px;
+            font-size: 0.75rem;
+            margin-top: 0.625rem;
+            padding: 0 0.3125rem;
           "
           @click="refreshServer()"
         >
           <img
             src="../../assets/img/shuaxin_icon@2x.png"
             alt=""
-            style="height: 14px; float: left"
+            style="height: 0.875rem; float: left"
           />
-          <div style="height: 14px; line-height: 14px; float: left"></div>
+          <div
+            style="height: 0.875rem; line-height: 0.875rem; float: left"
+          ></div>
         </div>
         <RadioGroup v-model="serverChosen" type="button" style="float: right">
           <Radio label="GPU">GPU({{ serverChosenNum }})</Radio>
@@ -49,52 +54,48 @@
         :no-data-text="defaultUrl(serverUrlType)"
         :loading="serverLoading"
       >
-        <template slot-scope="{ row, index }" slot="top">
-          <img
-            :src="getServerTop(index, 'zhiding')"
-            style="width: 18px; height: 18px"
-            @click="isServerTop(row, index)"
-          />
-        </template>
         <template slot-scope="{ row, index }" slot="action">
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: 0.3125rem; color: #13227a"
             :disabled="
               $refs.serverTable && $refs.serverTable.objData[index]._isDisabled
             "
             @click="deleteServer(row, index)"
-            ><Tooltip :content="i18n.释放"><img
-              src="../../assets/img/shanchuIcon.png"
-              alt=""
-              style="width: 18px; height: 18px"
-          /></Tooltip></Button>
+            ><Tooltip :content="i18n.释放"
+              ><img
+                src="../../assets/img/shanchuIcon.png"
+                alt=""
+                style="width: 1.125rem; height: 1.125rem" /></Tooltip
+          ></Button>
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: 0.3125rem; color: #13227a"
             :disabled="
               $refs.serverTable && $refs.serverTable.objData[index]._isDisabled
             "
-            ><Tooltip :content="i18n.停止"><img
-              src="../../assets/img/zanting-2@2x.png"
-              alt=""
-              style="width: 18px; height: 18px"
-          /></Tooltip></Button>
+            ><Tooltip :content="i18n.停止"
+              ><img
+                src="../../assets/img/zanting-2@2x.png"
+                alt=""
+                style="width: 1.125rem; height: 1.125rem" /></Tooltip
+          ></Button>
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: 0.3125rem; color: #13227a"
             :disabled="
               $refs.serverTable && $refs.serverTable.objData[index]._isDisabled
             "
             @click.native="createMirror(row, index)"
-            ><Tooltip :content="i18n.创建镜像"><img
-              src="../../assets/img/baocun@2x.png"
-              alt=""
-              style="width: 18px; height: 18px"
-          /></Tooltip></Button>
+            ><Tooltip :content="i18n.创建镜像"
+              ><img
+                src="../../assets/img/baocun@2x.png"
+                alt=""
+                style="width: 1.125rem; height: 1.125rem" /></Tooltip
+          ></Button>
         </template>
 
         <div slot="footer" class="footer">
@@ -102,28 +103,28 @@
             style="display: inline-block"
             @on-change="selectAllServer"
             v-model="serverIsAllSelectd"
-            >{{i18n.全选}}</Checkbox
+            >{{ i18n.全选 }}</Checkbox
           >
           <div style="display: inline-block; float: right">
-            {{i18n.共选中}}{{ serverChosenNum }}{{i18n.条}}
+            {{ i18n.共选中 }}{{ serverChosenNum }}{{ i18n.条 }}
             <Button
               class="footerBtn Del"
               :disabled="!serverIsSelectd"
               @click.native="deleteAllServer()"
               ><img
                 src="../../assets/img/shanchuIconDel.png"
-                style="width: 16px"
-              />{{i18n.删除}}</Button
+                style="width: 1rem"
+              />{{ i18n.删除 }}</Button
             >
-            <Button
+            <!-- <Button
               type="primary"
               class="footerBtn"
               :disabled="!serverIsSelectd"
               ><img
                 src="../../assets/img/xiazaiIconWhite.png"
-                style="width: 16px"
+                style="width: 1rem"
               />{{i18n.下载}}</Button
-            >
+            > -->
           </div>
         </div>
       </Table>
@@ -140,21 +141,23 @@
       "
     >
       <h2 slot="title" class="Title">
-        <span class="tableTitle">{{i18n.镜像概览}}</span>
+        <span class="tableTitle">{{ i18n.镜像概览 }}</span>
         <div
           style="
             float: right;
-            font-size: 12px;
-            margin-top: 10px;
-            padding: 0 5px;
+            font-size: 0.75rem;
+            margin-top: 0.625rem;
+            padding: 0 0.3125rem;
           "
         >
           <img
             src="../../assets/img/shuaxin_icon@2x.png"
             alt=""
-            style="height: 14px; float: left"
+            style="height: 0.875rem; float: left"
           />
-          <div style="height: 14px; line-height: 14px; float: left"></div>
+          <div
+            style="height: 0.875rem; line-height: 0.875rem; float: left"
+          ></div>
         </div>
         <RadioGroup v-model="mirrorChosen" type="button" style="float: right">
           <Radio label="GPU">GPU({{ serverChosenNum }})</Radio>
@@ -169,39 +172,35 @@
         :height="(375 / 1080) * screenHeight"
         :no-data-text="defaultUrl(mirrorUrlType)"
       >
-        <template slot-scope="{ row, index }" slot="top">
-          <img
-            :src="getMirrorTop(index, 'zhiding')"
-            style="width: 18px; height: 18px"
-            @click="isMirrorTop(row, index)"
-          />
-        </template>
         <template slot-scope="{ row, index }" slot="action">
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: 0.3125rem; color: #13227a"
             :disabled="
               $refs.mirrorTable && $refs.mirrorTable.objData[index]._isDisabled
             "
             @click.native="deleteMirror(row, index)"
-            ><Tooltip :content="i18n.删除镜像"><img
-              src="../../assets/img/shanchuIcon.png"
-              alt=""
-              style="width: 18px; height: 18px"
-          /></Tooltip></Button>
+            ><Tooltip :content="i18n.删除镜像"
+              ><img
+                src="../../assets/img/shanchuIcon.png"
+                alt=""
+                style="width: 1.125rem; height: 1.125rem" /></Tooltip
+          ></Button>
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: 0.3125rem; color: #13227a"
             :disabled="
               $refs.mirrorTable && $refs.mirrorTable.objData[index]._isDisabled
             "
-            ><Tooltip :content="i18n.创建机器"><img
-              src="../../assets/img/xinjian@2x.png"
-              alt=""
-              style="width: 18px; height: 18px"
-          /></Tooltip></Button>
+            @click.native="createmachine(row, index)"
+            ><Tooltip :content="i18n.创建机器"
+              ><img
+                src="../../assets/img/xinjian@2x.png"
+                alt=""
+                style="width: 1.125rem; height: 1.125rem" /></Tooltip
+          ></Button>
         </template>
 
         <div slot="footer" class="footer">
@@ -209,46 +208,52 @@
             style="display: inline-block"
             @on-change="selectAllMirror"
             v-model="mirrorIsAllSelectd"
-            >{{i18n.全选}}</Checkbox
+            >{{ i18n.全选 }}</Checkbox
           >
           <div style="display: inline-block; float: right">
-            {{i18n.共选中}}{{ mirrorChosenNum }}{{i18n.条}}
+            {{ i18n.共选中 }}{{ mirrorChosenNum }}{{ i18n.条 }}
             <Button
               class="footerBtn Del"
               :disabled="!mirrorIsSelectd"
               @click.native="deleteAllMirror()"
               ><img
                 src="../../assets/img/shanchuIconDel.png"
-                style="width: 16px"
-              />{{i18n.删除}}</Button
+                style="width: 1rem"
+              />{{ i18n.删除 }}</Button
             >
-            <Button
+            <!-- <Button
               type="primary"
               class="footerBtn"
               :disabled="!mirrorIsSelectd"
               ><img
                 src="../../assets/img/xiazaiIconWhite.png"
-                style="width: 16px"
+                style="width: 1rem"
               />{{i18n.下载}}</Button
-            >
+            > -->
           </div>
         </div>
       </Table>
     </Card>
     <Modal v-model="createMirrorModal" title="" class="createMirror">
       <template slot="header">
-        <div class="createMirrorTitle">{{i18n.创建个人镜像}}</div>
+        <div class="createMirrorTitle">{{ i18n.创建个人镜像 }}</div>
       </template>
-      {{i18n.个人镜像名称}}<Input placeholder="" class="createMirrorInput"></Input>
+      {{ i18n.个人镜像名称
+      }}<Input placeholder="" class="createMirrorInput"></Input>
       <template slot="footer">
-        <Button class="createMirrorBtn">{{i18n.保存镜像}}</Button>
+        <Button class="createMirrorBtn">{{ i18n.保存镜像 }}</Button>
       </template>
     </Modal>
   </div>
 </template>
 
 <script>
-import { getMachineSummary } from "@/api/info";
+import {
+  getMachineSummary,
+  Snapshots,
+  createMachine,
+  MachineDel,
+} from "@/api/info";
 export default {
   data() {
     return {
@@ -261,9 +266,11 @@ export default {
       serverList: [],
       serverPage: 1,
       serverLoading: false,
+      serverEnd:false,
       hasSelectServers: [],
       serverUrlType: 1,
       createMirrorModal: false,
+      timeout: null,
 
       mirrorChosenNum: 0,
       mirrorChosen: "GPU",
@@ -271,52 +278,49 @@ export default {
       mirrorIsAllSelectd: false,
       mirrorList: [
         {
-          mirror_id: 1,
-          mirror_name: "DPtech_test_indicate",
+          id: 1,
+          name: "DPtech_test_indicate",
           username: "test1",
           IP: "255.255.255.0",
           GPU: "T4*1",
           CPU: "16",
           Memory: "62GB",
           create_time: "2020/08/24 09:07:35",
-          isTop: false,
         },
         {
-          mirror_id: 2,
-          mirror_name: "DPtech_test_indicate",
+          id: 2,
+          name: "DPtech_test_indicate",
           username: "test2",
           IP: "255.255.255.0",
           GPU: "T4*1",
           CPU: "16",
           Memory: "62GB",
           create_time: "2020/08/24 09:07:35",
-          isTop: false,
         },
         {
-          mirror_id: 3,
-          mirror_name: "DPtech_test_indicate",
+          id: 3,
+          name: "DPtech_test_indicate",
           username: "test2",
           IP: "255.255.255.0",
           GPU: "T4*1",
           CPU: "16",
           Memory: "62GB",
           create_time: "2020/08/24 09:07:35",
-          isTop: false,
         },
         {
-          mirror_id: 4,
-          mirror_name: "DPtech_test_indicate",
+          id: 4,
+          name: "DPtech_test_indicate",
           username: "test2",
           IP: "255.255.255.0",
           GPU: "T4*1",
           CPU: "16",
           Memory: "62GB",
           create_time: "2020/08/24 09:07:35",
-          isTop: false,
         },
       ],
       mirrorPage: 1,
       mirrorLoading: false,
+      mirrorEnd:false,
       hasSelectMirrors: [],
       mirrorUrlType: 1,
 
@@ -325,12 +329,6 @@ export default {
           type: "selection",
           align: "center",
           width: 35,
-        },
-        {
-          title: " ",
-          align: "center",
-          width: 30,
-          slot: "top",
         },
         {
           title: "编号",
@@ -429,10 +427,10 @@ export default {
                 {
                   style: {
                     verticalAlign: "middle",
-                    width: "16px",
-                    height: "16px",
+                    width: "1rem",
+                    height: "1rem",
                     display: "inline-block",
-                    marginLeft: "5px",
+                    marginLeft: ".3125rem",
                   },
                   props: {
                     placement: "bottom",
@@ -443,8 +441,8 @@ export default {
                 [
                   h("img", {
                     style: {
-                      width: "16px",
-                      height: "16px",
+                      width: "1rem",
+                      height: "1rem",
                     },
                     domProps: {
                       src: a,
@@ -459,8 +457,8 @@ export default {
                       },
                     },
                     [
-                      h("div", {}, this.i18n.已结算费用+": 计算公式"),
-                      h("div", {}, this.i18n.未结算费用+": 计算公式"),
+                      h("div", {}, this.i18n.已结算费用 + ": 计算公式"),
+                      h("div", {}, this.i18n.未结算费用 + ": 计算公式"),
                     ]
                   ),
                 ]
@@ -485,14 +483,8 @@ export default {
           width: 35,
         },
         {
-          title: " ",
-          align: "center",
-          width: 30,
-          slot: "top",
-        },
-        {
           title: "编号",
-          key: "mirror_id",
+          key: "id",
           sortable: true,
           width: 50,
           align: "center",
@@ -502,7 +494,7 @@ export default {
         },
         {
           title: "名称",
-          key: "mirror_name",
+          key: "name",
           minWidth: 80,
           align: "center",
           renderHeader: (h) => {
@@ -569,6 +561,22 @@ export default {
         this.screenWidth = window.fullWidth; // 宽
       })();
     };
+    Snapshots({
+      page: this.mirrorPage,
+      per_page: 15,
+    })
+      .then((res) => {
+        if (res.items.length == 0) {
+          this.mirrorEnd = true;
+          return;
+        }
+        this.mirrorPage++;
+        this.mirrorList = [...res.items];
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     this.serverLoading = true;
     getMachineSummary()
       .then((res) => {
@@ -595,6 +603,16 @@ export default {
         (e) => {
           //滚动加载防抖
           if (this.serverLoading) return;
+          if(this.serverEnd){
+            if(this.timeout)
+              clearTimeout(this.timeout)
+            if(!this.timeout)
+              this.$Message.warning("已经到底了");
+            this.timeout = setTimeout(()=>{
+              this.timeout = null;
+            },2000)
+            return;
+          }
           if (
             Number.parseInt(
               e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight
@@ -603,6 +621,10 @@ export default {
             this.serverLoading = true;
             getMachineSummary()
               .then((res) => {
+                if(15 * this.serverPage>res.alive_machines.length){
+                  console.log(this.serverPage)
+                  this.serverEnd = true;
+                }
                 this.serverList.push(
                   ...res.alive_machines.slice(
                     15 * this.serverPage,
@@ -672,6 +694,12 @@ export default {
             1
           );
         }
+        MachineDel(row.machine_id)
+          .then((res) => {
+            console.log(res);
+            this.$message.success("机器释放成功");
+          })
+          .catch();
         this.serverList.splice(index, 1);
         this.serverRestore();
       }
@@ -692,13 +720,6 @@ export default {
         this.serverIsAllSelectd = false;
         this.serverRestore();
       }
-    },
-
-    getServerTop(index, name) {
-      let url = name + "Icon";
-      if (this.$refs.serverTable?.objData[index].isTop) url += "Top";
-      url += ".png";
-      return require("../../assets/img/" + url);
     },
     selectAllServer(state) {
       //全选
@@ -752,6 +773,8 @@ export default {
       this.serverIsAllSelectd = selection.length == num ? true : false;
     },
     refreshServer() {
+      this.serverPage = 1;
+      this.serverEnd = false;
       this.serverLoading = true;
       getMachineSummary()
         .then((res) => {
@@ -775,7 +798,7 @@ export default {
       setTimeout(() => {
         let obj = this.$refs.mirrorTable.objData;
         for (let item in obj) {
-          if (this.hasSelectMirrors.indexOf(obj[item].mirror_id) != -1) {
+          if (this.hasSelectMirrors.indexOf(obj[item].id) != -1) {
             obj[item]._isChecked = true;
           }
         }
@@ -787,7 +810,7 @@ export default {
         if (this.$refs.mirrorTable.objData[index]._isChecked) {
           this.mirrorChosenNum--;
           this.hasSelectMirrors.splice(
-            this.hasSelectMirrors.indexOf(row.mirror_id),
+            this.hasSelectMirrors.indexOf(row.id),
             1
           );
         }
@@ -815,11 +838,16 @@ export default {
         this.mirrorRestore();
       }
     },
-    getMirrorTop(index, name) {
-      let url = name + "Icon";
-      if (this.$refs.mirrorTable?.objData[index].isTop) url += "Top";
-      url += ".png";
-      return require("../../assets/img/" + url);
+    createmachine(row, index) {
+      createMachine({
+        snapshot_id: row.id,
+      })
+        .then((res) => {
+          this.$Message.success("机器创建成功");
+        })
+        .catch((err) => {
+          this.$Message.error("机器创建失败");
+        });
     },
     selectAllMirror(state) {
       //全选
@@ -829,7 +857,7 @@ export default {
         if (!this.$refs.mirrorTable.objData[item]._isDisabled) {
           this.$refs.mirrorTable.objData[item]._isChecked = state;
           num++;
-          hasSelect.push(this.$refs.mirrorTable.objData[item].mirror_id);
+          hasSelect.push(this.$refs.mirrorTable.objData[item].id);
         }
       }
       this.hasSelectMirrors = state ? hasSelect : [];
@@ -847,16 +875,16 @@ export default {
             // cost += this.$refs.serverTable.objData[item].cost;
             if (
               this.hasSelectMirrors.indexOf(
-                this.$refs.mirrorTable.objData[item].mirror_id
+                this.$refs.mirrorTable.objData[item].id
               ) == -1
             )
               this.hasSelectMirrors.push(
-                this.$refs.mirrorTable.objData[item].mirror_id
+                this.$refs.mirrorTable.objData[item].id
               );
           } else {
             if (
               this.hasSelectMirrors.indexOf(
-                this.$refs.mirrorTable.objData[item].mirror_id
+                this.$refs.mirrorTable.objData[item].id
               ) != -1
             )
               this.hasSelectMirrors.splice(
@@ -872,38 +900,12 @@ export default {
       this.mirrorIsSelectd = selection.length ? true : false;
       this.mirrorIsAllSelectd = selection.length == num ? true : false;
     },
-    isServerTop(row, index) {
-      this.serverList[index].isTop = !this.serverList[index].isTop;
-      let a = this.serverList.splice(index, 1);
-      for (let item in this.serverList) {
-        if (!this.serverList[item].isTop) {
-          let b = this.serverList.slice(0, item);
-          b.push(a[0]);
-          this.serverList = b.concat(this.serverList.slice(item));
-          return;
-        }
-      }
-      this.serverList.push(a[0]);
-    },
-    isMirrorTop(row, index) {
-      this.mirrorList[index].isTop = !this.mirrorList[index].isTop;
-      let a = this.mirrorList.splice(index, 1);
-      for (let item in this.mirrorList) {
-        if (!this.mirrorList[item].isTop) {
-          let b = this.mirrorList.slice(0, item);
-          b.push(a[0]);
-          this.mirrorList = b.concat(this.mirrorList.slice(item));
-          return;
-        }
-      }
-      this.mirrorList.push(a[0]);
+  },
+  computed: {
+    i18n() {
+      return this.$t("index.Server");
     },
   },
-  computed:{
-    i18n(){
-      return this.$t("index.Server");
-    }
-  }
 };
 </script>
 
@@ -911,23 +913,27 @@ export default {
 .col-card {
   overflow: hidden;
   /deep/ .ivu-card-head {
-    height: 45px;
-    padding: 5px 0;
+    height: 2.8125rem;
+    padding: 0.3125rem 0;
   }
   /deep/ .ivu-card-body {
-    height: 35px;
-    padding: 0 0 16px 0;
+    height: 2.1875rem;
+    padding: 0 0 1rem 0;
   }
   /deep/ .ivu-table-wrapper {
   }
   /deep/ .ivu-table {
-    /deep/.ivu-table-cell {
+    .ivu-table-cell {
       padding: 0;
+      width: 100%;
+      div {
+        display: inline-block;
+      }
     }
   }
   /deep/.ivu-table td,
   /deep/.ivu-table th {
-    height: 37px;
+    height: 2.3125rem;
   }
   /deep/ .ivu-table .disabled td {
     color: #d8d8d8 !important;
@@ -942,16 +948,16 @@ export default {
       width: 15%;
     }
     .tipTxt {
-      font-size: 12px;
+      font-size: 0.75rem;
     }
   }
 }
 
 .footer {
-  border-top: 1px solid #ebebeb;
+  border-top: 0.0625rem solid #ebebeb;
   .footerBtn.ivu-btn {
-    margin-right: 20px;
-    border-radius: 20px;
+    margin-right: 1.25rem;
+    border-radius: 1.25rem;
     display: inline-block;
     color: #ffffff;
     background: #13227a;
@@ -967,24 +973,24 @@ export default {
     background: #eaebef;
   }
   .ivu-checkbox-wrapper {
-    margin-left: 9px;
+    margin-left: 0.5625rem;
   }
 }
 .Title {
-  font-size: 18px;
   .tableTitle {
     display: inline-block;
-    margin-top: 7px;
-    margin-left: 10px;
+    margin-top: 0.4375rem;
+    margin-left: 0.625rem;
+    font-size: 1rem;
   }
   /deep/ .ivu-radio-group {
-    border: 1px solid #e9e9e9;
+    border: 0.0625rem solid #e9e9e9;
     border-color: #e9e9e9;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     .ivu-radio-wrapper {
       color: #666666;
       border: none;
-      border-radius: 20px;
+      border-radius: 1.25rem;
     }
     .ivu-radio-wrapper::before {
       display: none;
@@ -996,14 +1002,14 @@ export default {
       border-color: #13227a;
       background: #13227a;
       color: #ffffff;
-      border-radius: 20px;
+      border-radius: 1.25rem;
     }
   }
 }
 .deleteIcon {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   float: right;
   right: 0;
   top: 0;
@@ -1011,25 +1017,25 @@ export default {
 
 .createMirror {
   /deep/ .ivu-modal {
-    width: 400px !important;
+    width: 25rem !important;
   }
   /deep/ .ivu-modal-body {
-    padding: 20px 30px;
+    padding: 1.25rem 1.875rem;
     text-align: center;
   }
   .createMirrorTitle {
     text-align: center;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
   }
   .createMirrorInput {
     width: 50%;
   }
   .createMirrorBtn {
-    width: 120px;
-    height: 40px;
+    width: 7.5rem;
+    height: 2.5rem;
     background: #13227a;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     color: #ffffff;
   }
   /deep/ .ivu-modal-header {

@@ -52,11 +52,6 @@ export const constantRoutes = [
         name: 'Forget',
         component: () => import('@/views/user/components/Forget'),
       },
-      {
-        path: 'test',
-        name: 'test',
-        component: () => import('@/views/test')
-      }
     ],
 
   },
@@ -111,11 +106,6 @@ export const constantRoutes = [
         path: 'modify',
         name: 'modify',
         component: () => import('@/views/modify.vue'),
-      },
-      {
-        path: '/test',
-        name: 'test',
-        component: () => import('../views/test.vue')
       },
     ],
   },

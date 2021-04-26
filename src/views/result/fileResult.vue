@@ -1,7 +1,7 @@
 <template>
   <div>
     <Breadcrumb
-      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px',marginTop:'5px' }"
+      :style="{ marginLeft: (30 / 1080) * screenHeight + 'px',marginTop:'.3125rem' }"
       separator="-"
     >
       <BreadcrumbItem>{{i18n.结果总览}}</BreadcrumbItem>
@@ -25,17 +25,17 @@
         <div
           style="
             float: right;
-            font-size: 12px;
-            margin-top: 10px;
-            padding: 0 5px;
+            font-size: .75rem;
+            margin-top: .625rem;
+            padding: 0 .3125rem;
           "
         >
           <img
             src="../../assets/img/shuaxin_icon@2x.png"
             alt=""
-            style="height: 14px; float: left"
+            style="height: .875rem; float: left"
           />
-          <div style="height: 14px; line-height: 14px; float: left"></div>
+          <div style="height: .875rem; line-height: .875rem; float: left"></div>
         </div>
       </h2>
       <Table
@@ -50,11 +50,6 @@
       >
         <template slot-scope="{ row, index }" slot="top">
           <img
-            :src="getFileTop(index, 'zhiding')"
-            style="width: 18px; height: 18px"
-            @click="isFileTop(row, index)"
-          />
-          <img
             src="../../assets/img/yiguoqi.png"
             alt=""
             v-if="$refs.fileTable.objData[index]._isDisabled"
@@ -65,7 +60,7 @@
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: .3125rem; color: #13227a"
             @click.native="deleteFile(row, index)"
             :disabled="$refs.fileTable.objData[index]._isDisabled"
           >
@@ -73,13 +68,13 @@
               ><img
                 :src="getFileUrl(index, 'shanchu')"
                 alt=""
-                style="width: 18px; height: 18px"
+                style="width: 1.125rem; height: 1.125rem"
             /></Tooltip>
           </Button>
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: .3125rem; color: #13227a"
             :disabled="$refs.fileTable.objData[index]._isDisabled"
             @click.native="downloadFile(row, index)"
           >
@@ -87,7 +82,7 @@
               ><img
                 :src="getFileUrl(index, 'xiazai')"
                 alt=""
-                style="width: 18px; height: 18px"
+                style="width: 1.125rem; height: 1.125rem"
             /></Tooltip>
           </Button>
         </template>
@@ -110,7 +105,7 @@
                   @click.native="deleteAllFile()"
                   ><img
                     src="../../assets/img/shanchuIconDel.png"
-                    style="width: 16px"
+                    style="width: 1rem"
                   />{{
                     fileChosen == "all" ? i18n.移至回收站 : i18n.彻底删除
                   }}</Button
@@ -124,7 +119,7 @@
                         ? require('../../assets/img/xiazaiIconWhite.png')
                         : require('../../assets/img/daochu_按钮@2x.png')
                     "
-                    style="width: 16px"
+                    style="width: 1rem"
                   />{{ fileChosen == "all" ? i18n.下载 : i18n.恢复 }}</Button
                 >
               </div>
@@ -152,17 +147,17 @@
         <div
           style="
             float: right;
-            font-size: 12px;
-            margin-top: 10px;
-            padding: 0 5px;
+            font-size: .75rem;
+            margin-top: .625rem;
+            padding: 0 .3125rem;
           "
         >
           <img
             src="../../assets/img/shuaxin_icon@2x.png"
             alt=""
-            style="height: 14px; float: left"
+            style="height: .875rem; float: left"
           />
-          <div style="height: 14px; line-height: 14px; float: left"></div>
+          <div style="height: .875rem; line-height: .875rem; float: left"></div>
         </div>
       </h2>
       <Table
@@ -177,11 +172,6 @@
       >
         <template slot-scope="{ row, index }" slot="top">
           <img
-            :src="getMirrorTop(index, 'zhiding')"
-            style="width: 18px; height: 18px"
-            @click="isMirrorTop(row, index)"
-          />
-          <img
             src="../../assets/img/yiguoqi.png"
             alt=""
             v-if="$refs.mirrorTable.objData[index]._isDisabled"
@@ -192,7 +182,7 @@
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: .3125rem; color: #13227a"
             :disabled="$refs.mirrorTable.objData[index]._isDisabled"
             @click.native="deleteMirror(row, index)"
           >
@@ -200,20 +190,20 @@
             <img
               :src="getMirrorUrl(index, 'shanchu')"
               alt=""
-              style="width: 18px; height: 18px"
+              style="width: 1.125rem; height: 1.125rem"
             /></Tooltip>
           </Button>
           <Button
             type="text"
             size="small"
-            style="margin-right: 5px; color: #13227a"
+            style="margin-right: .3125rem; color: #13227a"
             :disabled="$refs.mirrorTable.objData[index]._isDisabled"
             @click.native="downloadMirror(row, index)"
           ><Tooltip :content="$refs.mirrorTable.objData[index].isDel||$refs.mirrorTable.objData[index].recycleBin? i18n.恢复:i18n.下载">
             <img
               :src="getMirrorUrl(index, 'xiazai')"
               alt=""
-              style="width: 18px; height: 18px"
+              style="width: 1.125rem; height: 1.125rem"
             /></Tooltip>
           </Button>
         </template>
@@ -234,7 +224,7 @@
               @click.native="deleteAllMirror()"
               ><img
                 src="../../assets/img/shanchuIconDel.png"
-                style="width: 16px"
+                style="width: 1rem"
               />{{ mirrorChosen == "all" ? i18n.移至回收站 : i18n.彻底删除 }}</Button
             >
 
@@ -248,7 +238,7 @@
                     ? require('../../assets/img/xiazaiIconWhite.png')
                     : require('../../assets/img/daochu_按钮@2x.png')
                 "
-                style="width: 16px"
+                style="width: 1rem"
               />{{ mirrorChosen == "all" ? i18n.下载 : i18n.恢复 }}</Button
             >
           </div>
@@ -271,6 +261,7 @@
 </template>
 
 <script>
+import { Files, delFile, fileRemark} from '@/api/info';
 export default {
   data() {
     return {
@@ -288,103 +279,7 @@ export default {
       mirrorIsSelectd: false,
       mirrorIsAllSelectd: false,
       mirrorUrlType: 1,
-      fileList: [
-        {
-          file_id: 1,
-          task_name: "DPtech_test_indicate",
-          job_id: "255.255.255.0",
-          fileName: "T4*1",
-          createTime: "2020/08/24 09:07:35",
-          fileSize: "16 GB",
-          duration: "4:11:20",
-          cost: "¥432.00",
-          remarks: "",
-          isDel: false,
-          isTop: false,
-          recycleBin: false,
-          expire: 7,
-        },
-        {
-          file_id: 12322,
-          task_name: "DPtech_test_indicate",
-          job_id: "255.255.255.0",
-          fileName: "T4*1",
-          createTime: "2020/08/29 09:07:35",
-          fileSize: "16 GB",
-          duration: "4:11:20",
-          cost: "¥432.00",
-          remarks: "",
-          type: "CPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: false,
-          expire: 7,
-        },
-        {
-          file_id: 12323,
-          task_name: "DPtech_test_indicate",
-          job_id: "255.255.255.0",
-          fileName: "T4*1",
-          createTime: "2021/08/24 09:07:35",
-          fileSize: "16 GB",
-          duration: "4:11:20",
-          cost: "¥432.00",
-          remarks: "",
-          type: "GPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: false,
-          expire: 7,
-        },
-        {
-          file_id: 12324,
-          task_name: "DPtech_test_indicate",
-          job_id: "255.255.255.0",
-          fileName: "T4*1",
-          createTime: "2021/08/24 09:07:35",
-          fileSize: "16 GB",
-          duration: "4:11:20",
-          cost: "¥432.00",
-          remarks: "",
-          type: "CPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: false,
-          expire: 7,
-        },
-        {
-          file_id: 12325,
-          task_name: "DPtech_test_indicate",
-          job_id: "255.255.255.0",
-          fileName: "T4*1",
-          createTime: "2021/08/24 09:07:35",
-          fileSize: "16 GB",
-          duration: "4:11:20",
-          cost: "¥432.00",
-          remarks: "",
-          type: "CPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: false,
-          expire: 7,
-        },
-        {
-          file_id: 12326,
-          task_name: "DPtech_test_indicate",
-          job_id: "255.255.255.0",
-          fileName: "T4*1",
-          createTime: "2021/08/24 09:07:35",
-          fileSize: "16 GB",
-          duration: "4:11:20",
-          cost: "¥432.00",
-          remarks: "",
-          type: "GPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: true,
-          expire: 7,
-        },
-      ],
+      fileList: [],
       file: [
         {
           type: "selection",
@@ -493,17 +388,17 @@ export default {
                 {
                   style: {
                     verticalAlign: "middle",
-                    width: "16px",
-                    height: "16px",
+                    width: "1rem",
+                    height: "1rem",
                     display: "inline-block",
-                    marginLeft: "5px",
+                    marginLeft: ".3125rem",
                   },
                 },
                 [
                   h("img", {
                     style: {
-                      width: "16px",
-                      height: "16px",
+                      width: "1rem",
+                      height: "1rem",
                     },
                     domProps: {
                       src: a,
@@ -604,7 +499,7 @@ export default {
                           width: a + "px",
                           whiteSpace: "normal",
                           wordBreak: "break-all",
-                          maxHeight: "400px",
+                          maxHeight: "25rem",
                         },
                       },
                       toolText //整个的信息即气泡内文字)
@@ -627,11 +522,15 @@ export default {
                   },
                   on: {
                     "on-enter": (e) => {
-                      this.fileList[params.index].remarks = e.target.value;
                       this.editIndex = -1;
                     },
                     "on-blur": (e) => {
                       this.fileList[params.index].remarks = e.target.value;
+                      fileRemark(params.row.id,{remark:e.target.value}).then(res=>{
+                        console.log(res);
+                      }).catch(err=>{
+                        console.log(err)
+                      })
                       this.editIndex = -1;
                     },
                   },
@@ -652,38 +551,7 @@ export default {
         },
       ],
       mirrorList: [
-        {
-          mirror_id: 1,
-          mirror_name: "DPtech_test_indicate",
-          username: "test1",
-          IP: "255.255.255.0",
-          GPU: "T4*1",
-          CPU: "16",
-          Memory: "62GB",
-          save_time: "4:20:30",
-          cost: "432.00",
-          type: "CPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: false,
-          expire: 7,
-        },
-        {
-          mirror_id: 2,
-          mirror_name: "DPtech_test_indicate",
-          username: "test2",
-          IP: "255.255.255.0",
-          GPU: "T4*1",
-          CPU: "16",
-          Memory: "62GB",
-          save_time: "4:20:30",
-          cost: "432.00",
-          type: "CPU",
-          isDel: false,
-          isTop: false,
-          recycleBin: true,
-          expire: 7,
-        },
+        
       ],
       mirror: [
         {
@@ -775,17 +643,17 @@ export default {
                 {
                   style: {
                     verticalAlign: "middle",
-                    width: "16px",
-                    height: "16px",
+                    width: "1rem",
+                    height: "1rem",
                     display: "inline-block",
-                    marginLeft: "5px",
+                    marginLeft: ".3125rem",
                   },
                 },
                 [
                   h("img", {
                     style: {
-                      width: "16px",
-                      height: "16px",
+                      width: "1rem",
+                      height: "1rem",
                     },
                     domProps: {
                       src: a,
@@ -827,6 +695,11 @@ export default {
         this.screenWidth = window.fullWidth; // 宽
       })();
     };
+    Files().then(res=>{
+      console.log(res);
+    }).catch(err=>{
+      console.log(err)
+    })
   },
   methods: {
     defaultUrl(type) {
@@ -860,12 +733,22 @@ export default {
           if (this.$refs.fileTable.objData[index]._isChecked)
             this.fileChosenNum--;
           this.fileList[index].isDel = true;
+          delFile(row.file_id).then(res=>{
+            console.log(res)
+          }).catch(err=>{
+            console.log(err);
+          })
         }
       } else if (this.fileChosen == "all") {
         if (confirm("确认要移入回收站吗?")) {
           if (this.$refs.fileTable.objData[index]._isChecked)
             this.fileChosenNum--;
           this.fileList[index].recycleBin = true;
+          delFile(row.file_id).then(res=>{
+            console.log(res)
+          }).catch(err=>{
+            console.log(err);
+          })
         }
       }
     },
@@ -875,6 +758,11 @@ export default {
           for (let item in this.$refs.fileTable.objData) {
             if (this.$refs.fileTable.objData[item]._isChecked) {
               this.fileList[item].isDel = true;
+              delFile(this.$refs.fileTable.objData[item].file_id).then(res=>{
+                console.log(res)
+              }).catch(err=>{
+                console.log(err);
+              })
             }
           }
           this.fileChosenNum = 0;
@@ -886,6 +774,11 @@ export default {
           for (let item in this.$refs.fileTable.objData) {
             if (this.$refs.fileTable.objData[item]._isChecked) {
               this.fileList[item].recycleBin = true;
+              delFile(this.$refs.fileTable.objData[item].file_id).then(res=>{
+                console.log(res)
+              }).catch(err=>{
+                console.log(err);
+              })
             }
           }
           this.fileChosenNum = 0;
@@ -1048,7 +941,7 @@ export default {
                           width: a + "px",
                           whiteSpace: "normal",
                           wordBreak: "break-all",
-                          maxHeight: "400px",
+                          maxHeight: "25rem",
                         },
                       },
                       toolText //整个的信息即气泡内文字)
@@ -1278,46 +1171,6 @@ export default {
       if (list.length == 0) this.mirrorUrlType = 3;
       return list;
     },
-    isFileTop(row, index) {
-      let a;
-      if (row.recycleBin) return;
-      for (let item in this.fileList) {
-        if (this.fileList[item].file_id == row.file_id) {
-          this.fileList[item].isTop = !this.fileList[item].isTop;
-          a = this.fileList.splice(item, 1);
-          break;
-        }
-      }
-      for (let item in this.fileList) {
-        if (!this.fileList[item].isTop) {
-          let b = this.fileList.slice(0, item);
-          b.push(a[0]);
-          this.fileList = b.concat(this.fileList.slice(item));
-          return;
-        }
-      }
-      this.fileList.push(a[0]);
-    },
-    isMirrorTop(row, index) {
-      let a;
-      if (row.recycleBin) return;
-      for (let item in this.mirrorList) {
-        if (this.mirrorList[item].mirror_id == row.mirror_id) {
-          this.mirrorList[item].isTop = !this.mirrorList[item].isTop;
-          a = this.mirrorList.splice(item, 1);
-          break;
-        }
-      }
-      for (let item in this.mirrorList) {
-        if (!this.mirrorList[item].isTop) {
-          let b = this.mirrorList.slice(0, item);
-          b.push(a[0]);
-          this.mirrorList = b.concat(this.mirrorList.slice(item));
-          return;
-        }
-      }
-      this.mirrorList.push(a[0]);
-    },
   },
   computed:{
     i18n(){
@@ -1331,21 +1184,25 @@ export default {
 .col-card {
   overflow: hidden;
   /deep/ .ivu-card-head {
-    height: 45px;
-    padding: 5px 0;
+    height: 2.8125rem;
+    padding: .3125rem 0;
   }
   /deep/ .ivu-card-body {
-    height: 35px;
-    padding: 0 0 16px 0;
+    height: 2.1875rem;
+    padding: 0 0 1rem 0;
   }
   /deep/ .ivu-table {
-    /deep/.ivu-table-cell {
+    .ivu-table-cell {
       padding: 0;
+      width:100%;
+      div{
+        display:inline-block;
+      }
     }
   }
   /deep/.ivu-table td,
   /deep/.ivu-table th {
-    height: 37px;
+    height: 2.3125rem;
   }
   /deep/ .ivu-table .disabled td {
     color: #d8d8d8 !important;
@@ -1368,19 +1225,19 @@ export default {
       width: 15%;
     }
     .tipTxt {
-      font-size: 12px;
+      font-size: .75rem;
     }
   }
 }
 .Title {
-  font-size: 18px;
+  font-size: 1.125rem;
   .tableTitle {
     display: inline-block;
-    margin-top: 7px;
-    margin-left: 10px;
+    margin-top: .4375rem;
+    margin-left: .625rem;
   }
   .ivu-tabs {
-    top: 4px;
+    top: .25rem;
   }
   .titleTab {
     display: inline-block;
@@ -1396,13 +1253,13 @@ export default {
     }
   }
   /deep/ .ivu-radio-group {
-    border: 1px solid #e9e9e9;
+    border: .0625rem solid #e9e9e9;
     border-color: #e9e9e9;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     .ivu-radio-wrapper {
       color: #666666;
       border: none;
-      border-radius: 20px;
+      border-radius: 1.25rem;
     }
     .ivu-radio-wrapper::before {
       display: none;
@@ -1414,7 +1271,7 @@ export default {
       border-color: #13227a;
       background: #13227a;
       color: #ffffff;
-      border-radius: 20px;
+      border-radius: 1.25rem;
     }
   }
   /deep/ .ivu-table-tip {
@@ -1422,17 +1279,17 @@ export default {
       width: 15%;
     }
     .tipTxt {
-      font-size: 12px;
+      font-size: .75rem;
     }
   }
 }
 
 .deleteIcon {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   // float: right;
-  left: -35px;
+  left: -2.1875rem;
   top: 0;
 }
 .ivu-table::before {
@@ -1447,8 +1304,8 @@ export default {
 }
 .footer {
   .footerBtn.ivu-btn {
-    margin-right: 20px;
-    border-radius: 20px;
+    margin-right: 1.25rem;
+    border-radius: 1.25rem;
     display: inline-block;
     color: #ffffff;
     background: #13227a;
@@ -1464,31 +1321,31 @@ export default {
     background: #eaebef;
   }
   .ivu-checkbox-wrapper {
-    margin-left: 5px;
+    margin-left: .3125rem;
   }
 }
 
 .restore {
   /deep/ .ivu-modal {
-    width: 400px !important;
+    width: 25rem !important;
   }
   /deep/ .ivu-modal-header {
     border: 0;
   }
   .restoreTitle {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
     text-align: center;
   }
   .restoreContent {
     text-align: center;
-    padding: 8px 0;
+    padding: .5rem 0;
   }
   .restoreBtn {
-    width: 120px;
-    height: 40px;
+    width: 7.5rem;
+    height: 2.5rem;
     background: #13227a;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     color: #ffffff;
   }
   /deep/ .ivu-modal-footer {

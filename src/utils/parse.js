@@ -31,12 +31,12 @@ export const asyncMenus = [
         name: 'function',
         icon: '',
       },
-      {
-        title: '云超算',
-        path: '/jobs/scc',
-        name: 'cloud',
-        icon: '',
-      },
+      // {
+      //   title: '云超算',
+      //   path: '/jobs/scc',
+      //   name: 'cloud',
+      //   icon: '',
+      // },
     ],
   },
   {
@@ -181,6 +181,10 @@ export const asyncRouters = [{
       path: 'authority',
       name: 'authority',
       component: () => import( /* webpackChunkName: "about" */ '../views/admin/authorityManagement/authorityManagement'),
+    }, {
+      path: 'role',
+      name: 'role',
+      component: () => import( /* webpackChunkName: "about" */ '../views/admin/roleManagement/RoleManagement'),
     }, ]
   },
   {

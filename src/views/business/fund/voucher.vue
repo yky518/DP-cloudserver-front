@@ -13,7 +13,7 @@
     <Table
       :columns="voucher"
       :data="voucherList"
-      :height="(500 / 1080) * screenHeight"
+      :height="(750 / 1080) * screenHeight"
       ref="voucherTable"
       class="voucherTable"
       :no-data-text="defaultUrl(voucherUrlType)"

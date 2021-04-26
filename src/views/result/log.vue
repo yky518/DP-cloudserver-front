@@ -1,13 +1,13 @@
 <template>
   <div id="log">
     <div>
-      JobInfo:  JobID:{{ logInf.job.job_id }}; JobName:{{ logInf.job.job_name }};
+      JobInfo:  JobID:{{ logInf.job.id }}; JobName:{{ logInf.job.job_name }};
       JobType:{{ logInf.job.job_type }}; UserName:{{ logInf.job.username }}
     </div>
     <div>
-      TaskInfo: TaskID:{{ logInf.task.task_id }};States:{{
+      TaskInfo: TaskID:{{ logInf.task.tasks_id }};States:{{
         logInf.task.states
-      }};IP:{{ logInf.task.ip }}
+      }};
     </div>
     <Input
       type="textarea"
@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { getJobDetails } from "@/api/info";
+import { log } from "@/api/info";
 export default {
   data() {
     return {
@@ -47,25 +47,15 @@ export default {
         this.screenWidth = window.fullWidth; // 宽
       })();
     };
-    const params = {
-      job_id: this.logInf.job.job_id,
-      page: 1,
-    };
-    getJobDetails(params).then((res) => {
-      let list = res.details;
-      list.forEach((item) => {
-        if (item.task_id == this.logInf.task.task_id) {
-          let logs = "";
-          item.log.log.forEach((item1) => {
-            logs += item1;
-            if (item1[item1.length - 1] != "\n") logs += "\n";
-          });
-          this.log = logs;
-          this.loading = false;
-          return;
-        }
-      });
-    });
+    log(this.logInf.task.tasks_id).then(res=>{
+      let logs = ""
+      let test = eval("("+res.log+")").log
+      test.forEach(item=>{
+        logs+=item;
+      })
+      this.log = logs;
+      this.loading = false;
+    })
   },
   methods: {},
 };

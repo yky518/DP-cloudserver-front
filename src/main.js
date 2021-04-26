@@ -17,13 +17,14 @@ if (localStorage.getItem('name')) {
   let n = 0;
   for (const menu of menus) {
     const tmp = parseRouter(asyncRouters, menu);
+    console.log(tmp)
     if (tmp) {
-      if (tmp.path === '/jobs' && n === 0) {
+      if (tmp.path === '/jobs' && n === 0 && tmp?.children[0]?.children) {
         console.log(tmp)
         tmpRouters.push({
           name: 'function',
           path: '/functions',
-          redirect: `/jobs/function/${tmp.children[0].children[0].path}`,
+          redirect: `/jobs/function/${tmp?.children[0]?.children[0].path}`,
         });
         n += 1;
       }

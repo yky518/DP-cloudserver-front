@@ -21,7 +21,7 @@
       class="withdrawTable"
       :columns="topUpOrder"
       :data="topUpOrderList"
-      :height="(480 / 1080) * screenHeight"
+      :height="(730 / 1080) * screenHeight"
     >
       <template slot="action" slot-scope="{ row, index }">
         <div style="color: #13227a" @click="withdraw(row, index)">{{i18n.提现}}</div>

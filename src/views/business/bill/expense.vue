@@ -22,7 +22,7 @@
         :style="{ margin: (20 / 1080) * screenHeight + 'px 0' }"
       >
         <div style="float: left; height: 38px; padding-top: 6px">
-          {{i18n.子账户消费汇总}}
+          {{i18n.账户消费汇总}}
         </div>
 
         <div class="filter">
@@ -82,9 +82,9 @@
       <Form label-position="right" :label-width="80" class="modal_form">
         <FormItem :label="i18n.账期+':'">
           <Date-picker
-            type="daterange"
-            format="yyyy/MM/dd"
-            :placeholder="i18n.选择日期和时间"
+            type="month"
+            format="yyyy/MM"
+            :placeholder="i18n.选择月份"
           ></Date-picker>
         </FormItem>
         <FormItem :label="i18n.验证码">
@@ -126,7 +126,7 @@
 <script>
 let echarts = require("echarts/lib/echarts");
 import Verify from "vue2-verify";
-import { getTrades, getBills } from "@/api/finance";
+import { getTrades, getBills} from "@/api/finance";
 export default {
   data() {
     return {
@@ -163,11 +163,11 @@ export default {
           },
         },
         {
-          title: "子账户名称",
+          title: "账户名称",
           key: "subAccount",
           align:"center",
           renderHeader: (h) => {
-            return h("div", {}, this.i18n.子账户名称);
+            return h("div", {}, this.i18n.账户名称);
           },
         },
         {
@@ -751,6 +751,7 @@ export default {
 
 <style lang="scss" scoped>
 #expense {
+  height: 100%;
   /deep/ .ivu-table-tip {
     .tipImg {
       width: 15%;

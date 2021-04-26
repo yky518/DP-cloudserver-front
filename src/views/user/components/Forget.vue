@@ -71,7 +71,7 @@
 
 <script>
 import Verify from "vue2-verify";
-import { passwordForget, accountModify } from "@/api/user";
+import { passwordForget, passwordModify } from "@/api/user";
 
 export default {
   name: "Modify",
@@ -135,7 +135,7 @@ export default {
       this.slidePass = true;
     },
     handleSubmit() {
-      accountModify({
+      passwordModify({
         password: this.formCustom.passwd,
         new_password: this.formCustom.passwd2,
       }).then((res) => {

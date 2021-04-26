@@ -104,21 +104,21 @@
           <span class="remittance_title">{{i18n.专属汇款账号}}</span>
           <span class="remittance_account">1109 3633 4810 601</span>
         </div>
-        <div class="sendAccount">
+        <!-- <div class="sendAccount">
           <span class="sendAccount_title">
             {{i18n.将以上账号免费发送至您绑定的邮箱}}1124****82@qq.com
           </span>
           <Button class="sendAccount_btn"
             >{{i18n.发送邮件}}</Button
           >
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { walletInfo, walletRecharge } from "@/api/finance";
+import { walletInfo, walletRecharge ,recharge} from "@/api/finance";
 export default {
   data() {
     return {
@@ -131,9 +131,7 @@ export default {
     };
   },
   created() {
-    walletInfo().then((res) => {
-      this.userBalance = res.u_balance.toFixed(2);
-    });
+    this.userBalance = this.$parent.$parent.$parent.userBalance;
     window.onresize = () => {
       return (() => {
         window.fullHeight = document.documentElement.clientHeight;
@@ -190,7 +188,7 @@ export default {
   color: #333333;
   .balance {
     overflow: hidden;
-    height: 8%;
+    height: 6%;
     .balance_title {
       float: left;
       font-size: 14px;
@@ -207,7 +205,7 @@ export default {
     }
   }
   .rechargeMain {
-    height: 9%;
+    height: 7%;
     overflow: hidden;
     font-size: 14px;
     .recharge_title {
@@ -217,7 +215,7 @@ export default {
       margin-right: 30px;
     }
     .recharge_input {
-      width: 17%;
+      width: 15%;
       float: left;
       height: 36px;
       line-height: 36px;
@@ -243,7 +241,7 @@ export default {
   .payment {
     margin-left: 90px;
     margin-top: 10px;
-    height: 15%;
+    height: 13%;
     overflow: hidden;
     .payment_type {
       width: 135px;
@@ -253,9 +251,9 @@ export default {
       margin-right: 45px;
       .payment_typeImg {
         height: 35px;
-        margin-top: 8%;
-        margin-left: 16%;
-        margin-right: 4%;
+        margin-top: 6%;
+        margin-left: 14%;
+        margin-right: 2%;
         float: left;
       }
       .payment_typeName {
@@ -268,7 +266,7 @@ export default {
   .tips {
     margin-left: 90px;
     margin-top: 10px;
-    width: 72%;
+    width: 70%;
     border: 1px solid #f0f0f0;
     padding: 15px 20px;
     background: #fafafa;

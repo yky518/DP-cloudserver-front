@@ -13,7 +13,7 @@
     <Table
       :columns="record"
       :data="recordList"
-      :height="(500 / 1080) * screenHeight"
+      :height="(750 / 1080) * screenHeight"
       :no-data-text="defaultUrl(rechargeUrlType)"
     ></Table>
     <Page style="text-align: center; margin-top: 20px"></Page>

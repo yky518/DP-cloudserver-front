@@ -126,3 +126,10 @@ export function verify(data) {
     data,
   });
 }
+
+export function Role(id) {
+  return request({
+    url: '/account/role/' + id,
+    method: 'get',
+  })
+}

@@ -114,7 +114,20 @@
             "确定":"",
             "创建时间在区间中的任务的状态":"The status of the tasks whose creation time is in the interval",
             "创建该子用户以来的所有费用":"All expenses since the creation of the sub-user",
-            "任务":"Task"
+            "任务":"Task",
+
+            "收藏Job列表":"List of favorite jobs",
+            "编号":"ID",
+            "名称":"Name",
+            "用户":"User",
+            "类型":"Type",
+            "状态":"Statu",
+            "子任务数":"Sub-tasks",
+            "运行时间":"Operation hours",
+            "备注":"Remarks",
+            "成功":"Success",
+            "等待":"Pending",
+            "运行":"Working"
         },
         "Invoice":{
             "如有开票需求请与您的销售人员联系":"If you need to invoice, please contact your sales staff"
@@ -349,12 +362,12 @@
             "超算存储":"",
             "超额流量":"",
             "云超算服务":"",
-            "子账户消费汇总":"Subaccount consumption summary",
+            "账户消费汇总":"Account consumption summary",
             "账期":"Billing Cycle",
             "搜索":"Search",
             "导出月度账单":"Export monthly bill",
             "账号":"Account",
-            "子账户名称":"Subaccount name",
+            "账户名称":"Account name",
             "原价":"Pretax Gross Amount",
             "优惠金额":"Invoice Discount",
             "应付金额":"Pretax Amount",
@@ -364,7 +377,7 @@
             "产品消费汇总":"Product consumption summary",
             "产品明细":"Product details",
             "提示您导出的账单为详细账单请在导出记录中下载":"Tip:This is a detailed bill,please download it in the export records",
-            "选择日期和时间":"Select date and time",
+            "选择月份":"Select month",
             "验证码":"Verification code:",
             "看不清换一张":"Change one",
             "验证码错误":"Verification code error",
@@ -427,7 +440,8 @@
             "总子任务数":"Total",
             "成功":"Success",
             "等待":"Pending",
-            "编辑":"Edit"
+            "编辑":"Edit",
+            "收藏夹":"Star"
         },
         "Server":{
             "结果总览":"Results",
